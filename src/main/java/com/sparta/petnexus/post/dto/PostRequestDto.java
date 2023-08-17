@@ -12,10 +12,9 @@ public class PostRequestDto {
 
     //  new Post 같은 것
     public Post toEntity(){
-        Post post = Post.builder()
+        return Post.builder()
                 .title(this.title)
                 .content(this.content)
                 .build();
-        return post;
     }
 }
