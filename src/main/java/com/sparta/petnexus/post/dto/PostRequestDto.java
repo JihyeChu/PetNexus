@@ -10,7 +10,6 @@ public class PostRequestDto {
     private String title;
     private String content;
 
-    //  new Post 같은 것
     public Post toEntity(){
         return Post.builder()
                 .title(this.title)

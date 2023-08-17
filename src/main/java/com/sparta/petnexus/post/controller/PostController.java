@@ -22,12 +22,12 @@ public class PostController {
         return postService.createPost(postRequestDto);
     }
 
-    @GetMapping("post")
+    @GetMapping("/post")
     public ResponseEntity<List<PostResponseDto>> getPosts(){
         return postService.getPosts();
     }
 
-    @GetMapping("post/{postId}")
+    @GetMapping("/post/{postId}")
     public ResponseEntity<PostResponseDto> getPostId(@PathVariable Long postId) {
         return postService.getPostId(postId);
     }

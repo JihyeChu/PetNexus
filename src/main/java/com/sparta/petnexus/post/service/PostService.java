@@ -22,13 +22,9 @@ public class PostService {
     private final PostRepository postRepository;
 
     public ResponseEntity<ApiResponse> createPost(PostRequestDto postRequestDto) {
-        try {
             Post post = postRequestDto.toEntity();
             postRepository.save(post);
             return ResponseEntity.ok().body(new ApiResponse("post 생성 성공!",HttpStatus.CREATED.value()));
-        } catch (Exception e) {
-            throw new BusinessException(ErrorCode.POST_NOT_CREATE);
-        }
     }
 
     public ResponseEntity<List<PostResponseDto>> getPosts() {
@@ -37,7 +33,7 @@ public class PostService {
 
     public ResponseEntity<PostResponseDto> getPostId(Long postId) {
         Post post = findPost(postId);
-        return ResponseEntity.ok().body(PostResponseDto.of(post));
+        return ResponseEntity.ok(PostResponseDto.of(post));
     }
 
     @Transactional
