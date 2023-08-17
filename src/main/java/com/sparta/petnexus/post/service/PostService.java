@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -29,7 +31,11 @@ public class PostService {
         }
     }
 
-    public PostResponseDto getPost(Long postId) {
+    public List<PostResponseDto> getPosts() {
+        return postRepository.findAll().stream().map(PostResponseDto::of).toList();
+    }
+
+    public PostResponseDto getPostId(Long postId) {
         Post post = findPost(postId);
         return PostResponseDto.of(post);
     }
@@ -50,4 +56,5 @@ public class PostService {
     public Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_POST));
     }
+
 }
