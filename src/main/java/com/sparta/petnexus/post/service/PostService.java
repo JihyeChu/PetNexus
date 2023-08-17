@@ -24,4 +24,10 @@ public class PostService {
             throw new BusinessException(ErrorCode.POST_NOT_CREATE);
         }
     }
+
+    public PostResponseDto getPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new BusinessException(ErrorCode.NOT_POST));
+        return PostResponseDto.of(post);
+    }
+    
 }

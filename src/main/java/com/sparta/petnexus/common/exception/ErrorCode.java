@@ -12,7 +12,8 @@ public enum ErrorCode {
     BAD_ID_PASSWORD(HttpStatus.BAD_REQUEST, "U003", "아이디나 비밀번호가 맞지 않습니다."),
     PASSWORD_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "U004", "비밀번호가 일치하지 않습니다."),
     //post
-    POST_NOT_CREATE(HttpStatus.BAD_REQUEST,"U001","post 를 만들 수 없습니다.")
+    POST_NOT_CREATE(HttpStatus.BAD_REQUEST,"U001","post 를 만들 수 없습니다."),
+    NOT_POST(HttpStatus.BAD_REQUEST,"U001","존재하지 않는 post 입니다.")
     ;
 
     private final HttpStatus httpStatus;
