@@ -8,6 +8,7 @@ import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +27,18 @@ public class PostService {
     }
 
     public PostResponseDto getPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new BusinessException(ErrorCode.NOT_POST));
+        Post post = findPost(postId);
         return PostResponseDto.of(post);
     }
-    
+
+    @Transactional
+    public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto) {
+        Post post = findPost(postId);
+        post.update(postRequestDto);
+        return PostResponseDto.of(post);
+    }
+
+    public Post findPost(Long id){
+        return postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_POST));
+    }
 }

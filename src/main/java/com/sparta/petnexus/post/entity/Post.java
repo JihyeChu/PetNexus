@@ -1,5 +1,6 @@
 package com.sparta.petnexus.post.entity;
 
+import com.sparta.petnexus.post.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,4 +26,9 @@ public class Post {
     private String content;
 
     // user 연관 관계
+
+    public void update(PostRequestDto postRequestDto){
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
+    }
 }
