@@ -10,12 +10,14 @@ public class PostResponseDto {
     private Long id;
     private String title;
     private String content;
+    private String username;
 
     public static PostResponseDto of(Post post){
         return PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .username(post.getUser().getUsername())
                 .build();
     }
 

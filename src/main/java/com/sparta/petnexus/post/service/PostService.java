@@ -2,14 +2,12 @@ package com.sparta.petnexus.post.service;
 
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
-import com.sparta.petnexus.common.response.ApiResponse;
 import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.post.repository.PostRepository;
+import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,36 +19,39 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public ResponseEntity<ApiResponse> createPost(PostRequestDto postRequestDto) {
-            Post post = postRequestDto.toEntity();
+    public void createPost(PostRequestDto postRequestDto, User user) {
+            Post post = postRequestDto.toEntity(user);
             postRepository.save(post);
-            return ResponseEntity.ok().body(new ApiResponse("post 생성 성공!",HttpStatus.CREATED.value()));
     }
 
-    public ResponseEntity<List<PostResponseDto>> getPosts() {
-        return ResponseEntity.ok().body(postRepository.findAll().stream().map(PostResponseDto::of).toList());
+    public List<PostResponseDto> getPosts() {
+        return postRepository.findAll().stream().map(PostResponseDto::of).toList();
     }
 
-    public ResponseEntity<PostResponseDto> getPostId(Long postId) {
+    public PostResponseDto getPostId(Long postId) {
         Post post = findPost(postId);
-        return ResponseEntity.ok(PostResponseDto.of(post));
+        return PostResponseDto.of(post);
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> updatePost(Long postId, PostRequestDto postRequestDto) {
+    public void updatePost(Long postId, PostRequestDto postRequestDto, User user) {
         Post post = findPost(postId);
+
+        if(!user.getId().equals(post.getUser().getId())){
+            throw new BusinessException(ErrorCode.NOT_POST_UPDATE);
+        }
         post.update(postRequestDto);
-        return ResponseEntity.ok().body(new ApiResponse("post 수정 성공!", HttpStatus.OK.value()));
     }
 
-    public ResponseEntity<ApiResponse> deletePost(Long postId) {
+    public void deletePost(Long postId, User user) {
         Post post = findPost(postId);
+        if(!user.getId().equals(post.getUser().getId())){
+            throw new BusinessException(ErrorCode.NOT_POST_DELETE);
+        }
         postRepository.delete(post);
-        return ResponseEntity.ok().body(new ApiResponse("post 삭제 완료!", HttpStatus.OK.value()));
     }
 
     public Post findPost(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_POST));
+        return postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
     }
-
 }
