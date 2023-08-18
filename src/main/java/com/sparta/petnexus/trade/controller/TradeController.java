@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Builder
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class TradeController {
@@ -25,14 +24,14 @@ public class TradeController {
     @PostMapping("/trade")
     public ResponseEntity<ApiResponse> createTrade(@RequestBody TradeRequestDto requestDto) {
         tradeService.createTrade(requestDto);
-        return ResponseEntity.ok(new ApiResponse("거래 게시글 생성 성공", HttpStatus.OK.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("거래 게시글 생성 성공", HttpStatus.CREATED.value()));
     }
 
     // 거래 게시글 전체 조회
     @GetMapping("/trade")
     public ResponseEntity<List<TradeResponseDto>> getTrade() {
         List<TradeResponseDto> tradeList = tradeService.getTrade();
-        return ResponseEntity.ok().body(tradeList);
+        return ResponseEntity.ok(tradeList);
     }
 
     // 거래 게시글 단건 조회
