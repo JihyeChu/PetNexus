@@ -1,12 +1,14 @@
 package com.sparta.petnexus.post.controller;
 
 import com.sparta.petnexus.common.response.ApiResponse;
+import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public ResponseEntity<ApiResponse> createPost(@RequestBody PostRequestDto postRequestDto) {
-        postService.createPost(postRequestDto);
+    public ResponseEntity<ApiResponse> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.createPost(postRequestDto,userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponse("post 생성 성공!", HttpStatus.CREATED.value()));
     }
 
@@ -35,14 +37,14 @@ public class PostController {
     }
 
     @PutMapping("/post/{postId}")
-    public ResponseEntity<ApiResponse> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto) {
-        postService.updatePost(postId, postRequestDto);
+    public ResponseEntity<ApiResponse> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.updatePost(postId, postRequestDto, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponse("post 수정 성공!", HttpStatus.OK.value()));
     }
 
     @DeleteMapping("/post/{postId}")
-    public ResponseEntity<ApiResponse> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public ResponseEntity<ApiResponse> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.deletePost(postId,userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponse("post 삭제 완료!", HttpStatus.OK.value()));
     }
 

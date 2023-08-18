@@ -6,6 +6,7 @@ import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.post.repository.PostRepository;
+import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +19,8 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public void createPost(PostRequestDto postRequestDto) {
-            Post post = postRequestDto.toEntity();
+    public void createPost(PostRequestDto postRequestDto, User user) {
+            Post post = postRequestDto.toEntity(user);
             postRepository.save(post);
     }
 
@@ -33,18 +34,24 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(Long postId, PostRequestDto postRequestDto) {
+    public void updatePost(Long postId, PostRequestDto postRequestDto, User user) {
         Post post = findPost(postId);
+
+        if(!user.getId().equals(post.getUser().getId())){
+            throw new BusinessException(ErrorCode.NOT_POST_UPDATE);
+        }
         post.update(postRequestDto);
     }
 
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, User user) {
         Post post = findPost(postId);
+        if(!user.getId().equals(post.getUser().getId())){
+            throw new BusinessException(ErrorCode.NOT_POST_DELETE);
+        }
         postRepository.delete(post);
     }
 
     public Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
     }
-
 }
