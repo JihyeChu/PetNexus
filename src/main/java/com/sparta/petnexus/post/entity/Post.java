@@ -1,6 +1,7 @@
 package com.sparta.petnexus.post.entity;
 
 import com.sparta.petnexus.post.dto.PostRequestDto;
+import com.sparta.petnexus.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +26,9 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
-    // user 연관 관계
+    @ManyToOne
+    @JoinColumn(name ="user_id")
+    private User user;
 
     public void update(PostRequestDto postRequestDto){
         this.title = postRequestDto.getTitle();
