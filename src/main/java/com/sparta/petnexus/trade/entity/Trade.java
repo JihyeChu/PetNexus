@@ -2,14 +2,11 @@ package com.sparta.petnexus.trade.entity;
 
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 @Table(name="trade")
@@ -37,14 +34,6 @@ public class Trade {
 //    @Builder.Default
 //    @OneToMany(mappedBy = "user", orphanRemoval = true)
 //    private List<User> users = new ArrayList<>();
-
-    @Builder
-    public Trade(TradeRequestDto requestDto){
-        this.title = requestDto.getTitle();
-        this.content = requestDto.getContent();
-        this.address = requestDto.getAddress();
-        this.category = requestDto.getCategory();
-    }
 
     public void update(TradeRequestDto requestDto) {
         this.title = requestDto.getTitle();

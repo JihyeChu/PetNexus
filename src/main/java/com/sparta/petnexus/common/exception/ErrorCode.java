@@ -15,6 +15,9 @@ public enum ErrorCode {
     NOT_FOUND_POST(HttpStatus.BAD_REQUEST,"P001","존재하지 않는 post 입니다."),
     NOT_POST_UPDATE(HttpStatus.BAD_REQUEST,"P002","작셩자만 수정할 수 있습니다."),
     NOT_POST_DELETE(HttpStatus.BAD_REQUEST,"P003","작셩자만 삭제할 수 있습니다.")
+    // trade
+    NOT_FOUND_TRADE(HttpStatus.BAD_REQUEST, "U001", "존재하지 않는 거래 게시글입니다.")
+
     ;
 
     private final HttpStatus httpStatus;

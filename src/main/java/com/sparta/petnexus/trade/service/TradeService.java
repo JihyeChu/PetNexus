@@ -1,5 +1,7 @@
 package com.sparta.petnexus.trade.service;
 
+import com.sparta.petnexus.common.exception.BusinessException;
+import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.entity.Trade;
@@ -20,12 +22,8 @@ public class TradeService {
     // 거래 게시글 생성
     @Transactional
     public void createTrade(TradeRequestDto requestDto) {
-        try {
-            Trade trade = requestDto.toEntity();
-            tradeRepository.save(trade);
-        } catch (Exception e) {
-            throw new RuntimeException("거래 게시글 생성 실패. " + e.getMessage(), e);
-        }
+        Trade trade = requestDto.toEntity();
+        tradeRepository.save(trade);
     }
 
     //    거래 게시글 전체 조회
@@ -58,7 +56,7 @@ public class TradeService {
 
     public Trade findTrade(Long tradeId) {
         return tradeRepository.findById(tradeId).orElseThrow(
-                () -> new IllegalArgumentException("선택한 거래 게시글은 존재하지 않습니다.")
+                () -> new BusinessException(ErrorCode.NOT_FOUND_TRADE)
         );
     }
 
