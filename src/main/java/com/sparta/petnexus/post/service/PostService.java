@@ -20,5 +20,7 @@ public interface PostService {
 
     void deletePost(Long postId, User user);
 
+    void createPostLike(Long postId, User user);
+    void deletePostLike(Long postId, User user);
     Post findPost(Long id);
 }

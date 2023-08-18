@@ -11,6 +11,7 @@ public class PostResponseDto {
     private String title;
     private String content;
     private String username;
+    private Integer like;
 
     public static PostResponseDto of(Post post){
         return PostResponseDto.builder()
@@ -18,6 +19,7 @@ public class PostResponseDto {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .username(post.getUser().getUsername())
+                .like(post.getPostLikes().size())
                 .build();
     }
 
