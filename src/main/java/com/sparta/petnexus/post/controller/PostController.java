@@ -5,6 +5,7 @@ import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,27 +20,30 @@ public class PostController {
 
     @PostMapping("/post")
     public ResponseEntity<ApiResponse> createPost(@RequestBody PostRequestDto postRequestDto) {
-        return postService.createPost(postRequestDto);
+        postService.createPost(postRequestDto);
+        return ResponseEntity.ok().body(new ApiResponse("post 생성 성공!", HttpStatus.CREATED.value()));
     }
 
     @GetMapping("/post")
     public ResponseEntity<List<PostResponseDto>> getPosts(){
-        return postService.getPosts();
+        return ResponseEntity.ok(postService.getPosts());
     }
 
     @GetMapping("/post/{postId}")
     public ResponseEntity<PostResponseDto> getPostId(@PathVariable Long postId) {
-        return postService.getPostId(postId);
+        return ResponseEntity.ok(postService.getPostId(postId));
     }
 
     @PutMapping("/post/{postId}")
     public ResponseEntity<ApiResponse> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto) {
-        return postService.updatePost(postId, postRequestDto);
+        postService.updatePost(postId, postRequestDto);
+        return ResponseEntity.ok().body(new ApiResponse("post 수정 성공!", HttpStatus.OK.value()));
     }
 
     @DeleteMapping("/post/{postId}")
     public ResponseEntity<ApiResponse> deletePost(@PathVariable Long postId) {
-        return postService.deletePost(postId);
+        postService.deletePost(postId);
+        return ResponseEntity.ok().body(new ApiResponse("post 삭제 완료!", HttpStatus.OK.value()));
     }
 
 }
