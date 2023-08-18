@@ -1,8 +1,11 @@
 package com.sparta.petnexus.trade.entity;
 
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
+import com.sparta.petnexus.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 
 @Builder
 @AllArgsConstructor
@@ -31,9 +34,9 @@ public class Trade {
     @Column
     private CategoryEnum category;
 
-//    @Builder.Default
-//    @OneToMany(mappedBy = "user", orphanRemoval = true)
-//    private List<User> users = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     public void update(TradeRequestDto requestDto) {
         this.title = requestDto.getTitle();
