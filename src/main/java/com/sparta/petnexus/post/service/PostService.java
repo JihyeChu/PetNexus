@@ -21,30 +21,26 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public PostResponseDto createPost(PostRequestDto postRequestDto) {
-        try {
+    public ResponseEntity<ApiResponse> createPost(PostRequestDto postRequestDto) {
             Post post = postRequestDto.toEntity();
             postRepository.save(post);
-            return PostResponseDto.of(post);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorCode.POST_NOT_CREATE);
-        }
+            return ResponseEntity.ok().body(new ApiResponse("post 생성 성공!",HttpStatus.CREATED.value()));
     }
 
-    public List<PostResponseDto> getPosts() {
-        return postRepository.findAll().stream().map(PostResponseDto::of).toList();
+    public ResponseEntity<List<PostResponseDto>> getPosts() {
+        return ResponseEntity.ok().body(postRepository.findAll().stream().map(PostResponseDto::of).toList());
     }
 
-    public PostResponseDto getPostId(Long postId) {
+    public ResponseEntity<PostResponseDto> getPostId(Long postId) {
         Post post = findPost(postId);
-        return PostResponseDto.of(post);
+        return ResponseEntity.ok(PostResponseDto.of(post));
     }
 
     @Transactional
-    public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto) {
+    public ResponseEntity<ApiResponse> updatePost(Long postId, PostRequestDto postRequestDto) {
         Post post = findPost(postId);
         post.update(postRequestDto);
-        return PostResponseDto.of(post);
+        return ResponseEntity.ok().body(new ApiResponse("post 수정 성공!", HttpStatus.OK.value()));
     }
 
     public ResponseEntity<ApiResponse> deletePost(Long postId) {
