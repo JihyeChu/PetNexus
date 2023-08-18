@@ -1,6 +1,7 @@
 package com.sparta.petnexus.user.dto;
 
 import com.sparta.petnexus.user.entity.User;
+import com.sparta.petnexus.user.entity.UserRoleEnum;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -9,7 +10,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class SignUpUserRequest {
+public class SignupRequest {
 
     @NotNull(message = "email 필수 입니다.")
     @Pattern(regexp = "[a-zA-z0-9]+@[a-zA-z]+[.]+[a-zA-z.]+", message = "email 형식이 맞지 않습니다.")
@@ -23,8 +24,8 @@ public class SignUpUserRequest {
     private String username;
 
     // username 미작성시, 임의 "user"로 저장
-    private String usernameNotNull(String username){
-        if(username==null){
+    private String usernameNotNull(String username) {
+        if (username == null) {
             username = "user";
         }
         return username;
@@ -35,6 +36,7 @@ public class SignUpUserRequest {
                 .email(this.email)
                 .password(encodePassword)
                 .username(usernameNotNull(this.username))
+                .role(UserRoleEnum.USER)
                 .build();
     }
 }
