@@ -18,22 +18,22 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto) {
+    public ResponseEntity<ApiResponse> createPost(@RequestBody PostRequestDto postRequestDto) {
         return postService.createPost(postRequestDto);
     }
 
-    @GetMapping("post")
-    public List<PostResponseDto> getPosts(){
+    @GetMapping("/post")
+    public ResponseEntity<List<PostResponseDto>> getPosts(){
         return postService.getPosts();
     }
 
-    @GetMapping("post/{postId}")
-    public PostResponseDto getPostId(@PathVariable Long postId) {
+    @GetMapping("/post/{postId}")
+    public ResponseEntity<PostResponseDto> getPostId(@PathVariable Long postId) {
         return postService.getPostId(postId);
     }
 
     @PutMapping("/post/{postId}")
-    public PostResponseDto updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto) {
+    public ResponseEntity<ApiResponse> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto) {
         return postService.updatePost(postId, postRequestDto);
     }
 
