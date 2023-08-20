@@ -24,7 +24,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader(TokenProvider.HEADER_AUTHORIZATION);
-        String token = getAccessToken(authorizationHeader);
+        String token = tokenProvider.getAccessToken(authorizationHeader);
 
         if (tokenProvider.validToken(token)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
@@ -32,14 +32,5 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String getAccessToken(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith(
-                TokenProvider.BEARER_PREFIX)) {
-            return authorizationHeader.substring(TokenProvider.BEARER_PREFIX.length());
-        }
-
-        return null;
     }
 }
