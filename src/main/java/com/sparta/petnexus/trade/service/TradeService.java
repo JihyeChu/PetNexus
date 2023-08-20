@@ -45,6 +45,20 @@ public interface TradeService {
     public void deleteTrade(Long tradeId, User user);
 
     /*
+     * 거래게시글 좋아요
+     * @param id : 좋아요 할 거래게시글 id
+     * @param user : 좋아요를 생성 할 요청자
+     * */
+    public void likeTrade(Long tradeId, User user);
+
+    /*
+    * 거래게시글 좋아요 취소
+    * @param id : 좋아요 취소 할 거래게시글 id
+    * @param user : 좋아요를 생성 할 요청자
+    * */
+    public void dislikeTrade(Long tradeId, User user);
+
+    /*
      * 거래게시글 Entity 한건 조회
      * @param id : 조회할 거래게시글 id
      * @return : 거래게시글 entity

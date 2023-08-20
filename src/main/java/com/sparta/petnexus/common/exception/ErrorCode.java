@@ -18,7 +18,9 @@ public enum ErrorCode {
     // trade
     NOT_FOUND_TRADE(HttpStatus.BAD_REQUEST, "T001", "존재하지 않는 거래 게시글입니다."),
     NOT_TRADE_UPDATE(HttpStatus.BAD_REQUEST,"T002","작셩자만 수정할 수 있습니다."),
-    NOT_TRADE_DELETE(HttpStatus.BAD_REQUEST,"T003","작셩자만 삭제할 수 있습니다.")
+    NOT_TRADE_DELETE(HttpStatus.BAD_REQUEST,"T003","작셩자만 삭제할 수 있습니다."),
+    EXISTED_LIKE(HttpStatus.CONFLICT, "T004", "이미 좋아요가 생성되었습니다."),
+    EXISTED_DISLIKE(HttpStatus.CONFLICT, "T005", "이미 좋아요 취소가 생성되었습니다.")
     ;
 
     private final HttpStatus httpStatus;

@@ -5,13 +5,17 @@ import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.entity.Trade;
+import com.sparta.petnexus.trade.like.entity.TradeLike;
+import com.sparta.petnexus.trade.like.repository.TradeLikeRepository;
 import com.sparta.petnexus.trade.repository.TradeRepository;
 import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.DialectOverride;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 public class TradeServiceImpl implements TradeService {
 
     private final TradeRepository tradeRepository;
+    private final TradeLikeRepository tradeLikeRepository;
 
     @Override
     @Transactional
@@ -65,9 +70,35 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
+    @Transactional
+    public void likeTrade(Long tradeId, User user){
+        Trade trade = findTrade(tradeId);
+
+        if(tradeLikeRepository.existsByUserAndTrade(user, trade)){
+            throw new BusinessException(ErrorCode.EXISTED_LIKE);
+        }else{
+            TradeLike tradeLike = new TradeLike(user, trade);
+            tradeLikeRepository.save(tradeLike);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void dislikeTrade(Long tradeId, User user){
+        Trade trade = findTrade(tradeId);
+        Optional<TradeLike> likeOptional = tradeLikeRepository.findByUserAndTrade(user, trade);
+        if(likeOptional.isPresent()){
+            tradeLikeRepository.delete(likeOptional.get());
+        }else{
+            throw new BusinessException(ErrorCode.EXISTED_DISLIKE);
+        }
+    }
+
+    @Override
     public Trade findTrade(Long tradeId) {
         return tradeRepository.findById(tradeId).orElseThrow(
                 () -> new BusinessException(ErrorCode.NOT_FOUND_TRADE)
         );
     }
+
 }

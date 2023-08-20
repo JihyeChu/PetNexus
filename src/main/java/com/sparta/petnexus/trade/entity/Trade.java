@@ -1,11 +1,13 @@
 package com.sparta.petnexus.trade.entity;
 
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
+import com.sparta.petnexus.trade.like.entity.TradeLike;
 import com.sparta.petnexus.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -37,6 +39,9 @@ public class Trade {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+    @OneToMany(mappedBy = "trade", cascade = CascadeType.REMOVE)
+    private List<TradeLike> tradeLikes = new ArrayList<>();
 
     public void update(TradeRequestDto requestDto) {
         this.title = requestDto.getTitle();
