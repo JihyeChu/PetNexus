@@ -1,5 +1,6 @@
 package com.sparta.petnexus.trade.dto;
 
+import com.sparta.petnexus.trade.bookmark.entity.TradeBookmark;
 import com.sparta.petnexus.trade.entity.CategoryEnum;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.trade.like.entity.TradeLike;
@@ -18,6 +19,8 @@ public class TradeResponseDto {
     private int price;
     private CategoryEnum category;
     private int tradeLikeCount;
+    private List<String> tradeBookmarkList;
+
 
     public static TradeResponseDto of(Trade trade){
         return TradeResponseDto.builder()
@@ -27,6 +30,7 @@ public class TradeResponseDto {
                 .price(trade.getPrice())
                 .category(trade.getCategory())
                 .tradeLikeCount(trade.getTradeLikes().size())
+                .tradeBookmarkList(trade.getTradeBookmarks().stream().map(bookmark -> bookmark.getTrade().getTitle()).toList())
                 .build();
     }
 

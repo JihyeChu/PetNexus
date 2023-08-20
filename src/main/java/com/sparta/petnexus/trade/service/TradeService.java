@@ -59,6 +59,20 @@ public interface TradeService {
     public void dislikeTrade(Long tradeId, User user);
 
     /*
+     * 거래게시글 북마크
+     * @param id : 북마크 할 거래게시글 id
+     * @param user : 북마크 요청자
+     * */
+    public void doBookmark(Long tradeId, User user);
+
+    /*
+    * 거래게시글 북마크 취소
+    * @param id : 북마크 취소 할 거래게시글 id
+    * @param user : 북마크 취소 요청자
+    * */
+    public void undoBookmark(Long tradeId, User user);
+
+    /*
      * 거래게시글 Entity 한건 조회
      * @param id : 조회할 거래게시글 id
      * @return : 거래게시글 entity

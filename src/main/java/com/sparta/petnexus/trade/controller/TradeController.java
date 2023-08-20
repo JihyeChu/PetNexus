@@ -56,17 +56,32 @@ public class TradeController {
         return ResponseEntity.ok().body(new ApiResponse("거래게시글 삭제 성공", HttpStatus.OK.value()));
     }
 
-    // 거래게시글 좋아요 생성
+    // 거래게시글 좋아요
     @PostMapping("/trade/{tradeId}/like")
     public ResponseEntity<ApiResponse> likeTrade(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         tradeService.likeTrade(tradeId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse("거래게시글 좋아요 성공", HttpStatus.ACCEPTED.value()));
     }
 
+    // 거래게시글 좋아요 취소
     @DeleteMapping("/trade/{tradeId}/like")
     public ResponseEntity<ApiResponse> dislikeTrade(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         tradeService.dislikeTrade(tradeId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse("거래게시글 좋아요 취소 성공", HttpStatus.ACCEPTED.value()));
+    }
+
+    // 거래게시글 북마크 생성
+    @PostMapping("/trade/{tradeId}/bookmark")
+    public ResponseEntity<ApiResponse> doBookmark(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        tradeService.doBookmark(tradeId, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse("거래게시글 북마크 성공",  HttpStatus.ACCEPTED.value()));
+    }
+
+    // 거래게시글 북마크 취소
+    @DeleteMapping("/trade/{tradeId}/bookmark")
+    public ResponseEntity<ApiResponse> undoBookmark(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        tradeService.undoBookmark(tradeId, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse("거래게시글 북마크 취소 성공", HttpStatus.ACCEPTED.value()));
     }
 }
 
