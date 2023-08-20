@@ -46,7 +46,7 @@ public class PostServiceImpl implements PostService {
         Post post = findPost(postId);
 
         if(!user.getId().equals(post.getUser().getId())){
-            throw new BusinessException(ErrorCode.NOT_POST_UPDATE);
+            throw new BusinessException(ErrorCode.NOT_USER_UPDATE);
         }
         post.update(postRequestDto);
     }
@@ -55,7 +55,7 @@ public class PostServiceImpl implements PostService {
     public void deletePost(Long postId, User user) {
         Post post = findPost(postId);
         if(!user.getId().equals(post.getUser().getId())){
-            throw new BusinessException(ErrorCode.NOT_POST_DELETE);
+            throw new BusinessException(ErrorCode.NOT_USER_DELETE);
         }
         postRepository.delete(post);
     }
