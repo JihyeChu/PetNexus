@@ -48,4 +48,27 @@ public class PostController {
         return ResponseEntity.ok().body(new ApiResponse("post 삭제 완료!", HttpStatus.OK.value()));
     }
 
+    @PostMapping("/post/{postId}/like")
+    public ResponseEntity<ApiResponse> createPostLike(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        postService.createPostLike(postId,userDetails.getUser());
+        return ResponseEntity.ok().body(new ApiResponse("해당 post에 좋아요를 눌렀습니다", HttpStatus.CREATED.value()));
+    }
+
+    @DeleteMapping("/post/{postId}/like")
+    public ResponseEntity<ApiResponse> deletePostLike(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        postService.deletePostLike(postId,userDetails.getUser());
+        return ResponseEntity.ok().body(new ApiResponse("좋아요를 취소 하였습니다", HttpStatus.OK.value()));
+    }
+
+    @PostMapping("/post/{postId}/bookmark")
+    public ResponseEntity<ApiResponse> createPostBookmark(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        postService.createPostBookmark(postId,userDetails.getUser());
+        return ResponseEntity.ok().body(new ApiResponse("해당 post를 북마크에 추가하였습니다.", HttpStatus.CREATED.value()));
+    }
+
+    @DeleteMapping("/post/{postId}/bookmark")
+    public ResponseEntity<ApiResponse> deletePostBookmark(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        postService.deletePostBookmark(postId,userDetails.getUser());
+        return ResponseEntity.ok().body(new ApiResponse("해당 post를 북마크에 삭제하였습니다.", HttpStatus.OK.value()));
+    }
 }
