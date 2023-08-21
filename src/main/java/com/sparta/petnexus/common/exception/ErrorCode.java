@@ -18,6 +18,9 @@ public enum ErrorCode {
     EXISTS_LIKE(HttpStatus.BAD_REQUEST,"P004","이미 좋아요한 POST 입니다."),
     NOT_EXISTS_LIKE(HttpStatus.BAD_REQUEST,"P005","좋아요를 누르지 않은 POST 입니다."),
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST,"P006","존재하지 않는 댓글입니다."),
+    EXISTS_BOOKMARK(HttpStatus.BAD_REQUEST,"P007","이미 북마크에 추가한 POST 입니다."),
+    NOT_EXISTS_BOOKMARK(HttpStatus.BAD_REQUEST,"P008","북마크를 하지 않은 POST 입니다."),
+    SELF_USER_POST(HttpStatus.BAD_REQUEST,"P009","본인 POST에는 누를 수 없습니다."),
     // trade
     NOT_FOUND_TRADE(HttpStatus.BAD_REQUEST, "U001", "존재하지 않는 거래 게시글입니다.")
     ;

@@ -11,16 +11,13 @@ import java.util.List;
 public interface PostService {
 
     void createPost(PostRequestDto postRequestDto, User user);
-
     List<PostResponseDto> getPosts();
-
     PostResponseDto getPostId(Long postId);
-
     void updatePost(Long postId, PostRequestDto postRequestDto, User user);
-
     void deletePost(Long postId, User user);
-
     void createPostLike(Long postId, User user);
     void deletePostLike(Long postId, User user);
+    void createPostBookmark(Long postId, User user);
+    void deletePostBookmark(Long postId, User user);
     Post findPost(Long id);
 }

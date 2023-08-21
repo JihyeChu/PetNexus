@@ -5,9 +5,11 @@ import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.entity.Post;
+import com.sparta.petnexus.post.postBookmark.entity.PostBookmark;
+import com.sparta.petnexus.post.postBookmark.repository.PostBookmarkRepository;
+import com.sparta.petnexus.post.postLike.entity.PostLike;
+import com.sparta.petnexus.post.postLike.repository.PostLikeRepository;
 import com.sparta.petnexus.post.repository.PostRepository;
-import com.sparta.petnexus.postLike.entity.PostLike;
-import com.sparta.petnexus.postLike.repository.PostLikeRepository;
 import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
+    private final PostBookmarkRepository postBookmarkRepository;
 
     @Override
     public void createPost(PostRequestDto postRequestDto, User user) {
@@ -63,6 +66,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void createPostLike(Long postId, User user) {
         Post post = findPost(postId);
+        userCheck(post,user);
 
         if(postLikeRepository.existsByPostAndUser(post,user)){
             throw new BusinessException(ErrorCode.EXISTS_LIKE);
@@ -84,7 +88,37 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public void createPostBookmark(Long postId, User user){
+        Post post = findPost(postId);
+        userCheck(post,user);
+
+        if(postBookmarkRepository.existsByPostAndUser(post,user)){
+            throw new BusinessException(ErrorCode.EXISTS_BOOKMARK);
+        } else{
+            PostBookmark postBookmark = new PostBookmark(post, user);
+            postBookmarkRepository.save(postBookmark);
+        }
+    }
+
+    @Override
+    public void deletePostBookmark(Long postId, User user){
+        Post post = findPost(postId);
+        Optional<PostBookmark> postBookmark =  postBookmarkRepository.findByPostAndUser(post,user);
+        if(postBookmark.isPresent()){
+            postBookmarkRepository.delete(postBookmark.get());
+        } else{
+            throw new BusinessException(ErrorCode.NOT_EXISTS_BOOKMARK);
+        }
+    }
+
+    @Override
     public Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
+    }
+
+    public void userCheck(Post post, User user) {
+        if (user.getId().equals(post.getUser().getId())) {
+            throw new BusinessException(ErrorCode.SELF_USER_POST);
+        }
     }
 }
