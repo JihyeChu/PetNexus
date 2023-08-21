@@ -2,6 +2,7 @@ package com.sparta.petnexus.trade.dto;
 
 import com.sparta.petnexus.trade.entity.CategoryEnum;
 import com.sparta.petnexus.trade.entity.Trade;
+import com.sparta.petnexus.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,13 +16,14 @@ public class TradeRequestDto {
     private int price;
     private CategoryEnum category;
 
-    public Trade toEntity(){
+    public Trade toEntity(User user){
         return Trade.builder()
                 .title(this.title)
                 .content(this.content)
                 .address(this.address)
                 .price(this.price)
                 .category(this.category)
+                .user(user)
                 .build();
     }
 }
