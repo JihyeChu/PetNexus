@@ -17,12 +17,13 @@ public enum ErrorCode {
     NOT_POST_DELETE(HttpStatus.BAD_REQUEST,"P003","작셩자만 삭제할 수 있습니다."),
     // trade
     NOT_FOUND_TRADE(HttpStatus.BAD_REQUEST, "T001", "존재하지 않는 거래 게시글입니다."),
-    NOT_TRADE_UPDATE(HttpStatus.BAD_REQUEST,"T002","작셩자만 수정할 수 있습니다."),
-    NOT_TRADE_DELETE(HttpStatus.BAD_REQUEST,"T003","작셩자만 삭제할 수 있습니다."),
+    NOT_TRADE_UPDATE(HttpStatus.BAD_REQUEST,"T002","작성자만 수정할 수 있습니다."),
+    NOT_TRADE_DELETE(HttpStatus.BAD_REQUEST,"T003","작성자만 삭제할 수 있습니다."),
     EXISTED_LIKE(HttpStatus.CONFLICT, "T004", "이미 좋아요가 생성되었습니다."),
     EXISTED_DISLIKE(HttpStatus.CONFLICT, "T005", "이미 좋아요 취소가 되었습니다."),
     EXISTED_DO_BOOKMARK(HttpStatus.CONFLICT, "T006", "이미 북마크가 생성되었습니다."),
     EXISTED_UNDO_BOOKMARK(HttpStatus.CONFLICT, "T007", "이미 북마크가 취소가 되었습니다."),
+    NOT_FOUND_TRADECOMMENT(HttpStatus.BAD_REQUEST, "T008", "존재하지 않는 거래 게시글 댓글입니다."),
     //Token
     INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST,"TK001","잘못된 리프레쉬 토큰입니다. 재로그인 해주세요."),
     NOT_FOUND_REFRESH_TOKEN(HttpStatus.BAD_REQUEST,"TK002","리프레쉬 토큰을 찾을 수 없습니다. 재로그인 해주세요.")
