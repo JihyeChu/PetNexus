@@ -1,7 +1,7 @@
-package com.sparta.petnexus.postComment.service;
+package com.sparta.petnexus.post.postComment.service;
 
-import com.sparta.petnexus.postComment.dto.PostCommentRequestsDto;
-import com.sparta.petnexus.postComment.entity.PostComment;
+import com.sparta.petnexus.post.postComment.entity.PostComment;
+import com.sparta.petnexus.post.postComment.dto.PostCommentRequestsDto;
 import com.sparta.petnexus.user.entity.User;
 
 public interface PostCommentService {

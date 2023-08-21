@@ -1,12 +1,12 @@
-package com.sparta.petnexus.postComment.service;
+package com.sparta.petnexus.post.postComment.service;
 
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.post.entity.Post;
+import com.sparta.petnexus.post.postComment.repository.PostCommentRepository;
 import com.sparta.petnexus.post.service.PostService;
-import com.sparta.petnexus.postComment.dto.PostCommentRequestsDto;
-import com.sparta.petnexus.postComment.entity.PostComment;
-import com.sparta.petnexus.postComment.repository.PostCommentRepository;
+import com.sparta.petnexus.post.postComment.dto.PostCommentRequestsDto;
+import com.sparta.petnexus.post.postComment.entity.PostComment;
 import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

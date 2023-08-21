@@ -1,8 +1,8 @@
 package com.sparta.petnexus.post.entity;
 
 import com.sparta.petnexus.post.dto.PostRequestDto;
-import com.sparta.petnexus.postComment.entity.PostComment;
-import com.sparta.petnexus.postLike.entity.PostLike;
+import com.sparta.petnexus.post.postComment.entity.PostComment;
+import com.sparta.petnexus.post.postLike.entity.PostLike;
 import com.sparta.petnexus.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

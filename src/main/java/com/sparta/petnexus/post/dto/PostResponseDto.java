@@ -1,7 +1,7 @@
 package com.sparta.petnexus.post.dto;
 
 import com.sparta.petnexus.post.entity.Post;
-import com.sparta.petnexus.postComment.dto.PostCommentResponseDto;
+import com.sparta.petnexus.post.postComment.dto.PostCommentResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 

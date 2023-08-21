@@ -1,9 +1,9 @@
-package com.sparta.petnexus.postComment.controller;
+package com.sparta.petnexus.post.postComment.controller;
 
 import com.sparta.petnexus.common.response.ApiResponse;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
-import com.sparta.petnexus.postComment.dto.PostCommentRequestsDto;
-import com.sparta.petnexus.postComment.service.PostCommentService;
+import com.sparta.petnexus.post.postComment.dto.PostCommentRequestsDto;
+import com.sparta.petnexus.post.postComment.service.PostCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

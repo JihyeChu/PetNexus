@@ -1,4 +1,4 @@
-package com.sparta.petnexus.postLike.entity;
+package com.sparta.petnexus.post.postLike.entity;
 
 import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.user.entity.User;
