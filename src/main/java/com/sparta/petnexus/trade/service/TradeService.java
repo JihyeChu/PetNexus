@@ -1,64 +1,83 @@
 package com.sparta.petnexus.trade.service;
 
-import com.sparta.petnexus.common.exception.BusinessException;
-import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.entity.Trade;
-import com.sparta.petnexus.trade.repository.TradeRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.sparta.petnexus.user.entity.User;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
-public class TradeService {
+public interface TradeService {
 
-    private final TradeRepository tradeRepository;
+    /*
+     * 거래게시글 생성
+     * @param requestDto : 거래게시글 생성 요청정보
+     * @param user : 거래게시글 생성 요청자
+     * */
+    public void createTrade(TradeRequestDto requestDto, User user);
 
-    // 거래 게시글 생성
-    @Transactional
-    public void createTrade(TradeRequestDto requestDto) {
-        Trade trade = requestDto.toEntity();
-        tradeRepository.save(trade);
-    }
+    /*
+     * 거래게시글 전체 조회
+     * @return : 거래게시글 전체 정보
+     * */
+    public List<TradeResponseDto> getTrade();
 
-    //    거래 게시글 전체 조회
-    @Transactional(readOnly = true)
-    public List<TradeResponseDto> getTrade() {
-        return tradeRepository.findAll().stream().map(TradeResponseDto::of).collect(Collectors.toList());
-    }
+    /*
+     * 거래게시글 단건 조회
+     * @param id : 조회 할 거래게시글 id
+     * @return : 조회된 한건의 거래게시글 정보
+     * */
+    public TradeResponseDto selectTrade(Long tradeId);
 
+    /*
+     * 거래게시글 수정
+     * @param requestDto : 거래게시글 수정 요청정보
+     * @param id : 수정 할 거래게시글 id
+     * @param user : 거래게시글 수정 요청자
+     * */
+    public void updateTrade(TradeRequestDto requestDto, Long tradeId, User user);
 
-    //    거래 게시글 단건 조회
-    @Transactional(readOnly = true)
-    public TradeResponseDto selectTrade(Long tradeId) {
-        Trade trade = findTrade(tradeId);
-        return TradeResponseDto.of(trade);
-    }
+    /*
+     * 거래게시글 삭제
+     * @param id : 삭제 할 거래게시글 id
+     * @param user : 거래게시글 삭제 요청자
+     * */
+    public void deleteTrade(Long tradeId, User user);
 
-    @Transactional
-    public void updateTrade(TradeRequestDto requestDto, Long tradeId) {
-        Trade trade = findTrade(tradeId);
+    /*
+     * 거래게시글 좋아요
+     * @param id : 좋아요 할 거래게시글 id
+     * @param user : 좋아요를 생성 할 요청자
+     * */
+    public void likeTrade(Long tradeId, User user);
 
-        trade.update(requestDto);
-    }
+    /*
+    * 거래게시글 좋아요 취소
+    * @param id : 좋아요 취소 할 거래게시글 id
+    * @param user : 좋아요를 생성 할 요청자
+    * */
+    public void dislikeTrade(Long tradeId, User user);
 
-    @Transactional
-    public void deleteTrade(Long tradeId) {
-        Trade trade = findTrade(tradeId);
+    /*
+     * 거래게시글 북마크
+     * @param id : 북마크 할 거래게시글 id
+     * @param user : 북마크 요청자
+     * */
+    public void doBookmark(Long tradeId, User user);
 
-        tradeRepository.delete(trade);
-    }
+    /*
+    * 거래게시글 북마크 취소
+    * @param id : 북마크 취소 할 거래게시글 id
+    * @param user : 북마크 취소 요청자
+    * */
+    public void undoBookmark(Long tradeId, User user);
 
-    public Trade findTrade(Long tradeId) {
-        return tradeRepository.findById(tradeId).orElseThrow(
-                () -> new BusinessException(ErrorCode.NOT_FOUND_TRADE)
-        );
-    }
+    /*
+     * 거래게시글 Entity 한건 조회
+     * @param id : 조회할 거래게시글 id
+     * @return : 거래게시글 entity
+     * */
+    public Trade findTrade(Long tradeId);
 
 
 }

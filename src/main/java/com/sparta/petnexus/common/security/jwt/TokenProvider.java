@@ -22,7 +22,10 @@ public class TokenProvider {
     private final UserDetailServiceImp userDetailServiceImp;
 
     public static final String HEADER_AUTHORIZATION = "Authorization";
+    public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
     public static final String BEARER_PREFIX = "Bearer ";
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2);
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(7);
 
     public String generateToken(User user, Duration expiredAt) {
         Date now = new Date();
@@ -66,6 +69,15 @@ public class TokenProvider {
                 .setSigningKey(jwtProperties.getSecretKey())
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public String getAccessToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith(
+                TokenProvider.BEARER_PREFIX)) {
+            return authorizationHeader.substring(TokenProvider.BEARER_PREFIX.length());
+        }
+
+        return null;
     }
 
 }
