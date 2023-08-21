@@ -68,12 +68,12 @@ public class PostServiceImpl implements PostService {
         Post post = findPost(postId);
         userCheck(post,user);
 
-        if(postLikeRepository.existsByPostAndUser(post,user)){
+        postLikeRepository.findByPostAndUser(post, user).ifPresent(postLike -> {
             throw new BusinessException(ErrorCode.EXISTS_LIKE);
-        } else{
-            PostLike postLike = new PostLike(post, user);
-            postLikeRepository.save(postLike);
-        }
+        });
+
+        PostLike postLike = new PostLike(post, user);
+        postLikeRepository.save(postLike);
     }
 
     @Override
@@ -92,12 +92,12 @@ public class PostServiceImpl implements PostService {
         Post post = findPost(postId);
         userCheck(post,user);
 
-        if(postBookmarkRepository.existsByPostAndUser(post,user)){
+        postBookmarkRepository.findByPostAndUser(post, user).ifPresent(postBookmark -> {
             throw new BusinessException(ErrorCode.EXISTS_BOOKMARK);
-        } else{
-            PostBookmark postBookmark = new PostBookmark(post, user);
-            postBookmarkRepository.save(postBookmark);
-        }
+        });
+
+        PostBookmark postBookmark = new PostBookmark(post, user);
+        postBookmarkRepository.save(postBookmark);
     }
 
     @Override

@@ -8,6 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface PostBookmarkRepository extends JpaRepository<PostBookmark, Long> {
-    Boolean existsByPostAndUser(Post post, User user);
     Optional<PostBookmark> findByPostAndUser(Post post, User user);
 }
