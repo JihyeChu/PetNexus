@@ -1,6 +1,7 @@
 package com.sparta.petnexus.post.entity;
 
 import com.sparta.petnexus.post.dto.PostRequestDto;
+import com.sparta.petnexus.postComment.entity.PostComment;
 import com.sparta.petnexus.postLike.entity.PostLike;
 import com.sparta.petnexus.user.entity.User;
 import jakarta.persistence.*;
@@ -36,6 +37,9 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private List<PostLike> postLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post")
+    private List<PostComment> PostComments = new ArrayList<>();
 
     public void update(PostRequestDto postRequestDto){
         this.title = postRequestDto.getTitle();
