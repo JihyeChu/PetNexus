@@ -67,6 +67,7 @@ public class securityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll() // swagger
                         .requestMatchers("/api/user/**").permitAll()
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 ->

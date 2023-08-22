@@ -83,6 +83,7 @@ public class TradeController {
         tradeService.undoBookmark(tradeId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse("거래게시글 북마크 취소 성공", HttpStatus.ACCEPTED.value()));
     }
+
 }
 
 

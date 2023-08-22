@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="postLike")
+@Table(name="post_like")
 public class PostLike {
 
     @Id

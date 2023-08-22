@@ -4,20 +4,25 @@ import com.sparta.petnexus.chat.dto.ChatListResponseDto;
 import com.sparta.petnexus.chat.dto.ChatRequestDto;
 import com.sparta.petnexus.chat.dto.ChatResponseDto;
 import com.sparta.petnexus.chat.service.ChatService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Log4j2
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Tag(name = "채팅 관련 API", description = "채팅 관련 API 입니다.")
 public class ChatController {
     private final SimpMessagingTemplate template; //특정 Broker 로 메세지를 전달
     private final ChatService chatService;
@@ -37,9 +42,10 @@ public class ChatController {
         template.convertAndSend("/sub/chat/" + savedMessage.getRoomId(), savedMessage);
     }
 
-    // 채팅방 채팅 목록 조회
     @GetMapping("/chat/{roomId}")
-    public ResponseEntity<ChatListResponseDto> getAllChatByGroupId(@PathVariable Long roomId) {
+    @Operation(summary = "채팅방 채팅 목록 조회", description = "@PathVariable을 통해 roomId를 받아와, 해당 채팅방에 존재하는 채팅 목록을 조회합니다.")
+    public ResponseEntity<ChatListResponseDto> getAllChatByGroupId(
+        @Parameter(name = "roomId", description = "특정 채팅방 id", in = ParameterIn.PATH) @PathVariable Long roomId) {
         ChatListResponseDto result = chatService.getAllChatByRoomId(roomId);
         return ResponseEntity.ok(result);
     }
