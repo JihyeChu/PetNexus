@@ -1,5 +1,6 @@
 package com.sparta.petnexus.user.dto;
 
+import com.sparta.petnexus.common.security.info.ProviderType;
 import com.sparta.petnexus.user.entity.User;
 import com.sparta.petnexus.user.entity.UserRoleEnum;
 import jakarta.validation.constraints.NotNull;
@@ -37,6 +38,7 @@ public class SignupRequest {
                 .password(encodePassword)
                 .username(usernameNotNull(this.username))
                 .role(UserRoleEnum.USER)
+                .providerType(ProviderType.LOCAL)
                 .build();
     }
 }
