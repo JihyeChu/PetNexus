@@ -73,8 +73,8 @@ public class TokenProvider {
         int cookieMaxAge = (int) TokenProvider.REFRESH_TOKEN_DURATION.toSeconds();
 
         CookieUtil.deleteCookie(request, response, TokenProvider.REFRESH_TOKEN_COOKIE_NAME);
-        CookieUtil.addCookie(response, TokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken,
-                cookieMaxAge);
+
+        CookieUtil.addCookie(response, TokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
     }
 
     public String getRefreshTokenFromCookie(HttpServletRequest req) {

@@ -42,8 +42,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         User user = userRepository.findByEmail((String) userInfo.getAttributes().get("email"));
 
         String accessToken = tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
-        String refreshToken = tokenProvider.generateRefreshToken(user,
-                TokenProvider.REFRESH_TOKEN_DURATION);
+
+        String refreshToken = tokenProvider.generateRefreshToken(user, TokenProvider.REFRESH_TOKEN_DURATION);
 
         // refreshToken -> cookie
         tokenProvider.addRefreshTokenToCookie(request, response, refreshToken);

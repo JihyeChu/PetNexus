@@ -9,6 +9,7 @@ import com.sparta.petnexus.user.dto.LoginRequest;
 import com.sparta.petnexus.user.dto.SignupRequest;
 import com.sparta.petnexus.user.entity.User;
 import com.sparta.petnexus.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
