@@ -10,10 +10,10 @@ import com.sparta.petnexus.user.dto.LoginRequest;
 import com.sparta.petnexus.user.dto.SignupRequest;
 import com.sparta.petnexus.user.entity.User;
 import com.sparta.petnexus.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -61,63 +61,40 @@ public class UserService {
             String accessToken = tokenProvider.generateToken(user,
                     TokenProvider.ACCESS_TOKEN_DURATION);
 
-            // generateRefreshToken, and redis save -> email, refreshToken, duration
+            // accessToken -> header
+            httpResponse.addHeader(TokenProvider.HEADER_AUTHORIZATION, accessToken);
+
+            // generateRefreshToken, and redis save
             String refreshToken = tokenProvider.generateRefreshToken(user,
                     TokenProvider.REFRESH_TOKEN_DURATION);
 
-            // accessToken add cookie before encode // if value has a // maybe throw exception.
-            String token = URLEncoder.encode(accessToken, "utf-8").replaceAll("\\+", "%20");
+            //refreshToken -> cookie
+            tokenProvider.addRefreshTokenToCookie(httpRequest, httpResponse, refreshToken);
 
-            // accesstoken -> cookie
-            addAccessToCookie(httpRequest, httpResponse, token);
-
-            //refreshtoken -> header
-            httpResponse.addHeader(TokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken);
-
-            // TODO : accessToken redirect param -> front catch param and save in local storage and refreshToken save in cookie
+            // Tod : accessToken redirect param -> front catch param and save in local storage
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.BAD_ID_PASSWORD);
         }
     }
 
-    private void addAccessToCookie(HttpServletRequest request, HttpServletResponse response,
-            String accessToken) {
-        int cookieMaxAge = (int) TokenProvider.ACCESS_TOKEN_DURATION.toSeconds();
-
-        CookieUtil.deleteCookie(request, response, TokenProvider.HEADER_AUTHORIZATION);
-        CookieUtil.addCookie(response, TokenProvider.HEADER_AUTHORIZATION, accessToken,
-                cookieMaxAge);
-    }
-
-    public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(
-                () -> new BusinessException(ErrorCode.NOT_FOUND_USER)
-        );
-    }
-
-    public void createNewAccessToken(HttpServletRequest request, HttpServletResponse httpResponse)
-            throws UnsupportedEncodingException {
-        String tokenValue = tokenProvider.getTokenFromCookie(request);
-        String accessToken = tokenProvider.getAccessToken(tokenValue);
-        String requestToken = request.getHeader(TokenProvider.REFRESH_TOKEN_COOKIE_NAME);
+    public void createNewAccessToken(HttpServletRequest request, HttpServletResponse httpResponse) {
+        String authorizationHeader = request.getHeader(TokenProvider.HEADER_AUTHORIZATION);
+        String accessToken = tokenProvider.getAccessToken(authorizationHeader);
         String email = tokenProvider.getAuthentication(accessToken).getName();
-        String refreshToken = redisUtils.get(email, String.class);
+        User user = userRepository.findByEmail(email);
 
-        if(requestToken.equals(refreshToken)) {
-            String validToken = tokenProvider.getAccessToken(refreshToken);
-            if (!tokenProvider.validToken(validToken)) {
+        String cookieRefreshToken = tokenProvider.getRefreshTokenFromCookie(request);
+        String redisRefreshToken = redisUtils.get(email, String.class);
+
+        if (cookieRefreshToken.equals(redisRefreshToken)) {
+            if (!tokenProvider.validToken(redisRefreshToken)) {
                 throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN);
             }
         }
-        User user = userRepository.findByEmail(email);
 
-        tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
-        String newToken = tokenProvider.generateToken(user,
-                TokenProvider.ACCESS_TOKEN_DURATION);
-        String newAccessToken = URLEncoder.encode(newToken, "utf-8").replaceAll("\\+", "%20");
+        String newAccessToken = tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
 
-        // accesstoken -> cookie
-        addAccessToCookie(request, httpResponse, newAccessToken);
+        httpResponse.addHeader(TokenProvider.HEADER_AUTHORIZATION, newAccessToken);
     }
 
 }
