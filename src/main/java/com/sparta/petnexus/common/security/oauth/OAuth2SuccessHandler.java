@@ -25,9 +25,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
-    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
     public static final String REDIRECT_PATH = "/";
 
     private final TokenProvider tokenProvider;
@@ -47,38 +44,19 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 oAuth2User.getAttributes());
         User user = userRepository.findByEmail((String) userInfo.getAttributes().get("email"));
 
-        String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-        String refreshToken = tokenProvider.generateRefreshToken(user, REFRESH_TOKEN_DURATION);
+        String accessToken = tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
+        String refreshToken = tokenProvider.generateRefreshToken(user, TokenProvider.REFRESH_TOKEN_DURATION);
 
-        //jwt토큰 생성 및 패스에 토큰 추가
-        String token = URLEncoder.encode(accessToken, "utf-8").replaceAll("\\+", "%20");
+        // refreshToken -> cookie
+        tokenProvider.addRefreshTokenToCookie(request, response, refreshToken);
 
-        // accesstoken -> cookie
-        addAccessToCookie(request, response, token);
-
-        response.addHeader(TokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken);
+        response.addHeader(TokenProvider.HEADER_AUTHORIZATION, accessToken);
 
         clearAuthenticationAttributes(request, response);
 
+        // Tod : accessToken redirect param -> front catch param and save in local storage
 //        String targetUrl = getTargetUrl(accessToken);
 //        getRedirectStrategy().sendRedirect(request, response, targetUrl);
-    }
-
-    private void addAccessToCookie(HttpServletRequest request, HttpServletResponse response,
-            String accessToken) {
-        int cookieMaxAge = (int) TokenProvider.ACCESS_TOKEN_DURATION.toSeconds();
-
-        CookieUtil.deleteCookie(request, response, TokenProvider.HEADER_AUTHORIZATION);
-        CookieUtil.addCookie(response, TokenProvider.HEADER_AUTHORIZATION, accessToken,
-                cookieMaxAge);
-    }
-
-    private void addRefreshTokenToCookie(HttpServletRequest request, HttpServletResponse response,
-            String refreshToken) {
-        int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
-
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
-        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
     }
 
     private void clearAuthenticationAttributes(HttpServletRequest request,
