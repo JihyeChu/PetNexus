@@ -5,14 +5,11 @@ import com.sparta.petnexus.common.security.info.OAuth2UserInfo;
 import com.sparta.petnexus.common.security.info.OAuth2UserInfoFactory;
 import com.sparta.petnexus.common.security.info.ProviderType;
 import com.sparta.petnexus.common.security.jwt.TokenProvider;
-import com.sparta.petnexus.common.util.CookieUtil;
 import com.sparta.petnexus.user.entity.User;
 import com.sparta.petnexus.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -45,7 +42,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         User user = userRepository.findByEmail((String) userInfo.getAttributes().get("email"));
 
         String accessToken = tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
-        String refreshToken = tokenProvider.generateRefreshToken(user, TokenProvider.REFRESH_TOKEN_DURATION);
+        String refreshToken = tokenProvider.generateRefreshToken(user,
+                TokenProvider.REFRESH_TOKEN_DURATION);
 
         // refreshToken -> cookie
         tokenProvider.addRefreshTokenToCookie(request, response, refreshToken);

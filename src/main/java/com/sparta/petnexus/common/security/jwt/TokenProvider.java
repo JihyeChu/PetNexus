@@ -11,8 +11,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.time.Duration;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +73,8 @@ public class TokenProvider {
         int cookieMaxAge = (int) TokenProvider.REFRESH_TOKEN_DURATION.toSeconds();
 
         CookieUtil.deleteCookie(request, response, TokenProvider.REFRESH_TOKEN_COOKIE_NAME);
-        CookieUtil.addCookie(response, TokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
+        CookieUtil.addCookie(response, TokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken,
+                cookieMaxAge);
     }
 
     public String getRefreshTokenFromCookie(HttpServletRequest req) {
@@ -83,7 +82,7 @@ public class TokenProvider {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(REFRESH_TOKEN_COOKIE_NAME)) {
-                        return cookie.getValue();
+                    return cookie.getValue();
                 }
             }
         }

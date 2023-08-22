@@ -70,29 +70,23 @@ public class securityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll() // swagger
                         .requestMatchers("/api/user/**").permitAll()
                         .anyRequest().permitAll())
-                .oauth2Login(oauth2 ->
-                        oauth2
-                                .loginPage("/login")
-                                .authorizationEndpoint(authorization ->
-                                        authorization
-                                                .baseUri("/oauth2/authorization")
-                                                .authorizationRequestRepository(
-                                                        oAuth2AuthorizationRequestBasedOnCookieRepository()))
-                                .redirectionEndpoint(redirection ->
-                                        redirection
-                                                .baseUri("/*/oauth2/code/*"))
-                                .userInfoEndpoint(userInfo ->
-                                        userInfo
-                                                .userService(oAuth2UserCustomService))
-                                .successHandler(oAuth2SuccessHandler()))
-                .logout((logout) ->
-                        logout
-                                .logoutSuccessUrl("/login"))
-                .exceptionHandling((exceptionHandling) ->
-                        exceptionHandling
-                                .defaultAuthenticationEntryPointFor(
-                                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                                        new AntPathRequestMatcher("/api/**"))
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .authorizationEndpoint(authorization -> authorization
+                                .baseUri("/oauth2/authorization")
+                                .authorizationRequestRepository(
+                                        oAuth2AuthorizationRequestBasedOnCookieRepository()))
+                        .redirectionEndpoint(redirection -> redirection
+                                .baseUri("/*/oauth2/code/*"))
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserCustomService))
+                        .successHandler(oAuth2SuccessHandler()))
+                .logout((logout) -> logout
+                        .logoutSuccessUrl("/login"))
+                .exceptionHandling((exceptionHandling) -> exceptionHandling
+                        .defaultAuthenticationEntryPointFor(
+                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                                new AntPathRequestMatcher("/api/**"))
                 );
         return http.build();
     }
