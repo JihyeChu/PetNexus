@@ -2,15 +2,18 @@ package com.sparta.petnexus.user.service;
 
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.common.redis.utils.RedisUtils;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.common.security.jwt.TokenProvider;
-import com.sparta.petnexus.token.entity.RefreshToken;
-import com.sparta.petnexus.token.repository.RefreshTokenRepository;
+import com.sparta.petnexus.common.util.CookieUtil;
 import com.sparta.petnexus.user.dto.LoginRequest;
 import com.sparta.petnexus.user.dto.SignupRequest;
 import com.sparta.petnexus.user.entity.User;
 import com.sparta.petnexus.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -27,7 +30,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisUtils redisUtils;
 
     public void signUp(SignupRequest request) {
 
@@ -39,7 +42,8 @@ public class UserService {
         userRepository.save(request.toEntity(encodePassword));
     }
 
-    public void logIn(HttpServletResponse httpResponse, LoginRequest request) {
+    public void logIn(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
+            LoginRequest request) {
         try {
             Authentication authentication = authenticationConfiguration.getAuthenticationManager()
                     .authenticate(
@@ -56,29 +60,41 @@ public class UserService {
 
             String accessToken = tokenProvider.generateToken(user,
                     TokenProvider.ACCESS_TOKEN_DURATION);
-            String refreshToken = tokenProvider.generateToken(user,
-                    TokenProvider.REFRESH_TOKEN_DURATION);
-            saveRefreshToken(user.getId(), refreshToken);
 
+            // accessToken -> header
             httpResponse.addHeader(TokenProvider.HEADER_AUTHORIZATION, accessToken);
-            httpResponse.addHeader(TokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken);
 
+            // generateRefreshToken, and redis save
+            String refreshToken = tokenProvider.generateRefreshToken(user,
+                    TokenProvider.REFRESH_TOKEN_DURATION);
+
+            //refreshToken -> cookie
+            tokenProvider.addRefreshTokenToCookie(httpRequest, httpResponse, refreshToken);
+
+            // Tod : accessToken redirect param -> front catch param and save in local storage
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.BAD_ID_PASSWORD);
         }
     }
 
-    public void saveRefreshToken(Long userId, String newRefreshToken) {
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
-                .map(entity -> entity.update(newRefreshToken))
-                .orElse(new RefreshToken(userId, newRefreshToken));
+    public void createNewAccessToken(HttpServletRequest request, HttpServletResponse httpResponse) {
+        String authorizationHeader = request.getHeader(TokenProvider.HEADER_AUTHORIZATION);
+        String accessToken = tokenProvider.getAccessToken(authorizationHeader);
+        String email = tokenProvider.getAuthentication(accessToken).getName();
+        User user = userRepository.findByEmail(email);
 
-        refreshTokenRepository.save(refreshToken);
+        String cookieRefreshToken = tokenProvider.getRefreshTokenFromCookie(request);
+        String redisRefreshToken = redisUtils.get(email, String.class);
+
+        if (cookieRefreshToken.equals(redisRefreshToken)) {
+            if (!tokenProvider.validToken(redisRefreshToken)) {
+                throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN);
+            }
+        }
+
+        String newAccessToken = tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
+
+        httpResponse.addHeader(TokenProvider.HEADER_AUTHORIZATION, newAccessToken);
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(
-                () -> new BusinessException(ErrorCode.NOT_FOUND_USER)
-        );
-    }
 }

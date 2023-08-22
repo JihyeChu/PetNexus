@@ -77,7 +77,8 @@ public class TradeServiceImpl implements TradeService {
     public void likeTrade(Long tradeId, User user){
         Trade trade = findTrade(tradeId);
 
-        if(tradeLikeRepository.existsByUserAndTrade(user, trade)){
+        Optional<TradeLike> likeOptional = tradeLikeRepository.findByUserAndTrade(user, trade);
+        if(likeOptional.isPresent()){
             throw new BusinessException(ErrorCode.EXISTED_LIKE);
         }else{
             TradeLike tradeLike = new TradeLike(user, trade);
@@ -89,6 +90,7 @@ public class TradeServiceImpl implements TradeService {
     @Transactional
     public void dislikeTrade(Long tradeId, User user){
         Trade trade = findTrade(tradeId);
+
         Optional<TradeLike> likeOptional = tradeLikeRepository.findByUserAndTrade(user, trade);
         if(likeOptional.isPresent()){
             tradeLikeRepository.delete(likeOptional.get());
