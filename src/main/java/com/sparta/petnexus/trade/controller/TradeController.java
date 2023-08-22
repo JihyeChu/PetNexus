@@ -5,6 +5,10 @@ import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.service.TradeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name="trade", description = "거래게시글/좋아요/북마크 관련 API 입니다.")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -22,64 +27,77 @@ public class TradeController {
 
     private final TradeService tradeService;
 
-    // 거래게시글 생성
     @PostMapping("/trade")
+    @Operation(summary = "거래게시글 생성", description = "@RequestBody를 통해 게시글 정보를 넘겨주고 생성합니다.")
     public ResponseEntity<ApiResponse> createTrade(@RequestBody TradeRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tradeService.createTrade(requestDto, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("거래게시글 생성 성공", HttpStatus.CREATED.value()));
     }
 
-    // 거래게시글 전체 조회
     @GetMapping("/trade")
+    @Operation(summary = "거래게시글 전체 조회", description = "거래게시글을 조회합니다.")
     public ResponseEntity<List<TradeResponseDto>> getTrade() {
         List<TradeResponseDto> tradeList = tradeService.getTrade();
         return ResponseEntity.ok(tradeList);
     }
 
-    // 거래게시글 단건 조회
     @GetMapping("/trade/{tradeId}")
-    public ResponseEntity<TradeResponseDto> selectTrade(@PathVariable Long tradeId) {
+    @Operation(summary = "거래게시글 단건 조회", description = "@PathVariable를 통해 조회하고자 하는 게시글을 받아옵니다.")
+    public ResponseEntity<TradeResponseDto> selectTrade(
+        @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId) {
         return ResponseEntity.ok().body(tradeService.selectTrade(tradeId));
     }
 
     // 거래게시글 수정
     @PutMapping("/trade/{tradeId}")
-    public ResponseEntity<ApiResponse> updateTrade(@RequestBody TradeRequestDto requestDto, @PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @Operation(summary = "거래게시글 수정", description = "@PathVariable를 통해 수정하고자 하는 게시글, 수정하고자 하는 정보 requestDto를 받아 수정합니다. ")
+    public ResponseEntity<ApiResponse> updateTrade(
+            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @RequestBody TradeRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tradeService.updateTrade(requestDto, tradeId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponse("거래게시글 수정 성공", HttpStatus.OK.value()));
     }
 
     // 거래게시글 삭제
     @DeleteMapping("/trade/{tradeId}")
-    public ResponseEntity<ApiResponse> deleteTrade(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @Operation(summary = "거래게시글 삭제", description = "@PathVariable를 통해 삭제하고자 하는 게시글을 받아 삭제합니다. ")
+    public ResponseEntity<ApiResponse> deleteTrade(
+            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tradeService.deleteTrade(tradeId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponse("거래게시글 삭제 성공", HttpStatus.OK.value()));
     }
 
     // 거래게시글 좋아요
     @PostMapping("/trade/{tradeId}/like")
-    public ResponseEntity<ApiResponse> likeTrade(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @Operation(summary = "거래게시글 좋아요", description = "@PathVariable를 통해 게시글을 받아와 좋아요를 생성합니다.")
+    public ResponseEntity<ApiResponse> likeTrade(
+            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tradeService.likeTrade(tradeId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse("거래게시글 좋아요 성공", HttpStatus.ACCEPTED.value()));
     }
 
     // 거래게시글 좋아요 취소
     @DeleteMapping("/trade/{tradeId}/like")
-    public ResponseEntity<ApiResponse> dislikeTrade(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @Operation(summary = "거래게시글 좋아요 취소", description = "@PathVariable를 통해 게시글을 받아와 좋아요 취소합니다.")
+    public ResponseEntity<ApiResponse> dislikeTrade(
+            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tradeService.dislikeTrade(tradeId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse("거래게시글 좋아요 취소 성공", HttpStatus.ACCEPTED.value()));
     }
 
     // 거래게시글 북마크 생성
     @PostMapping("/trade/{tradeId}/bookmark")
-    public ResponseEntity<ApiResponse> doBookmark(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @Operation(summary = "거래게시글 북마크", description = "@PathVariable를 통해 게시글을 받아와 북마크를 생성합니다.")
+    public ResponseEntity<ApiResponse> doBookmark(
+            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tradeService.doBookmark(tradeId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse("거래게시글 북마크 성공",  HttpStatus.ACCEPTED.value()));
     }
 
     // 거래게시글 북마크 취소
     @DeleteMapping("/trade/{tradeId}/bookmark")
-    public ResponseEntity<ApiResponse> undoBookmark(@PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @Operation(summary = "거래게시글 북마크 취소", description = "@PathVariable를 통해 게시글을 받아와 북마크 취소합니다.")
+    public ResponseEntity<ApiResponse> undoBookmark(
+            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         tradeService.undoBookmark(tradeId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ApiResponse("거래게시글 북마크 취소 성공", HttpStatus.ACCEPTED.value()));
     }
