@@ -23,7 +23,7 @@ public class UserDetailServiceImp implements UserDetailsService {
         if (user == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_USER);
         }
-        return new UserDetailsImpl(user);
 
+        return new UserDetailsImpl(user);
     }
 }
