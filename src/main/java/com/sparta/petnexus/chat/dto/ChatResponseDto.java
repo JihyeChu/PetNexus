@@ -8,12 +8,12 @@ import lombok.Getter;
 
 @Builder
 @Getter
-@Schema(description = "채팅방 조회 응답 DTO")
+@Schema(description = "채팅방 채팅 목록 조회 응답 DTO")
 public class ChatResponseDto {
     @Schema(description = "채팅방 아이디", example = "1")
     private Long roomId;
     @Schema(description = "작성자 아이디", example = "1")
-    private Long userId;
+    private Long writerId;
     @Schema(description = "작성자")
     private String writer;
     @Schema(description = "메세지 내용")
@@ -23,8 +23,8 @@ public class ChatResponseDto {
 
     public static ChatResponseDto of(Chat chat) {
         return ChatResponseDto.builder()
-            .userId(chat.getUserId())
-            .roomId(chat.getRoomId())
+            .writerId(chat.getWriterId())
+            .roomId(chat.getChatRoom().getId())
             .writer(chat.getWriter())
             .message(chat.getMessage())
             .createdAt(chat.getCreatedAt())
