@@ -4,7 +4,6 @@ import com.sparta.petnexus.chat.entity.ChatRoom;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +33,6 @@ public class ChatRoomRequestDto {
 
     public ChatRoom toEntity(User user, Trade trade) { // 중고거래
         return ChatRoom.builder()
-            .title(UUID.randomUUID().toString())
             .sellerId(trade.getUser().getId())
             .user(user)
             .trade(trade)

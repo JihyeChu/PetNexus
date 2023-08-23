@@ -26,10 +26,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     @Transactional(readOnly = true)
     public ChatRoomListResponseDto getOpenChatRooms() {
-        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByOrderByCreatedAtAsc();
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByTitleNotNullOrderByCreatedAtAsc();
 
         return ChatRoomListResponseDto.of(chatRoomList);
-
     }
 
     // 오픈채팅방 생성
