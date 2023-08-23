@@ -8,13 +8,14 @@ import lombok.Getter;
 
 @Builder
 @Getter
-@Schema(description = "채팅방 목록 조회 응답 DTO")
+@Schema(description = "오픈채팅방 목록 조회 응답 DTO")
 public class ChatRoomListResponseDto {
 
     List<ChatRoomResponseDto> chatRoomList;
 
     public static ChatRoomListResponseDto of(List<ChatRoom> chats) {
-        List<ChatRoomResponseDto> chatRoomResponseDtoList = chats.stream().map(ChatRoomResponseDto::of)
+        List<ChatRoomResponseDto> chatRoomResponseDtoList = chats.stream()
+            .map(ChatRoomResponseDto::of)
             .toList();
         return ChatRoomListResponseDto.builder()
             .chatRoomList(chatRoomResponseDtoList)
