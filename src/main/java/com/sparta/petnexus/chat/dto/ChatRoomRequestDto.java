@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "오픈채팅방 생성 및 수정 시 요청 DTO")
+@Schema(description = "오픈채팅방 생성 및 수정/ 중고거래 채팅방 생성 요청 DTO")
 public class ChatRoomRequestDto {
 
     @Schema(description = "오픈채팅방 제목", example = "강아지 병원 정보 공유합니다.")

@@ -23,6 +23,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final TradeRepository tradeRepository;
 
     // 오픈채팅방 목록 조회
+    @Override
+    @Transactional(readOnly = true)
     public ChatRoomListResponseDto getOpenChatRooms() {
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByOrderByCreatedAtAsc();
 
@@ -31,6 +33,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     // 오픈채팅방 생성
+    @Override
     public void createOpenChatRoom(ChatRoomRequestDto requestDto, User user) {
         ChatRoom chatRoom = requestDto.toEntity(user);
 
@@ -38,6 +41,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     // 오픈채팅방 수정
+    @Override
     @Transactional
     public void updateOpenChatRoom(Long id, ChatRoomRequestDto requestDto,
         User user) {
@@ -51,6 +55,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     // 중고거래 채팅방 목록 조회
+    @Override
+    @Transactional(readOnly = true)
     public TradeChatRoomListResponseDto getTradeChatRooms(User user) {
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByUser_IdAndTrade_IdNotNullOrderByCreatedAtAsc(
             user.getId());
@@ -60,6 +66,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     // 중고거래 채팅방 생성
+    @Override
     public void createTradeChatRoom(ChatRoomRequestDto requestDto, User user) {
         Trade trade = findTrade(requestDto.getTradeId());
 
@@ -69,6 +76,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     // 채팅방 삭제
+    @Override
+    @Transactional
     public void deleteChatRoom(Long id, User user) {
         ChatRoom chatRoom = findChatRoom(id);
 
