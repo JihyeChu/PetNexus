@@ -41,18 +41,26 @@ public interface ChatRoomService {
 
     /**
      * 중고거래 채팅방 생성
-     *
-     * @param requestDto 중고거래 채팅방 저장 요청정보
+     * @param id 중고거래 상품 id
      * @param user       중고거래 채팅방 생성 요청자
      */
-    void createTradeChatRoom(ChatRoomRequestDto requestDto, User user);
+    void createTradeChatRoom(Long id, User user);
 
     /**
-     * 채팅방 삭제
+     * 오픈채팅방 삭제
      *
      * @param id   삭제할 채팅방 id
      * @param user 오픈채팅방 삭제 요청자
      */
     // 채팅방 삭제
     void deleteChatRoom(Long id, User user);
+
+    /**
+     * 중고거래 채팅방 삭제
+     *
+     * @param id   삭제할 채팅방 id
+     * @param user 중고거래 채팅방 삭제 요청자
+     */
+    // 채팅방 삭제
+    void deleteTradeChatRoom(Long id, User user);
 }

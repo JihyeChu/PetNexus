@@ -18,20 +18,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Chat extends Timestamped {
+public class TradeChat extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
+    @JoinColumn(name = "trade_chat_room_id")
+    private TradeChatRoom tradeChatRoom;
 
     @Column(nullable = false)
     private String sender;
 
     @Column(nullable = false)
     private String message;
-
 }

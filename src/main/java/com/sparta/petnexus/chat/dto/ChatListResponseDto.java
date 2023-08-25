@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-@Schema(description = "채팅방 내 채팅 목록 조회 응답 DTO")
+@Schema(description = "오픈채팅방 내 채팅 목록 조회 응답 DTO")
 public class ChatListResponseDto {
 
     private List<ChatResponseDto> chatList;
