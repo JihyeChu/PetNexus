@@ -1,12 +1,17 @@
 package com.sparta.petnexus.chat.entity;
 
+import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.user.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,25 +23,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class ChatRoom extends Timestamped {
-
+public class TradeChatRoom extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long sellerId; // 판매자
+
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user; // 오픈채팅 개설자
+    @JoinColumn(name = "buyer_id")
+    private User buyer; // 중고거래 구매자
 
-    private String title; // 채팅방 이름
+    @ManyToOne
+    @JoinColumn(name = "trade_id")
+    private Trade trade; // 중고거래 상품
 
-    private String content; // 채팅방 설명
-
-    public void updateChatRoomTitle(String title) {
-        this.title = title;
-    }
-
-    public void updateChatRoomContent(String content) {
-        this.content = content;
-    }
+    @OneToMany(mappedBy = "tradeChatRoom", cascade = CascadeType.ALL)
+    private List<TradeChat> messageList = new ArrayList<>();
 }

@@ -1,6 +1,6 @@
 package com.sparta.petnexus.chat.dto;
 
-import com.sparta.petnexus.chat.entity.ChatRoom;
+import com.sparta.petnexus.chat.entity.TradeChatRoom;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Builder;
@@ -13,7 +13,7 @@ public class TradeChatRoomListResponseDto {
 
     List<TradeChatRoomResponseDto> tradeChatRoomList;
 
-    public static TradeChatRoomListResponseDto of(List<ChatRoom> chats) {
+    public static TradeChatRoomListResponseDto of(List<TradeChatRoom> chats) {
         List<TradeChatRoomResponseDto> tradeChatRoomResponseDtoList = chats.stream()
             .map(TradeChatRoomResponseDto::of)
             .toList();
