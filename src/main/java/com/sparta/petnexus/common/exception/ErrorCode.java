@@ -37,8 +37,9 @@ public enum ErrorCode {
     // Chat
     NOT_FOUND_CHATROOM(HttpStatus.BAD_REQUEST,"C001","존재하지 않는 채팅방입나다."),
     ONLY_MASTER_EDIT(HttpStatus.BAD_REQUEST,"C002","채팅방 개설자만 수정할 수 있습니다."),
-    ONLY_MASTER_DELETE(HttpStatus.BAD_REQUEST,"C003","채팅방 개설자만 삭제할 수 있습니다.")
-
+    ONLY_MASTER_DELETE(HttpStatus.BAD_REQUEST,"C003","채팅방 개설자만 삭제할 수 있습니다."),
+    INVALID_AUTH_TOKEN(HttpStatus.BAD_REQUEST,"C004","잘못된 인증 토큰입니다."),
+    ONLY_SELLER_OR_BUYER_DELETE(HttpStatus.BAD_REQUEST,"C005","구매자 또는 판매자만 삭제할 수 있습니다."),
     ;
 
     private final HttpStatus httpStatus;
