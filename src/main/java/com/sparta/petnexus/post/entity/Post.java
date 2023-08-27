@@ -41,6 +41,12 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<PostComment> PostComments = new ArrayList<>();
 
+    public Post(String title,String content, User user){
+        this.title = title;
+        this.content = content;
+        this.user = user;
+    }
+
     public void update(PostRequestDto postRequestDto){
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();

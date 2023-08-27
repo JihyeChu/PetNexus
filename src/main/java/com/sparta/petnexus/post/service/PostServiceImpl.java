@@ -1,5 +1,8 @@
 package com.sparta.petnexus.post.service;
 
+import com.sparta.petnexus.Image.entity.Image;
+import com.sparta.petnexus.Image.repository.ImageRepository;
+import com.sparta.petnexus.Image.service.ImageService;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.post.dto.PostRequestDto;
@@ -14,7 +17,9 @@ import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,11 +30,24 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
     private final PostBookmarkRepository postBookmarkRepository;
+    private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
     @Override
-    public void createPost(PostRequestDto postRequestDto, User user) {
-        Post post = postRequestDto.toEntity(user);
+    @Transactional
+    public void createPost(User user, List<MultipartFile> files, String title, String content) throws IOException {
+        Post post = new Post(title, content, user);
         postRepository.save(post);
+
+        for (MultipartFile file : files) {
+            if (file != null) {
+                String fileUrl = imageService.uploadFile(file, post.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, post.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(post, fileUrl));
+            }
+        }
     }
 
     @Override
@@ -48,7 +66,7 @@ public class PostServiceImpl implements PostService {
     public void updatePost(Long postId, PostRequestDto postRequestDto, User user) {
         Post post = findPost(postId);
 
-        if(!user.getId().equals(post.getUser().getId())){
+        if (!user.getId().equals(post.getUser().getId())) {
             throw new BusinessException(ErrorCode.NOT_USER_UPDATE);
         }
         post.update(postRequestDto);
@@ -57,7 +75,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePost(Long postId, User user) {
         Post post = findPost(postId);
-        if(!user.getId().equals(post.getUser().getId())){
+        if (!user.getId().equals(post.getUser().getId())) {
             throw new BusinessException(ErrorCode.NOT_USER_DELETE);
         }
         postRepository.delete(post);
@@ -66,7 +84,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void createPostLike(Long postId, User user) {
         Post post = findPost(postId);
-        userCheck(post,user);
+        userCheck(post, user);
 
         postLikeRepository.findByPostAndUser(post, user).ifPresent(postLike -> {
             throw new BusinessException(ErrorCode.EXISTS_LIKE);
@@ -77,20 +95,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePostLike(Long postId, User user){
+    public void deletePostLike(Long postId, User user) {
         Post post = findPost(postId);
-        Optional<PostLike> postLike =  postLikeRepository.findByPostAndUser(post,user);
-        if(postLike.isPresent()){
+        Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
+        if (postLike.isPresent()) {
             postLikeRepository.delete(postLike.get());
-        } else{
+        } else {
             throw new BusinessException(ErrorCode.NOT_EXISTS_LIKE);
         }
     }
 
     @Override
-    public void createPostBookmark(Long postId, User user){
+    public void createPostBookmark(Long postId, User user) {
         Post post = findPost(postId);
-        userCheck(post,user);
+        userCheck(post, user);
 
         postBookmarkRepository.findByPostAndUser(post, user).ifPresent(postBookmark -> {
             throw new BusinessException(ErrorCode.EXISTS_BOOKMARK);
@@ -101,12 +119,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePostBookmark(Long postId, User user){
+    public void deletePostBookmark(Long postId, User user) {
         Post post = findPost(postId);
-        Optional<PostBookmark> postBookmark =  postBookmarkRepository.findByPostAndUser(post,user);
-        if(postBookmark.isPresent()){
+        Optional<PostBookmark> postBookmark = postBookmarkRepository.findByPostAndUser(post, user);
+        if (postBookmark.isPresent()) {
             postBookmarkRepository.delete(postBookmark.get());
-        } else{
+        } else {
             throw new BusinessException(ErrorCode.NOT_EXISTS_BOOKMARK);
         }
     }

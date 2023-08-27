@@ -14,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,8 +29,11 @@ public class PostController {
 
     @PostMapping("/post")
     @Operation(summary = "post 생성", description = "requestDto로 받아온 데이터로 post를 만듭니다.")
-    public ResponseEntity<ApiResponse> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.createPost(postRequestDto,userDetails.getUser());
+    public ResponseEntity<ApiResponse> createPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                  @RequestParam(value = "file", required = false) List<MultipartFile> files,
+                                                  @RequestParam(value = "title") String title,
+                                                  @RequestParam(value = "content") String content) throws IOException {
+        postService.createPost(userDetails.getUser(),files,title,content);
         return ResponseEntity.ok().body(new ApiResponse("post 생성 성공!", HttpStatus.CREATED.value()));
     }
 

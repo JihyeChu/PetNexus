@@ -4,13 +4,15 @@ import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.user.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
 public interface PostService {
 
-    void createPost(PostRequestDto postRequestDto, User user);
+    void createPost(User user, List<MultipartFile> files,String title,String content) throws IOException;
     List<PostResponseDto> getPosts();
     PostResponseDto getPostId(Long postId);
     void updatePost(Long postId, PostRequestDto postRequestDto, User user);
