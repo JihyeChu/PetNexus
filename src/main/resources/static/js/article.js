@@ -92,7 +92,7 @@ function httpRequest(method, url, body, success, fail) {
     fetch(url, {
         method: method,
         headers: { // 로컬 스토리지에서 액세스 토큰 값을 가져와 헤더에 추가
-            Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+            Authorization: localStorage.getItem('access_token'),
             'Content-Type': 'application/json',
         },
         body: body,

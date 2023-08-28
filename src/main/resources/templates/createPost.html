@@ -1,12 +1,14 @@
 <!DOCTYPE HTML>
 
 <html>
+
 	<head>
 		<title>펫 넥서스</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/css/main.css" />
 	</head>
+
 	<body class="homepage is-preload">
 		<div id="page-wrapper">
 
@@ -21,20 +23,13 @@
 							<nav id="nav">
 								<ul>
 									<li><a class="icon solid fa-home" href="/home"><span>HOME</span></a></li>
-									<li><a href="/community" class="icon fa-chart-bar"><span>커뮤니티</span></a></li>
+									<li><a class="icon fa-chart-bar" href="/community"><span>커뮤니티</span></a></li>
 									<li><a class="icon solid fa-cog" href="/trade"><span>중고장터</span></a></li>
 									<li><a class="icon solid fa-retweet" href="/hospital"><span>병원찾기</span></a></li>
-									<li><a class="icon solid fa-sitemap" href="no-sidebar.html"><span>오픈 채팅</span></a></li>
+									<li><a class="icon solid fa-sitemap" href="/openChat"><span>오픈 채팅</span></a></li>
 								</ul>
 							</nav>
 
-					</div>
-				</section>
-
-			<!-- Banner -->
-				<section id="banner">
-					<div class="container">
-						<p>찾으시는 커뮤니티 글이 있으신가요?</p>
 					</div>
 				</section>
 
@@ -50,9 +45,8 @@
 										<article class="box post">
 											<header>
 												<input type="text" class="form-control" placeholder="+제목 입력" th:value="${post.title}">
-												<h2  th:text="${post.title}"><a href="#"></a></h2>
 											</header>
-											<textarea class="form-control h-25" rows="10" placeholder="+작성할 내용을 입력하세요..." id="contents" th:text="${post.content}"></textarea>
+												<textarea class="form-control h-25" rows="10" placeholder="+작성할 내용을 입력하세요..." id="contents" th:text="${post.content}"></textarea>
 											<ul class="actions">
 												<li><button th:if="${post.id} == null" type="button" class="btn btn-outline-dark" id="createUmm-btn" onclick="create()">완료</button></li>
 												<li><button th:if="${post.id} != null" type="button" class="btn btn-outline-dark" id="modify-btn" onclick="update()">수정</button></li>
@@ -62,34 +56,11 @@
 
 								</div>
 
-							<!-- Sidebar -->
-								<div id="sidebar" class="col-4 col-12-medium">
-
-									<!-- Highlights -->
-										<section>
-											<ul class="divided">
-												<li>
-
-													<!-- Highlight -->
-														<article class="box highlight">
-															<header>
-																<h3><a href="#" class="button icon solid fa-file">글 작성하기</a></h3>
-															</header>
-														</article>
-
-												</li>
-											</ul>
-										</section>
-
-								</div>
-
 						</div>
 					</div>
 				</section>
 
 
 		</div>
-		<script src="/js/token.js"></script>
-		<script src="/js/article.js"></script>
 	</body>
 </html>

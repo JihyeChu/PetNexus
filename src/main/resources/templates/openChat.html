@@ -49,14 +49,14 @@
 								<div id="content" class="col-8 col-12-medium">
 
 									<!-- Post -->
-										<article class="box post" th:each="post : ${postList}">
+										<article class="box post" th:each="chatRoom : ${chatRoomList.getChatRoomList()}">
 											<header>
-												<h2 th:text="${post.title}"></h2>
+												<h2 th:text="${chatRoom.title}"></h2>
 											</header>
-											<h3 th:text="${post.username}"></h3>
-											<p th:text="${post.content}"></p>
+											<p th:text="${chatRoom.content}"></p>
 											<ul class="actions">
-												<li><a  th:onclick="|location.href='@{/community/{postId}(postId=${post.id})}'|" class="button icon solid fa-file">게시글 보기</a></li>
+												<li><a  th:onclick="|location.href='@{/openChat/room?chatId={chatId}(chatId=${chatRoom.id})}'|"
+																class="button icon solid fa-file">채팅방 입장</a></li>
 											</ul>
 										</article>
 

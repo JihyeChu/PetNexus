@@ -1,5 +1,6 @@
 package com.sparta.petnexus.user.pet.entity;
 
+import com.sparta.petnexus.user.dto.AddPetRequest;
 import com.sparta.petnexus.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,4 +40,11 @@ public class Pet {
     @ManyToOne(fetch =FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
+
+    public void update(AddPetRequest request) {
+        this.petName = request.getPetName();
+        this.petType = request.getPetType();
+        this.petKind = request.getPetKind();
+        this.petGender = request.getPetGender();
+    }
 }

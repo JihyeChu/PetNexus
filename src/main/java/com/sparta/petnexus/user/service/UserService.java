@@ -116,12 +116,22 @@ public class UserService {
                 .build());
     }
 
-    public void logOut(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    public void logOut(HttpServletRequest httpRequest) {
         String authorizationHeader = httpRequest.getHeader(TokenProvider.HEADER_AUTHORIZATION);
         String accessToken = tokenProvider.getAccessToken(authorizationHeader);
         String email = tokenProvider.getAuthentication(accessToken).getName();
         redisUtils.delete(email);
 
         redisUtils.setBlackList(accessToken,"accessToken",tokenProvider.getExpiration(accessToken));
+    }
+
+    @Transactional
+    public void updatePet(Long petId, AddPetRequest request, User user) {
+        Pet pet = petRepository.findByIdAndUser(petId, user);
+        pet.update(request);
+    }
+
+    public void deletePet(Long petId, User user) {
+        petRepository.delete( petRepository.findByIdAndUser(petId, user));
     }
 }

@@ -1,15 +1,16 @@
 const stompClient = new StompJs.Client({
-  brokerURL: 'ws://localhost:8080/stomp/chat'
+  brokerURL: 'ws://localhost:8080/stomp/chat',
 });
 
 let params = new URLSearchParams(location.search);
 let id = params.get('chatId');
 
+
 stompClient.onConnect = (frame) => {
   setConnected(true);
   console.log('Connected: ' + frame);
   stompClient.subscribe(`/sub/chat/${id}`, (greeting) => {
-    showGreeting(JSON.parse(greeting.body).content);
+    showGreeting(JSON.parse(greeting.body).message);
   });
 };
 

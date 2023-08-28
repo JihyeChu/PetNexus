@@ -23,7 +23,7 @@ public class PostViewController {
         return "community";
     }
 
-    @GetMapping("/community/post/{postId}")
+    @GetMapping("/community/{postId}")
     public String getPost(@PathVariable Long postId, Model model) {
         PostResponseDto postResponseDto = postService.getPostId(postId);
         model.addAttribute("post", postResponseDto);
@@ -38,12 +38,7 @@ public class PostViewController {
             PostResponseDto postResponseDto = postService.getPostId(postId);
             model.addAttribute("post", postResponseDto);
         }
-        return "posting";
-    }
-
-    @GetMapping("/hospital")
-    public String search(){
-        return "search";
+        return "createPost";
     }
 
 }

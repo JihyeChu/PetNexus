@@ -16,11 +16,11 @@ public class ChatRoomViewController {
     @GetMapping("/openChat")
     public String openChatList(Model model){
         ChatRoomListResponseDto chatRoomListResponseDto = chatRoomService.getOpenChatRooms();
-        model.addAttribute("chatRoom",chatRoomListResponseDto);
+        model.addAttribute("chatRoomList",chatRoomListResponseDto);
         return "openChat";
     }
 
-    @GetMapping("/websoket")
+    @GetMapping("/openChat/room")
     public String openChatList(@RequestParam Long chatId){
         return "websoket";
     }

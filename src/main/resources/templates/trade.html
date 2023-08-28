@@ -2,11 +2,13 @@
 
 <html>
 	<head>
+
 		<title>펫 넥서스</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/css/main.css" />
 	</head>
+
 	<body class="homepage is-preload">
 		<div id="page-wrapper">
 
@@ -21,10 +23,10 @@
 							<nav id="nav">
 								<ul>
 									<li><a class="icon solid fa-home" href="/home"><span>HOME</span></a></li>
-									<li><a href="/community" class="icon fa-chart-bar"><span>커뮤니티</span></a></li>
+									<li><a class="icon fa-chart-bar" href="/community"><span>커뮤니티</span></a></li>
 									<li><a class="icon solid fa-cog" href="/trade"><span>중고장터</span></a></li>
 									<li><a class="icon solid fa-retweet" href="/hospital"><span>병원찾기</span></a></li>
-									<li><a class="icon solid fa-sitemap" href="no-sidebar.html"><span>오픈 채팅</span></a></li>
+									<li><a class="icon solid fa-sitemap" href="/openChat"><span>오픈 채팅</span></a></li>
 								</ul>
 							</nav>
 
@@ -49,12 +51,12 @@
 									<!-- Post -->
 										<article class="box post" th:each = "trade : ${tradeList}">
 											<header>
-												<h2 th:text="${trade.title}"><a href="#"></a></h2>
+												<h2 th:text="${trade.title}"></h2>
 											</header>
 											<h3 th:text="${trade.category}"></h3>
 											<p th:text="${trade.content}"></p>
 											<ul class="actions">
-												<li><a  class="button icon solid fa-file">Continue Reading</a></li>
+												<li><a  class="button icon solid fa-file">상품 상세보기</a></li>
 											</ul>
 										</article>
 
@@ -158,7 +160,5 @@
 
 
 		</div>
-		<script src="/js/token.js"></script>
-		<script src="/js/article.js"></script>
 	</body>
 </html>
