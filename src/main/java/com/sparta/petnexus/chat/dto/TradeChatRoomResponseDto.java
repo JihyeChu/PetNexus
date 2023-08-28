@@ -21,7 +21,7 @@ public class TradeChatRoomResponseDto {
         return TradeChatRoomResponseDto.builder()
             .tradeId(chatRoom.getTrade().getId())
             .buyerId(chatRoom.getBuyer().getId())
-            .sellerId(chatRoom.getSellerId())
+            .sellerId(chatRoom.getTrade().getUser().getId())
             .build();
     }
 }

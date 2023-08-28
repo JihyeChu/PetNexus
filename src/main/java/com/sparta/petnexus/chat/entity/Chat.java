@@ -33,5 +33,4 @@ public class Chat extends Timestamped {
 
     @Column(nullable = false)
     private String message;
-
 }

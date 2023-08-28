@@ -10,11 +10,11 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Log4j2
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ChatController {
@@ -26,48 +26,54 @@ public class ChatController {
     // /pub/chat/enter 에 메세지가 오면 동작
     @MessageMapping("chat/enter/{roomId}")
     @SendTo("/sub/chat/{roomId}")
-    public ChatMessageDto enter(@DestinationVariable Long roomId, ChatMessageDto message,
+    public ChatMessageDto enter(@DestinationVariable Long roomId,
         @Header("Authorization") String token) { // 채팅방 입장
 
         String authorization = tokenProvider.getAccessToken(token);
         String username = tokenProvider.getAuthentication(authorization).getName();
 
-        message.setSender(username);
-        message.setRoomId(roomId);
-        message.setMessage(username + "님이 채팅방에 참여하였습니다.");
-
-        return message;
+        return ChatMessageDto.builder()
+            .roomId(roomId)
+            .sender(username)
+            .message(username + "님이 채팅방에 참여하였습니다.")
+            .build();
     }
 
     // /pub/chat/message 에 메세지가 오면 동작
     @MessageMapping("chat/message/{roomId}") // 오픈채팅
     @SendTo("/sub/chat/{roomId}")
-    public ChatMessageDto message(@DestinationVariable Long roomId, ChatMessageDto message,
+    public ChatMessageDto message(@DestinationVariable Long roomId, ChatMessageDto messageDto,
         @Header("Authorization") String token) {
         String authorization = tokenProvider.getAccessToken(token);
         String username = tokenProvider.getAuthentication(authorization).getName();
 
-        message.setSender(username);
-        message.setRoomId(roomId);
+        messageDto.setSender(username);
+        messageDto.setRoomId(roomId);
+        chatService.saveMessage(roomId, messageDto);
 
-        chatService.saveMessage(roomId, message);
-
-        return message;
+        return ChatMessageDto.builder()
+            .roomId(roomId)
+            .sender(username)
+            .message(messageDto.getMessage())
+            .build();
     }
 
     // /pub/trade-chat/message 에 메세지가 오면 동작
     @MessageMapping("tradechat/message/{roomId}") // 중고거래 채팅
     @SendTo("/sub/tradechat/{roomId}")
-    public ChatMessageDto tradeMessage(@DestinationVariable Long roomId, ChatMessageDto message,
+    public ChatMessageDto tradeMessage(@DestinationVariable Long roomId, ChatMessageDto messageDto,
         @Header("Authorization") String token) {
         String authorization = tokenProvider.getAccessToken(token);
         String username = tokenProvider.getAuthentication(authorization).getName();
 
-        message.setSender(username);
-        message.setRoomId(roomId);
+        messageDto.setSender(username);
+        messageDto.setRoomId(roomId);
+        chatService.saveTradeMessage(roomId, messageDto);
 
-        chatService.saveTradeMessage(roomId, message);
-
-        return message;
+        return ChatMessageDto.builder()
+            .roomId(roomId)
+            .sender(username)
+            .message(messageDto.getMessage())
+            .build();
     }
 }
