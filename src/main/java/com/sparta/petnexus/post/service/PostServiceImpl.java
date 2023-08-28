@@ -2,7 +2,7 @@ package com.sparta.petnexus.post.service;
 
 import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.Image.repository.ImageRepository;
-import com.sparta.petnexus.Image.service.ImageService;
+import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.post.dto.PostRequestDto;
@@ -31,23 +31,32 @@ public class PostServiceImpl implements PostService {
     private final PostLikeRepository postLikeRepository;
     private final PostBookmarkRepository postBookmarkRepository;
     private final ImageRepository imageRepository;
-    private final ImageService imageService;
+    private final AwsS3upload imageService;
 
     @Override
     @Transactional
     public void createPost(User user, List<MultipartFile> files, String title, String content) throws IOException {
         Post post = new Post(title, content, user);
         postRepository.save(post);
-
-        for (MultipartFile file : files) {
-            if (file != null) {
-                String fileUrl = imageService.uploadFile(file, post.getId());
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = imageService.upload(file, "post " + post.getId());
                 if (imageRepository.existsByImageUrlAndId(fileUrl, post.getId())) {
                     throw new BusinessException(ErrorCode.EXISTED_FILE);
                 }
                 imageRepository.save(new Image(post, fileUrl));
             }
         }
+
+//        for (MultipartFile file : files) {
+//            if (file != null) {
+//                String fileUrl = imageService.upload(file,  "post " + post.getId());
+//                if (imageRepository.existsByImageUrlAndId(fileUrl, post.getId())) {
+//                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+//                }
+//                imageRepository.save(new Image(post, fileUrl));
+//            }
+//        }
     }
 
     @Override
