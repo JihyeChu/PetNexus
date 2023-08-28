@@ -143,17 +143,6 @@
 
         for ( var i=0; i<places.length; i++ ) {
 
-            // 지도에 클릭 이벤트를 등록
-            // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-            // kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-            //
-            //     // 클릭한 위도, 경도 정보를 가져옵니다.
-            //     var latlng = mouseEvent.latLng;
-            //     var message = "경도, 위도 : " + latlng.getLat() + ',' + latlng.getLng();
-            //     var resultDiv = document.getElementById('result');
-            //     resultDiv.innerHTML = message;
-            // });
-
             // 마커를 생성하고 지도에 표시합니다
             var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
                 marker = addMarker(placePosition, i),
@@ -173,17 +162,11 @@
                     displayInfowindow(marker, title);
                 });
 
-                // kakao.maps.event.addListener(marker, 'mouseout', function() {
-                //     infowindow.close();
-                // });
 
                 itemEl.onclick =  function () {
                     displayInfowindow(marker, title);
                 };
 
-                // itemEl.onmouseout =  function () {
-                //     infowindow.close();
-                // };
             })(marker, places[i].place_name);
 
             fragment.appendChild(itemEl);
