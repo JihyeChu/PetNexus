@@ -35,8 +35,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void createPost(User user, List<MultipartFile> files, String title, String content) throws IOException {
-        Post post = new Post(title, content, user);
+    public void createPost(User user, List<MultipartFile> files,PostRequestDto postRequestDto) throws IOException {
+        Post post = new Post(postRequestDto, user);
         postRepository.save(post);
         if (files != null) {
             for (MultipartFile file : files) {

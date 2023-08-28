@@ -32,9 +32,8 @@ public class PostController {
     @Operation(summary = "post 생성", description = "requestDto로 받아온 데이터로 post를 만듭니다.")
     public ResponseEntity<ApiResponse> createPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @RequestParam(value = "file", required = false) List<MultipartFile> files,
-                                                  @RequestParam(value = "title") String title,
-                                                  @RequestParam(value = "content") String content) throws IOException {
-        postService.createPost(userDetails.getUser(),files,title,content);
+                                                  @ModelAttribute PostRequestDto postRequestDto) throws IOException {
+        postService.createPost(userDetails.getUser(),files, postRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("post 생성 성공!", HttpStatus.CREATED.value()));
     }
 

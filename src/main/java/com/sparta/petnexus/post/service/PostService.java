@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface PostService {
 
-    void createPost(User user, List<MultipartFile> files,String title,String content) throws IOException;
+    void createPost(User user, List<MultipartFile> files,PostRequestDto postRequestDto) throws IOException;
     List<PostResponseDto> getPosts();
     PostResponseDto getPostId(Long postId);
     void updatePost(Long postId, PostRequestDto postRequestDto, User user);

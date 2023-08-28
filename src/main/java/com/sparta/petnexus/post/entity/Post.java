@@ -42,9 +42,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Image> image = new ArrayList<>();
 
-    public Post(String title,String content, User user){
-        this.title = title;
-        this.content = content;
+    public Post(PostRequestDto postRequestDto, User user){
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
         this.user = user;
     }
 
