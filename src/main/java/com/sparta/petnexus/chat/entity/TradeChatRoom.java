@@ -28,8 +28,6 @@ public class TradeChatRoom extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long sellerId; // 판매자
-
     @ManyToOne
     @JoinColumn(name = "buyer_id")
     private User buyer; // 중고거래 구매자

@@ -72,7 +72,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         Trade trade = findTrade(tradeId);
 
         TradeChatRoom tradeChatRoom = TradeChatRoom.builder()
-            .sellerId(trade.getUser().getId())
             .buyer(user)
             .trade(trade).build();
 
@@ -97,7 +96,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public void deleteTradeChatRoom(Long id, User user) {
         TradeChatRoom tradeChatRoom = findTradeChatRoom(id);
 
-        if (!tradeChatRoom.getSellerId().equals(user.getId()) || !tradeChatRoom.getBuyer().getId()
+        if (!tradeChatRoom.getTrade().getUser().getId().equals(user.getId())
+            || !tradeChatRoom.getBuyer().getId()
             .equals(user.getId())) {
             throw new BusinessException(ErrorCode.ONLY_SELLER_OR_BUYER_DELETE);
         }
