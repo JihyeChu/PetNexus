@@ -12,13 +12,11 @@ import com.sparta.petnexus.trade.like.repository.TradeLikeRepository;
 import com.sparta.petnexus.trade.repository.TradeRepository;
 import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.DialectOverride;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,21 +29,19 @@ public class TradeServiceImpl implements TradeService {
     @Override
     @Transactional
     public void createTrade(TradeRequestDto requestDto, User user) {
-        Trade trade = requestDto.toEntity(user);
-        tradeRepository.save(trade);
+        tradeRepository.save(requestDto.toEntity(user));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<TradeResponseDto> getTrade() {
-        return tradeRepository.findAll().stream().map(TradeResponseDto::of).collect(Collectors.toList());
+        return tradeRepository.findAll().stream().map(TradeResponseDto::of).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public TradeResponseDto selectTrade(Long tradeId) {
-        Trade trade = findTrade(tradeId);
-        return TradeResponseDto.of(trade);
+        return TradeResponseDto.of(findTrade(tradeId));
     }
 
     @Override
@@ -74,13 +70,13 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public void likeTrade(Long tradeId, User user){
+    public void likeTrade(Long tradeId, User user) {
         Trade trade = findTrade(tradeId);
 
         Optional<TradeLike> likeOptional = tradeLikeRepository.findByUserAndTrade(user, trade);
-        if(likeOptional.isPresent()){
+        if (likeOptional.isPresent()) {
             throw new BusinessException(ErrorCode.EXISTED_LIKE);
-        }else{
+        } else {
             TradeLike tradeLike = new TradeLike(user, trade);
             tradeLikeRepository.save(tradeLike);
         }
@@ -88,25 +84,25 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public void dislikeTrade(Long tradeId, User user){
+    public void dislikeTrade(Long tradeId, User user) {
         Trade trade = findTrade(tradeId);
 
         Optional<TradeLike> likeOptional = tradeLikeRepository.findByUserAndTrade(user, trade);
-        if(likeOptional.isPresent()){
+        if (likeOptional.isPresent()) {
             tradeLikeRepository.delete(likeOptional.get());
-        }else{
+        } else {
             throw new BusinessException(ErrorCode.EXISTED_DISLIKE);
         }
     }
 
     @Override
     @Transactional
-    public void doBookmark(Long tradeId, User user){
+    public void doBookmark(Long tradeId, User user) {
         Trade trade = findTrade(tradeId);
 
-        if(tradeBookmarkRepository.existsByUserAndTrade(user, trade)){
+        if (tradeBookmarkRepository.existsByUserAndTrade(user, trade)) {
             throw new BusinessException(ErrorCode.EXISTED_DO_BOOKMARK);
-        }else{
+        } else {
             TradeBookmark tradeBookmark = new TradeBookmark(user, trade);
             tradeBookmarkRepository.save(tradeBookmark);
         }
@@ -115,13 +111,13 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public void undoBookmark(Long tradeId, User user){
+    public void undoBookmark(Long tradeId, User user) {
         Trade trade = findTrade(tradeId);
         Optional<TradeBookmark> tradeBookmark = tradeBookmarkRepository.findByUserAndTrade(user, trade);
 
-        if(tradeBookmark.isPresent()){
+        if (tradeBookmark.isPresent()) {
             tradeBookmarkRepository.delete(tradeBookmark.get());
-        }else{
+        } else {
             throw new BusinessException(ErrorCode.EXISTED_UNDO_BOOKMARK);
         }
     }

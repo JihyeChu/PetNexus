@@ -31,7 +31,10 @@ public class Trade {
     private String content;
 
     @Column
-    private String address;
+    private String latitude;
+
+    @Column
+    private String longitude;
 
     @Column
     private int price;
@@ -39,11 +42,11 @@ public class Trade {
     @Column
     private CategoryEnum category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy = "trade", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "trade")
     private List<TradeLike> tradeLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "trade", cascade = CascadeType.REMOVE)
@@ -55,7 +58,8 @@ public class Trade {
     public void update(TradeRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.address = requestDto.getAddress();
+        this.latitude = requestDto.getLatitude();
+        this.longitude = requestDto.getLongitude();
         this.category = requestDto.getCategory();
     }
 }
