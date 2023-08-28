@@ -22,7 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    public static final String REDIRECT_PATH = "/";
+    public static final String REDIRECT_PATH = "/home";
 
     private final TokenProvider tokenProvider;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
@@ -41,20 +41,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 oAuth2User.getAttributes());
         User user = userRepository.findByEmail((String) userInfo.getAttributes().get("email"));
 
-        String accessToken = tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
-
         String refreshToken = tokenProvider.generateRefreshToken(user, TokenProvider.REFRESH_TOKEN_DURATION);
-
-        // refreshToken -> cookie
         tokenProvider.addRefreshTokenToCookie(request, response, refreshToken);
 
-        response.addHeader(TokenProvider.HEADER_AUTHORIZATION, accessToken);
+        String accessToken = tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
+        String targetUrl = getTargetUrl(accessToken);
 
         clearAuthenticationAttributes(request, response);
-
-        // Tod : accessToken redirect param -> front catch param and save in local storage
-//        String targetUrl = getTargetUrl(accessToken);
-//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
     private void clearAuthenticationAttributes(HttpServletRequest request,
