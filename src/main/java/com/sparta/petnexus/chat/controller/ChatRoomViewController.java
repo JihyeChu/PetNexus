@@ -6,6 +6,7 @@ import com.sparta.petnexus.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,5 +20,8 @@ public class ChatRoomViewController {
         return "openChat";
     }
 
-
+    @GetMapping("/websoket")
+    public String openChatList(@RequestParam Long chatId){
+        return "websoket";
+    }
 }
