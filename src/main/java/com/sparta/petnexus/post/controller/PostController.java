@@ -35,7 +35,7 @@ public class PostController {
                                                   @RequestParam(value = "title") String title,
                                                   @RequestParam(value = "content") String content) throws IOException {
         postService.createPost(userDetails.getUser(),files,title,content);
-        return ResponseEntity.ok().body(new ApiResponse("post 생성 성공!", HttpStatus.CREATED.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("post 생성 성공!", HttpStatus.CREATED.value()));
     }
 
     @GetMapping("/post")
@@ -72,7 +72,7 @@ public class PostController {
     public ResponseEntity<ApiResponse> createPostLike(
             @Parameter(name="postId",description = "특정 post id",in= ParameterIn.PATH) @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         postService.createPostLike(postId,userDetails.getUser());
-        return ResponseEntity.ok().body(new ApiResponse("해당 post에 좋아요를 눌렀습니다", HttpStatus.CREATED.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("해당 post에 좋아요를 눌렀습니다", HttpStatus.CREATED.value()));
     }
 
     @DeleteMapping("/post/{postId}/like")
@@ -88,7 +88,7 @@ public class PostController {
     public ResponseEntity<ApiResponse> createPostBookmark(
             @Parameter(name="postId",description = "특정 post id",in= ParameterIn.PATH) @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         postService.createPostBookmark(postId,userDetails.getUser());
-        return ResponseEntity.ok().body(new ApiResponse("해당 post를 북마크에 추가하였습니다.", HttpStatus.CREATED.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("해당 post를 북마크에 추가하였습니다.", HttpStatus.CREATED.value()));
     }
 
     @DeleteMapping("/post/{postId}/bookmark")

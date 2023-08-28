@@ -47,27 +47,18 @@ public class PostServiceImpl implements PostService {
                 imageRepository.save(new Image(post, fileUrl));
             }
         }
-
-//        for (MultipartFile file : files) {
-//            if (file != null) {
-//                String fileUrl = imageService.upload(file,  "post " + post.getId());
-//                if (imageRepository.existsByImageUrlAndId(fileUrl, post.getId())) {
-//                    throw new BusinessException(ErrorCode.EXISTED_FILE);
-//                }
-//                imageRepository.save(new Image(post, fileUrl));
-//            }
-//        }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
         return postRepository.findAll().stream().map(PostResponseDto::of).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PostResponseDto getPostId(Long postId) {
-        Post post = findPost(postId);
-        return PostResponseDto.of(post);
+        return PostResponseDto.of(findPost(postId));
     }
 
     @Override
@@ -82,6 +73,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void deletePost(Long postId, User user) {
         Post post = findPost(postId);
         if (!user.getId().equals(post.getUser().getId())) {
@@ -91,6 +83,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void createPostLike(Long postId, User user) {
         Post post = findPost(postId);
         userCheck(post, user);
@@ -99,11 +92,11 @@ public class PostServiceImpl implements PostService {
             throw new BusinessException(ErrorCode.EXISTS_LIKE);
         });
 
-        PostLike postLike = new PostLike(post, user);
-        postLikeRepository.save(postLike);
+        postLikeRepository.save(new PostLike(post, user));
     }
 
     @Override
+    @Transactional
     public void deletePostLike(Long postId, User user) {
         Post post = findPost(postId);
         Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
@@ -115,6 +108,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void createPostBookmark(Long postId, User user) {
         Post post = findPost(postId);
         userCheck(post, user);
@@ -123,11 +117,11 @@ public class PostServiceImpl implements PostService {
             throw new BusinessException(ErrorCode.EXISTS_BOOKMARK);
         });
 
-        PostBookmark postBookmark = new PostBookmark(post, user);
-        postBookmarkRepository.save(postBookmark);
+        postBookmarkRepository.save(new PostBookmark(post, user));
     }
 
     @Override
+    @Transactional
     public void deletePostBookmark(Long postId, User user) {
         Post post = findPost(postId);
         Optional<PostBookmark> postBookmark = postBookmarkRepository.findByPostAndUser(post, user);
@@ -143,6 +137,7 @@ public class PostServiceImpl implements PostService {
         return postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_POST));
     }
 
+    @Override
     public void userCheck(Post post, User user) {
         if (user.getId().equals(post.getUser().getId())) {
             throw new BusinessException(ErrorCode.SELF_USER_POST);

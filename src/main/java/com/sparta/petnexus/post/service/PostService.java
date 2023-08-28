@@ -22,4 +22,5 @@ public interface PostService {
     void createPostBookmark(Long postId, User user);
     void deletePostBookmark(Long postId, User user);
     Post findPost(Long id);
+    void userCheck(Post post, User user);
 }
