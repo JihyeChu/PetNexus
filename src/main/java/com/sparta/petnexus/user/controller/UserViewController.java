@@ -18,4 +18,9 @@ public class UserViewController {
         return "oauthLogin";
     }
 
+    @GetMapping("/tradeKakaoMap")
+    public String map() {
+        return "tradeKakaoMap";
+    }
+
 }
