@@ -1,6 +1,6 @@
 package com.sparta.petnexus.chat.dto;
 
-import com.sparta.petnexus.chat.entity.ChatRoom;
+import com.sparta.petnexus.chat.entity.TradeChatRoom;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,15 +13,15 @@ public class TradeChatRoomResponseDto {
     @Schema(description = "중고 거래 게시글 ID", example = "1")
     private Long tradeId;
     @Schema(description = "구매자 ID", example = "1")
-    private Long userId;
+    private Long buyerId;
     @Schema(description = "판매자 ID", example = "2")
     private Long sellerId;
 
-    public static TradeChatRoomResponseDto of(ChatRoom chatRoom) {
+    public static TradeChatRoomResponseDto of(TradeChatRoom chatRoom) {
         return TradeChatRoomResponseDto.builder()
             .tradeId(chatRoom.getTrade().getId())
-            .userId(chatRoom.getUser().getId())
-            .sellerId(chatRoom.getSellerId())
+            .buyerId(chatRoom.getBuyer().getId())
+            .sellerId(chatRoom.getTrade().getUser().getId())
             .build();
     }
 }

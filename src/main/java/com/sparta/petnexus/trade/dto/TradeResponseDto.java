@@ -21,12 +21,14 @@ public class TradeResponseDto {
     private String title;
     @Schema(description = "trade 내용")
     private String content;
-    @Schema(description = "trade 거래희망주소")
-    private String address;
+    @Schema(description = "trade 위도")
+    private Double latitude;
+    @Schema(description = "trade 경도")
+    private Double longitude;
     @Schema(description = "trade 가격")
     private int price;
     @Schema(description = "trade 품목")
-    private CategoryEnum category;
+    private String category;
     @Schema(description = "trade 좋아요 수")
     private int tradeLikeCount;
     @Schema(description = "trade 북마크 리스트")
@@ -38,9 +40,10 @@ public class TradeResponseDto {
         return TradeResponseDto.builder()
                 .title(trade.getTitle())
                 .content(trade.getContent())
-                .address(trade.getAddress())
+                .latitude(Double.parseDouble(trade.getLatitude()))
+                .longitude(Double.parseDouble(trade.getLongitude()))
                 .price(trade.getPrice())
-                .category(trade.getCategory())
+                .category(String.valueOf(trade.getCategory()))
                 .tradeLikeCount(trade.getTradeLikes().size())
                 .tradeBookmarkList(trade.getTradeBookmarks().stream().map(bookmark -> bookmark.getTrade().getTitle()).toList())
                 .tradeCommentList(trade.getTradeComments().stream().map(TradeCommentResponseDto::of).toList())

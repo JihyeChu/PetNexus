@@ -5,11 +5,14 @@ import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.common.redis.utils.RedisUtils;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.common.security.jwt.TokenProvider;
+import com.sparta.petnexus.user.dto.AddPetRequest;
 import com.sparta.petnexus.user.dto.LoginRequest;
+import com.sparta.petnexus.user.dto.ProfileRequest;
 import com.sparta.petnexus.user.dto.SignupRequest;
+import com.sparta.petnexus.user.pet.entity.Pet;
 import com.sparta.petnexus.user.entity.User;
+import com.sparta.petnexus.user.pet.repository.PetRepository;
 import com.sparta.petnexus.user.repository.UserRepository;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +22,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PetRepository petRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final TokenProvider tokenProvider;
@@ -90,9 +95,43 @@ public class UserService {
             }
         }
 
-        String newAccessToken = tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
+        String newAccessToken = tokenProvider.generateToken(user,
+                TokenProvider.ACCESS_TOKEN_DURATION);
 
         httpResponse.addHeader(TokenProvider.HEADER_AUTHORIZATION, newAccessToken);
     }
 
+    @Transactional
+    public void updateProfile(ProfileRequest request, User user) {
+        user.updateUsername(request.getUsername());
+    }
+
+    public void addPet(AddPetRequest request, User user) {
+        petRepository.save(Pet.builder()
+                .petName(request.getPetName())
+                .petType(request.getPetType())
+                .petKind(request.getPetKind())
+                .petGender(request.getPetGender())
+                .user(user)
+                .build());
+    }
+
+    public void logOut(HttpServletRequest httpRequest) {
+        String authorizationHeader = httpRequest.getHeader(TokenProvider.HEADER_AUTHORIZATION);
+        String accessToken = tokenProvider.getAccessToken(authorizationHeader);
+        String email = tokenProvider.getAuthentication(accessToken).getName();
+        redisUtils.delete(email);
+
+        redisUtils.setBlackList(accessToken,"accessToken",tokenProvider.getExpiration(accessToken));
+    }
+
+    @Transactional
+    public void updatePet(Long petId, AddPetRequest request, User user) {
+        Pet pet = petRepository.findByIdAndUser(petId, user);
+        pet.update(request);
+    }
+
+    public void deletePet(Long petId, User user) {
+        petRepository.delete( petRepository.findByIdAndUser(petId, user));
+    }
 }

@@ -1,6 +1,5 @@
 package com.sparta.petnexus.chat.entity;
 
-import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,13 +26,7 @@ public class ChatRoom extends Timestamped {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user; // 오픈채팅 개설자, 중고거래 구매자
-
-    @ManyToOne
-    @JoinColumn(name = "trade_id")
-    private Trade trade; // 중고거래 상품
-
-    private Long sellerId; // 판매자
+    private User user; // 오픈채팅 개설자
 
     private String title; // 채팅방 이름
 
