@@ -29,7 +29,7 @@ public class PostCommentController {
                                                          @RequestBody PostCommentRequestsDto postCommentRequestsDto,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
         postCommentService.createPostComment(postId,postCommentRequestsDto,userDetails.getUser());
-        return ResponseEntity.ok().body(new ApiResponse("댓글 달기 완료!", HttpStatus.CREATED.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("댓글 달기 완료!", HttpStatus.CREATED.value()));
     }
 
     @PutMapping("/post/{postId}/comment/{commentId}")
