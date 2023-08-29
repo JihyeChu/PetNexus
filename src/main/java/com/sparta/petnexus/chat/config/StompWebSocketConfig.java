@@ -34,9 +34,9 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker("/sub");
     }
 
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) { // 핸들러 등록
-        // connect / disconnect 인터셉터
-        registration.interceptors(stompHandler);
-    }
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) { // 핸들러 등록
+//        // connect / disconnect 인터셉터
+//        registration.interceptors(stompHandler);
+//    }
 }

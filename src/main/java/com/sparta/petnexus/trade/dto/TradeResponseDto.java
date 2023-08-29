@@ -28,7 +28,7 @@ public class TradeResponseDto {
     @Schema(description = "trade 가격")
     private int price;
     @Schema(description = "trade 품목")
-    private CategoryEnum category;
+    private String category;
     @Schema(description = "trade 좋아요 수")
     private int tradeLikeCount;
     @Schema(description = "trade 북마크 리스트")
@@ -43,7 +43,7 @@ public class TradeResponseDto {
                 .latitude(Double.parseDouble(trade.getLatitude()))
                 .longitude(Double.parseDouble(trade.getLongitude()))
                 .price(trade.getPrice())
-                .category(trade.getCategory())
+                .category(String.valueOf(trade.getCategory()))
                 .tradeLikeCount(trade.getTradeLikes().size())
                 .tradeBookmarkList(trade.getTradeBookmarks().stream().map(bookmark -> bookmark.getTrade().getTitle()).toList())
                 .tradeCommentList(trade.getTradeComments().stream().map(TradeCommentResponseDto::of).toList())

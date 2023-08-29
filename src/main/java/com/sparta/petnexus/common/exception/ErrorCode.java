@@ -36,7 +36,8 @@ public enum ErrorCode {
     //Token
     INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST,"TK001","잘못된 리프레쉬 토큰입니다. 재로그인 해주세요."),
     NOT_FOUND_REFRESH_TOKEN(HttpStatus.BAD_REQUEST,"TK002","리프레쉬 토큰을 찾을 수 없습니다. 재로그인 해주세요."),
-  
+    INVALID_ACCESS_TOKEN(HttpStatus.BAD_REQUEST,"TK003","잘못된 토큰입니다. 재로그인 해주세요."),
+
     // Chat
     NOT_FOUND_CHATROOM(HttpStatus.BAD_REQUEST,"C001","존재하지 않는 채팅방입나다."),
     ONLY_MASTER_EDIT(HttpStatus.BAD_REQUEST,"C002","채팅방 개설자만 수정할 수 있습니다."),

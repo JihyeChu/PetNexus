@@ -3,13 +3,17 @@ package com.sparta.petnexus.post.dto;
 import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.post.postComment.dto.PostCommentResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "post 조회 응답 DTO")
 public class PostResponseDto {
 
