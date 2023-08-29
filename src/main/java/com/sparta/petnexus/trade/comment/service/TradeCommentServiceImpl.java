@@ -14,14 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class TradeCommentServiceImpl implements TradeCommentService{
+public class TradeCommentServiceImpl implements TradeCommentService {
 
     private final TradeService tradeService;
     private final TradeCommentRepository tradeCommentRepository;
 
     @Override
     @Transactional
-    public void createComment(Long tradeId, TradeCommentRequestDto requestDto, User user){
+    public void createComment(Long tradeId, TradeCommentRequestDto requestDto, User user) {
         Trade trade = tradeService.findTrade(tradeId);
         TradeComment tradeComment = requestDto.toEntity(user, trade);
         tradeCommentRepository.save(tradeComment);
@@ -29,11 +29,11 @@ public class TradeCommentServiceImpl implements TradeCommentService{
 
     @Override
     @Transactional
-    public void updateComment(Long tradeId, Long commentId, TradeCommentRequestDto requestDto, User user){
+    public void updateComment(Long tradeId, Long commentId, TradeCommentRequestDto requestDto, User user) {
         Trade trade = tradeService.findTrade(tradeId);
         TradeComment tradeComment = findTradeComment(commentId);
 
-        if(!user.getId().equals(trade.getUser().getId())){
+        if (!user.getId().equals(trade.getUser().getId())) {
             throw new BusinessException(ErrorCode.NOT_TRADE_UPDATE);
         }
 
@@ -42,7 +42,7 @@ public class TradeCommentServiceImpl implements TradeCommentService{
 
     @Override
     @Transactional
-    public void deleteComment(Long tradeId, Long commentId, User user){
+    public void deleteComment(Long tradeId, Long commentId, User user) {
         Trade trade = tradeService.findTrade(tradeId);
         TradeComment tradeComment = findTradeComment(commentId);
 
@@ -55,9 +55,9 @@ public class TradeCommentServiceImpl implements TradeCommentService{
 
 
     @Override
-    public TradeComment findTradeComment(Long tradeCommentId){
+    public TradeComment findTradeComment(Long tradeCommentId) {
         return tradeCommentRepository.findById(tradeCommentId).orElseThrow(
-                () ->  new BusinessException(ErrorCode.NOT_FOUND_TRADECOMMENT)
+                () -> new BusinessException(ErrorCode.NOT_FOUND_TRADECOMMENT)
         );
     }
 
