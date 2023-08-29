@@ -20,4 +20,10 @@ public class UserViewController {
     public String search(){
         return "hospital";
     }
+
+    @GetMapping("/tradeKakaoMap")
+    public String map() {
+        return "tradeKakaoMap";
+    }
+
 }

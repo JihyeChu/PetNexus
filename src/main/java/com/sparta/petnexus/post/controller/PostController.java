@@ -11,10 +11,13 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,11 +28,13 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/post")
+    @PostMapping(value = "/post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "post 생성", description = "requestDto로 받아온 데이터로 post를 만듭니다.")
-    public ResponseEntity<ApiResponse> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.createPost(postRequestDto,userDetails.getUser());
-        return ResponseEntity.ok().body(new ApiResponse("post 생성 성공!", HttpStatus.CREATED.value()));
+    public ResponseEntity<ApiResponse> createPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                  @RequestParam(value = "file", required = false) List<MultipartFile> files,
+                                                  @ModelAttribute PostRequestDto postRequestDto) throws IOException {
+        postService.createPost(userDetails.getUser(),files, postRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("post 생성 성공!", HttpStatus.CREATED.value()));
     }
 
     @GetMapping("/post")
@@ -66,7 +71,7 @@ public class PostController {
     public ResponseEntity<ApiResponse> createPostLike(
             @Parameter(name="postId",description = "특정 post id",in= ParameterIn.PATH) @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         postService.createPostLike(postId,userDetails.getUser());
-        return ResponseEntity.ok().body(new ApiResponse("해당 post에 좋아요를 눌렀습니다", HttpStatus.CREATED.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("해당 post에 좋아요를 눌렀습니다", HttpStatus.CREATED.value()));
     }
 
     @DeleteMapping("/post/{postId}/like")
@@ -82,7 +87,7 @@ public class PostController {
     public ResponseEntity<ApiResponse> createPostBookmark(
             @Parameter(name="postId",description = "특정 post id",in= ParameterIn.PATH) @PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         postService.createPostBookmark(postId,userDetails.getUser());
-        return ResponseEntity.ok().body(new ApiResponse("해당 post를 북마크에 추가하였습니다.", HttpStatus.CREATED.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("해당 post를 북마크에 추가하였습니다.", HttpStatus.CREATED.value()));
     }
 
     @DeleteMapping("/post/{postId}/bookmark")
