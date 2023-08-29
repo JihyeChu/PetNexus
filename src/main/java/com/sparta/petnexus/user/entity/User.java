@@ -1,6 +1,7 @@
 package com.sparta.petnexus.user.entity;
 
 import com.sparta.petnexus.common.security.info.ProviderType;
+import com.sparta.petnexus.user.pet.entity.Pet;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +9,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +41,9 @@ public class User {
     @Column
     private ProviderType providerType;
 
+    @OneToMany(mappedBy = "user")
+    private List<Pet> pet = new ArrayList<>();
+
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
@@ -51,5 +58,9 @@ public class User {
 
     public void updateEmail(String email) {
         this.email = email;
+    }
+
+    public void updateUsername(String username) {
+        this.username = username;
     }
 }

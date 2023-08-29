@@ -16,8 +16,10 @@ public class TradeRequestDto {
     private String title;
     @Schema(description = "trade 내용")
     private String content;
-    @Schema(description = "trade 거래희망주소")
-    private String address;
+    @Schema(description = "trade 위도")
+    private String latitude;
+    @Schema(description = "trade 경도")
+    private String longitude;
     @Schema(description = "trade 가격")
     private int price;
     @Schema(description = "trade 품목")
@@ -27,7 +29,8 @@ public class TradeRequestDto {
         return Trade.builder()
                 .title(this.title)
                 .content(this.content)
-                .address(this.address)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
                 .price(this.price)
                 .category(this.category)
                 .user(user)

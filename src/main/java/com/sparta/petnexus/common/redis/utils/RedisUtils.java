@@ -7,12 +7,15 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class RedisUtils {
     private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisBlackListTemplate;
+
     private final ModelMapper modelMapper;
 
     public void put(String key, Object value, Duration expiredAt){
@@ -49,5 +52,12 @@ public class RedisUtils {
 
     public long getExpireTime(String key){
         return redisTemplate.getExpire(key, TimeUnit.SECONDS);
+    }
+
+    public void setBlackList(String key, Object value, Duration expiredAt) {
+        redisBlackListTemplate.opsForValue().set(key, value, expiredAt.toMillis(), TimeUnit.SECONDS);
+    }
+    public boolean hasKeyBlackList(String key){
+        return redisBlackListTemplate.hasKey(key);
     }
 }

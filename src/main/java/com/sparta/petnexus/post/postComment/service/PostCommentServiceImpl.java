@@ -20,10 +20,10 @@ public class PostCommentServiceImpl implements PostCommentService {
     private final PostService postService;
 
     @Override
+    @Transactional
     public void createPostComment(Long postId, PostCommentRequestsDto postCommentRequestsDto, User user){
         Post post = postService.findPost(postId);
-        PostComment postComment = postCommentRequestsDto.toEntity(post,user);
-        postCommentRepository.save(postComment);
+        postCommentRepository.save(postCommentRequestsDto.toEntity(post,user));
     }
 
     @Override
@@ -38,6 +38,7 @@ public class PostCommentServiceImpl implements PostCommentService {
     }
 
     @Override
+    @Transactional
     public void deletePostComment(Long postId, Long commentId, User user){
         PostComment postComment = findPostComment(commentId);
         if(!user.getId().equals(postComment.getUser().getId())){

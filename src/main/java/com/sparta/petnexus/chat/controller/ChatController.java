@@ -42,18 +42,19 @@ public class ChatController {
     // /pub/chat/message 에 메세지가 오면 동작
     @MessageMapping("chat/message/{roomId}") // 오픈채팅
     @SendTo("/sub/chat/{roomId}")
-    public ChatMessageDto message(@DestinationVariable Long roomId, ChatMessageDto messageDto,
-        @Header("Authorization") String token) {
-        String authorization = tokenProvider.getAccessToken(token);
-        String username = tokenProvider.getAuthentication(authorization).getName();
+    public ChatMessageDto message(@DestinationVariable Long roomId, ChatMessageDto messageDto)
+//        @Header("Authorization") String token)
+    {
+//        String authorization = tokenProvider.getAccessToken(token);
+//        String username = tokenProvider.getAuthentication(authorization).getName();
 
-        messageDto.setSender(username);
+        messageDto.setSender("Test");
         messageDto.setRoomId(roomId);
         chatService.saveMessage(roomId, messageDto);
 
         return ChatMessageDto.builder()
             .roomId(roomId)
-            .sender(username)
+            .sender("Test")
             .message(messageDto.getMessage())
             .build();
     }
