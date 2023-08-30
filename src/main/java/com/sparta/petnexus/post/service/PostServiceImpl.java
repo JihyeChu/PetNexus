@@ -31,7 +31,7 @@ public class PostServiceImpl implements PostService {
     private final PostLikeRepository postLikeRepository;
     private final PostBookmarkRepository postBookmarkRepository;
     private final ImageRepository imageRepository;
-    private final AwsS3upload imageService;
+    private final AwsS3upload awsS3upload;
 
     @Override
     @Transactional
@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
         if (files != null) {
             for (MultipartFile file : files) {
-                String fileUrl = imageService.upload(file, "post " + post.getId());
+                String fileUrl = awsS3upload.upload(file, "post " + post.getId());
                 if (imageRepository.existsByImageUrlAndId(fileUrl, post.getId())) {
                     throw new BusinessException(ErrorCode.EXISTED_FILE);
                 }

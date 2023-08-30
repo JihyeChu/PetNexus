@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +27,11 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping(value = "/post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/post")
     @Operation(summary = "post 생성", description = "requestDto로 받아온 데이터로 post를 만듭니다.")
     public ResponseEntity<ApiResponse> createPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                   @RequestParam(value = "file", required = false) List<MultipartFile> files,
-                                                  @ModelAttribute PostRequestDto postRequestDto) throws IOException {
+                                                  @RequestPart(value = "requestDto") PostRequestDto postRequestDto) throws IOException {
         postService.createPost(userDetails.getUser(),files, postRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("post 생성 성공!", HttpStatus.CREATED.value()));
     }
