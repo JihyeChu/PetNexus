@@ -1,0 +1,48 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # checkout branch create
+    - uses: actions/checkout@v3
+
+      # java use
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+      # application, yml set-up
+    - name: yml 파일 생성
+      run: |
+          touch ./src/main/resources/application.properties
+          echo "${{ secrets.PROPERTIES }}" > ./src/main/resources/application.properties
+          touch ./src/main/resources/application.yml
+          echo "${{ secrets.OAUTH }}" > ./src/main/resources/application.yml
+          
+      # chmod
+    - name: Build with Gradle
+      run: chmod +x gradlew
+      
+      # build Gradle
+    - name: Build with Gradle
+      run: ./gradlew clean build --exclude-task test
+      
