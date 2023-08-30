@@ -2,6 +2,7 @@ package com.sparta.petnexus.trade.service;
 
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.notification.service.NotificationService;
 import com.sparta.petnexus.trade.bookmark.entity.TradeBookmark;
 import com.sparta.petnexus.trade.bookmark.repository.TradeBookmarkRepository;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
@@ -25,6 +26,7 @@ public class TradeServiceImpl implements TradeService {
     private final TradeRepository tradeRepository;
     private final TradeLikeRepository tradeLikeRepository;
     private final TradeBookmarkRepository tradeBookmarkRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -79,6 +81,8 @@ public class TradeServiceImpl implements TradeService {
         } else {
             TradeLike tradeLike = new TradeLike(user, trade);
             tradeLikeRepository.save(tradeLike);
+
+            notificationService.notifyToUsersThatTheyHaveReceivedLike(tradeLike); // 좋아요 알람 추가
         }
     }
 

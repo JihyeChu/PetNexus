@@ -5,6 +5,7 @@ import com.sparta.petnexus.Image.repository.ImageRepository;
 import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.notification.service.NotificationService;
 import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.entity.Post;
@@ -32,6 +33,8 @@ public class PostServiceImpl implements PostService {
     private final PostBookmarkRepository postBookmarkRepository;
     private final ImageRepository imageRepository;
     private final AwsS3upload imageService;
+    private final NotificationService notificationService;
+
 
     @Override
     @Transactional
@@ -91,8 +94,9 @@ public class PostServiceImpl implements PostService {
         postLikeRepository.findByPostAndUser(post, user).ifPresent(postLike -> {
             throw new BusinessException(ErrorCode.EXISTS_LIKE);
         });
-
         postLikeRepository.save(new PostLike(post, user));
+
+        notificationService.notifyToUsersThatTheyHaveReceivedLike(new PostLike(post, user)); // 좋아요 알람 추가
     }
 
     @Override
