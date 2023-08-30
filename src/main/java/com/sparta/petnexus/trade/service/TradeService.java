@@ -4,7 +4,9 @@ import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.user.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface TradeService {
@@ -13,8 +15,9 @@ public interface TradeService {
      * 거래게시글 생성
      * @param requestDto : 거래게시글 생성 요청정보
      * @param user : 거래게시글 생성 요청자
+     * @param files : 거래게시글 생성 첨부 파일
      * */
-    public void createTrade(TradeRequestDto requestDto, User user);
+    public void createTrade(TradeRequestDto requestDto, User user,List<MultipartFile> files) throws IOException;
 
     /*
      * 거래게시글 전체 조회

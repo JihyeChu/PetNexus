@@ -9,14 +9,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name="trade", description = "거래게시글/좋아요/북마크 관련 API 입니다.")
@@ -29,8 +29,10 @@ public class TradeController {
 
     @PostMapping("/trade")
     @Operation(summary = "거래게시글 생성", description = "@RequestBody를 통해 게시글 정보를 넘겨주고 생성합니다.")
-    public ResponseEntity<ApiResponse> createTrade(@RequestBody TradeRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        tradeService.createTrade(requestDto, userDetails.getUser());
+    public ResponseEntity<ApiResponse> createTrade(@RequestPart(value = "requestDto") TradeRequestDto requestDto,
+                                                   @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                   @RequestPart(value = "file", required = false) List<MultipartFile> files) throws IOException {
+        tradeService.createTrade(requestDto, userDetails.getUser(),files);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("거래게시글 생성 성공", HttpStatus.CREATED.value()));
     }
 

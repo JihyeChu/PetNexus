@@ -1,5 +1,8 @@
 package com.sparta.petnexus.chat.service;
 
+import com.sparta.petnexus.Image.config.AwsS3upload;
+import com.sparta.petnexus.Image.entity.Image;
+import com.sparta.petnexus.Image.repository.ImageRepository;
 import com.sparta.petnexus.chat.dto.ChatRoomListResponseDto;
 import com.sparta.petnexus.chat.dto.ChatRoomRequestDto;
 import com.sparta.petnexus.chat.dto.TradeChatRoomListResponseDto;
@@ -12,10 +15,14 @@ import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.trade.repository.TradeRepository;
 import com.sparta.petnexus.user.entity.User;
+
+import java.io.IOException;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +31,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final TradeChatRoomRepository tradeChatRoomRepository;
     private final TradeRepository tradeRepository;
+    private final AwsS3upload awsS3upload;
+    private final ImageRepository imageRepository;
 
     // 오픈채팅방 목록 조회
     @Override
@@ -36,10 +45,18 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     // 오픈채팅방 생성
     @Override
-    public void createOpenChatRoom(ChatRoomRequestDto requestDto, User user) {
+    public void createOpenChatRoom(ChatRoomRequestDto requestDto, User user, List<MultipartFile> files) throws IOException {
         ChatRoom chatRoom = requestDto.toEntity(user);
-
         chatRoomRepository.save(chatRoom);
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = awsS3upload.upload(file, "chatRoom " + chatRoom.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, chatRoom.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(chatRoom, fileUrl));
+            }
+        }
     }
 
     // 오픈채팅방 수정
