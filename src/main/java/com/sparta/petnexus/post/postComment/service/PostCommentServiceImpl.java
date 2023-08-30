@@ -2,6 +2,7 @@ package com.sparta.petnexus.post.postComment.service;
 
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.notification.service.NotificationService;
 import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.post.postComment.repository.PostCommentRepository;
 import com.sparta.petnexus.post.service.PostService;
@@ -18,12 +19,15 @@ public class PostCommentServiceImpl implements PostCommentService {
 
     private final PostCommentRepository postCommentRepository;
     private final PostService postService;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
     public void createPostComment(Long postId, PostCommentRequestsDto postCommentRequestsDto, User user){
         Post post = postService.findPost(postId);
         postCommentRepository.save(postCommentRequestsDto.toEntity(post,user));
+
+        notificationService.notifyToUsersThatTheyHaveReceivedComment(postCommentRequestsDto.toEntity(post,user)); // 댓글 알람 추가
     }
 
     @Override

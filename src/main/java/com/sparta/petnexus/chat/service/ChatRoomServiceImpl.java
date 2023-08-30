@@ -9,6 +9,7 @@ import com.sparta.petnexus.chat.repository.ChatRoomRepository;
 import com.sparta.petnexus.chat.repository.TradeChatRoomRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.notification.service.NotificationService;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.trade.repository.TradeRepository;
 import com.sparta.petnexus.user.entity.User;
@@ -24,6 +25,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final TradeChatRoomRepository tradeChatRoomRepository;
     private final TradeRepository tradeRepository;
+    private final NotificationService notificationService;
 
     // 오픈채팅방 목록 조회
     @Override
@@ -76,6 +78,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             .trade(trade).build();
 
         tradeChatRoomRepository.save(tradeChatRoom);
+
+        // 판매자에게 구매요청 알람보내기
+        notificationService.notifyToSellersThatTheyHaveReceivedTradeChatRequest(tradeChatRoom);
     }
 
     // 오픈채팅방 삭제

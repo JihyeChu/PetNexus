@@ -2,6 +2,7 @@ package com.sparta.petnexus.trade.comment.service;
 
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.notification.service.NotificationService;
 import com.sparta.petnexus.trade.comment.dto.TradeCommentRequestDto;
 import com.sparta.petnexus.trade.comment.entity.TradeComment;
 import com.sparta.petnexus.trade.comment.repository.TradeCommentRepository;
@@ -18,6 +19,7 @@ public class TradeCommentServiceImpl implements TradeCommentService {
 
     private final TradeService tradeService;
     private final TradeCommentRepository tradeCommentRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -25,6 +27,8 @@ public class TradeCommentServiceImpl implements TradeCommentService {
         Trade trade = tradeService.findTrade(tradeId);
         TradeComment tradeComment = requestDto.toEntity(user, trade);
         tradeCommentRepository.save(tradeComment);
+
+        notificationService.notifyToUsersThatTheyHaveReceivedComment(tradeComment); // 댓글 알람 추가
     }
 
     @Override
