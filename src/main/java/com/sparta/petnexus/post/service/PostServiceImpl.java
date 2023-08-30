@@ -32,7 +32,7 @@ public class PostServiceImpl implements PostService {
     private final PostLikeRepository postLikeRepository;
     private final PostBookmarkRepository postBookmarkRepository;
     private final ImageRepository imageRepository;
-    private final AwsS3upload imageService;
+    private final AwsS3upload awsS3upload;
     private final NotificationService notificationService;
 
 
