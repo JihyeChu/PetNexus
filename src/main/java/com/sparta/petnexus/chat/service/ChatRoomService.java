@@ -4,6 +4,10 @@ import com.sparta.petnexus.chat.dto.ChatRoomListResponseDto;
 import com.sparta.petnexus.chat.dto.ChatRoomRequestDto;
 import com.sparta.petnexus.chat.dto.TradeChatRoomListResponseDto;
 import com.sparta.petnexus.user.entity.User;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 public interface ChatRoomService {
 
@@ -19,8 +23,9 @@ public interface ChatRoomService {
      *
      * @param requestDto 오픈채팅방 저장 요청정보
      * @param user       오픈채팅방 생성 요청자
+     * @param files       오픈채팅방 생성 첨부 파일
      */
-    void createOpenChatRoom(ChatRoomRequestDto requestDto, User user);
+    void createOpenChatRoom(ChatRoomRequestDto requestDto, User user, List<MultipartFile> files) throws IOException;
 
     /**
      * 오픈채팅방 제목 수정

@@ -37,4 +37,14 @@ public class Image {
         this.post = post;
         this.imageUrl = urlText;
     }
+
+    public Image(Trade trade,String urlText){
+        this.trade = trade;
+        this.imageUrl = urlText;
+    }
+
+    public Image(ChatRoom chatRoom,String urlText){
+        this.chatRoom = chatRoom;
+        this.imageUrl = urlText;
+    }
 }

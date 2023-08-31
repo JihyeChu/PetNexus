@@ -36,10 +36,11 @@ public class PostServiceImpl implements PostService {
     private final NotificationService notificationService;
 
 
+
     @Override
     @Transactional
     public void createPost(User user, List<MultipartFile> files,PostRequestDto postRequestDto) throws IOException {
-        Post post = new Post(postRequestDto, user);
+        Post post = postRequestDto.toEntity(user);
         postRepository.save(post);
         if (files != null) {
             for (MultipartFile file : files) {
