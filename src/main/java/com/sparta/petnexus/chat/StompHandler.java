@@ -3,6 +3,7 @@ package com.sparta.petnexus.chat;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.common.security.jwt.TokenProvider;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -11,6 +12,10 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Log4j2
@@ -28,21 +33,34 @@ public class StompHandler implements ChannelInterceptor {
         // websocket 을 통해 들어온 요청이 처리 되기 전 실행된다.
         // websocket 연결시 헤더의 jwt token 유효성 검증
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            log.info(accessor.getCommand());
             String jwt = accessor.getFirstNativeHeader("Authorization");
+            log.info("jwt!!!!!!!!!" + jwt);
 
-            if (!tokenProvider.validToken(
-                Objects.requireNonNull(jwt)
-                    .substring(7))) {
-                throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
-            }
+
+             String token = jwt.substring(7);
+
+
+            // UsernamePasswordAuthenticationToken 발급
+           //Authentication authentication = tokenProvider.getAuthentication(jwt);
+    /*        accessor.setUser(authentication);
+            log.info(accessor);
+            log.info(accessor.getCommand());*/
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(tokenProvider.getAuthentication(token), null,null);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            accessor.setUser(authentication);
         }
         return message;
     }
+
+
 
     @Override
     public void postSend(Message message, MessageChannel channel, boolean sent) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String sessionId = accessor.getSessionId();
+
         switch (Objects.requireNonNull(accessor.getCommand())) {
             case CONNECT:
                 // 유저가 Websocket 으로 connect()를 한 뒤 호출됨
@@ -50,8 +68,7 @@ public class StompHandler implements ChannelInterceptor {
                 break;
             case DISCONNECT:
                 log.info("DISCONNECT");
-                log.info("sessionId: {}",sessionId);
-                log.info("channel:{}",channel);
+                log.info("channel:{}", channel);
                 log.info(message);
                 // 유저가 Websocket 으로 disconnect() 를 한 뒤 호출됨 or 세션이 끊어졌을 때 발생함(페이지 이동~ 브라우저 닫기 등)
                 break;

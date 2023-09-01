@@ -1,0 +1,171 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/openChatRoom.css}">
+<title>Stomp Real-time Chat</title>
+
+<body class="homepage is-preload">
+<div class="chat-box">
+    <div class="container bootstrap snippets bootdeys">
+        <div class="col-md-7 col-xs-12 col-md-offset-2">
+            <!-- Panel Chat -->
+            <div class="panel" id="chat">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="chats" th:each="chat : ${chatList.getChatList()}">
+                        <div class="chat chat-left">
+                            <div class="chat-avatar">
+                                <a class="avatar avatar-online" data-toggle="tooltip" href="#"
+                                   data-placement="left" title=""
+                                   data-original-title="Edward Fletcher">
+                                    <img src="/img/profile2.png"
+                                         alt="...">
+                                    <i></i>
+                                </a>
+                            </div>
+                            <div class="chat-body">
+                                <div class="chat-content">
+                                    <p th:text="${chat.message}"></p>
+                                    <p th:text="${chat.sender}"></p>
+                                    <time class="chat-time" th:text="${chat.createdAt}">
+                                    </time>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="my-chat">
+                            <div class="chat-avatar">
+                                <a class="avatar avatar-online" data-toggle="tooltip" href="#"
+                                   data-placement="right" title="" data-original-title="June Lane">
+                                    <img src="/img/profile1.png" alt="...">
+                                    <i></i>
+                                </a>
+                            </div>
+                            <div class="chat-body">
+                                <div class="chat-content">
+                                    <p>
+                                        입금 부탁드립니다.
+                                        <br>ㅎㅎㅎㅎㅎㅎ
+                                    </p>
+                                    <time class="chat-time" datetime="2015-07-01T11:37">11:37:08 am
+                                    </time>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Say something"
+                                   id="messageInput">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button"
+                                        id="sendButton">Send</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- End Panel Chat -->
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+    let messageInput = $(`#messageInput`).val();
+    console.log(messageInput)
+    let chatBox = $('.chats');
+
+    // roomId 파라미터 가져오기
+    const queryString = window.location.search;
+    console.log(queryString);
+    const urlParams = new URLSearchParams(queryString);
+    const roomId = urlParams.get('chatId')
+    console.log(roomId);
+
+    //const jwt = localStorage.getItem('access_token');
+    /*테스트용*/
+    const jwt = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJob2pvb2dsaW1AZ21haWwuY29tIiwiaWF0IjoxNjkzNTM4ODEzLCJleHAiOjE2OTM1NDYwMTMsInN1YiI6ImVzYzAyMThAbmF2ZXIuY29tIiwiaWQiOjF9.po2iuY8i-VbGq53f1Ode924AcQFa_jexqmn4u0Ed07w";
+
+    if (jwt) {
+
+        console.log('Access Token:', jwt);
+    } else {
+        console.log('Access Token not found');
+    }
+
+    // 헤더에 토큰 값 넣어주기(?)
+    const headers = new Headers();
+    headers.append('Authorization', jwt);
+    console.log("headers!!!!!!!!!!!!!!!!!!!!!!!!!" + headers.get('Authorization'))
+
+    $(document).ready(function () {
+
+        // WebSocket connection
+        const stompClient = new StompJs.Client({
+            connectHeaders: {
+                Authorization: jwt
+            },
+            brokerURL: 'ws://localhost:8080/stomp/chat',
+        });
+
+        stompClient.activate();
+
+        stompClient.onConnect = (frame) => {
+            console.log('STOMP Connection' + frame);
+
+            stompClient.subscribe(`/sub/chat/${roomId}`, (greeting) => {
+                showGreeting(JSON.parse(greeting.body).message);
+            });
+        };
+
+        stompClient.onWebSocketError = (error) => {
+            console.error('Error with websocket', error);
+        };
+
+        stompClient.onStompError = (frame) => {
+            console.error('Broker reported error: ' + frame.headers['message']);
+            console.error('Additional details: ' + frame.body);
+        };
+
+        stompClient.activate();
+
+        function sendMessage() {
+            stompClient.publish({
+                destination: `/pub/chat/message/${roomId}`,
+                body: JSON.stringify({'message': messageInput})
+            });
+        }
+
+        function showGreeting(message) {
+            chatBox.append("<tr><td>" + message + "</td></tr>");
+        }
+
+        $(function () {
+            $("form").on('submit', (e) => e.preventDefault());
+            $("#sendButton").click(() => sendMessage());
+        });
+        //////////////////////
+
+        // 4. subscribe(path, callback)으로 메세지를 받을 수 있음
+        // callback 첫번째 파라미터의 body 메시지의 내용이 들어온다.
+        /*   stompClient.subscribe('/sub/chat/' + roomId, function (chat) {
+               const content = JSON.parse(chat.body);
+               chatBox.append('<div>' + content.message + '</div>')
+           });*/
+
+        /*sendButton.click(function () {
+            const message = messageInput.val();
+            stompClient.send('/publish/chat/message', {}, JSON.stringify({roomId: roomId, message: message}));
+            messageInput.val('');
+        });*/
+    })
+
+</script>
+
+
