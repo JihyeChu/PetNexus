@@ -1,5 +1,8 @@
 package com.sparta.petnexus.trade.service;
 
+import com.sparta.petnexus.Image.config.AwsS3upload;
+import com.sparta.petnexus.Image.entity.Image;
+import com.sparta.petnexus.Image.repository.ImageRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.notification.service.NotificationService;
@@ -15,7 +18,9 @@ import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +31,25 @@ public class TradeServiceImpl implements TradeService {
     private final TradeRepository tradeRepository;
     private final TradeLikeRepository tradeLikeRepository;
     private final TradeBookmarkRepository tradeBookmarkRepository;
+    private final ImageRepository imageRepository;
+    private final AwsS3upload awsS3upload;
     private final NotificationService notificationService;
+
 
     @Override
     @Transactional
-    public void createTrade(TradeRequestDto requestDto, User user) {
-        tradeRepository.save(requestDto.toEntity(user));
+    public void createTrade(TradeRequestDto requestDto, User user, List<MultipartFile> files) throws IOException {
+        Trade trade = requestDto.toEntity(user);
+        tradeRepository.save(trade);
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = awsS3upload.upload(file, "trade " + trade.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, trade.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(trade, fileUrl));
+            }
+        }
     }
 
     @Override
