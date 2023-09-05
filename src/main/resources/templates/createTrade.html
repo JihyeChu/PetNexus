@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>펫 넥서스</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="/css/main.css"/>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#header").load("./header.html");
+        });
+    </script>
+</head>
+
+<body class="homepage is-preload">
+<div id="page-wrapper">
+    <div id="header"></div>
+
+    <!-- Main -->
+    <section id="main">
+        <div class="space-y-12 bg-white w-full max-w-xl mx-auto">
+            <div class="border-2 px-20 pb-20 ">
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-4">
+                        <label for="title" class="block text-sm font-medium leading-6 text-gray-900">제목</label>
+                        <div class="mt-2">
+                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300  sm:max-w-md">
+                                <input type="text" name="title" id="title" autocomplete="title"
+                                       class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                                       placeholder="제목을 입력해주세요." th:value="${trade.title}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-full">
+                        <label for="contents" class="block text-sm font-medium leading-6 text-gray-900">내용</label>
+                        <div class="mt-2">
+                            <textarea id="contents" name="about" rows="3"
+                                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6" placeholder="내용을 입력해주세요." th:text="${trade.content}"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-4">
+                    <label for="title" class="block text-sm font-medium leading-6 text-gray-900">희망장소</label>
+                    <div class="mt-2">
+                        <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300  sm:max-w-md">
+                            <input type="text" name="latitude" id="latitude" autocomplete="latitude"
+                                   class="block flex-1 border py-1.5 pl-1 mr-4 text-gray-900 sm:text-sm sm:leading-6"
+                                   th:value="${trade.latitude}"/>
+                            <input type="text" name="longitude" id="longitude" autocomplete="longitude"
+                                   class="block flex-1 border py-1.5 pl-1 text-gray-900 sm:text-sm sm:leading-6"
+                                   th:value="${trade.longitude}"/>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="sm:col-span-4">
+                        <label for="title" class="block text-sm font-medium leading-6 text-gray-900">가격</label>
+                    <div class="mt-2">
+                        <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300  sm:max-w-md">
+                            <input type="text" name="price" id="price" autocomplete="price"
+                                   class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                                   placeholder="가격을 입력해주세요." th:value="${trade.price}">
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="sm:col-span-4">
+                        <div class="mt-2">
+                            <div class="relative inline-block text-left">
+                                <button type="button" id="categoryButton" class="items-center gap-x-1 text-sm font-semibold leading-6">
+                                    <span>카테고리</span>
+                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div id="categoryDropdown" class="hidden absolute left-0 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                    <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="categoryButton">
+                                        <button onclick="selectCategory('ITEM');" class="block text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">물품</button>
+                                        <button onclick="selectCategory('FOOD');" class="block text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">음식</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-span-full">
+                        <label class="block text-sm font-medium leading-6 text-gray-900">파일 업로드</label>
+                        <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                            <div class="text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor"
+                                     aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                          d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                                <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                                    <label for="imageFiles"
+                                           class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                                        <span>Upload a file</span>
+                                        <!--                                        <input id="file" name="file" type="text" class="sr-only" th:value="${file}">-->
+                                        <input type="file" id="imageFiles" accept="image/*" multiple>
+                                    </label>
+                                    <p class="pl-1">or drag and drop</p>
+                                </div>
+                                <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 1MB</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-6">
+                <button type="reset" class="rounded-md bg-orange-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">다시쓰기</button>
+                <button  th:if="${trade.id} == null" type="button"  onclick="create()"
+                         class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    완료
+                </button>
+            </div>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function create(){
+        let title = $('#title').val();
+        let contents = $('#contents').val();
+        let latitude = $('#latitude').val();
+        let longitude = $('#longitude').val();
+        let price = $('#price').val();
+        let category = document.getElementById('categoryButton').textContent;
+        console.log(category);
+
+        let imageFiles = document.getElementById('imageFiles').files;
+        let formData = new FormData();
+        formData.append("title", title);
+        formData.append("content", contents);
+        formData.append("latitude", latitude);
+        formData.append("longitude", longitude);
+        formData.append("price", price);
+        formData.append("category", category);
+        for(let i=0; i<imageFiles.length; i++){
+            formData.append("imageFiles", imageFiles[i]);
+        }
+        $.ajax({
+            type:"POST",
+            url: `/api/trade`,
+            data: formData,
+            headers: {
+                Authorization: localStorage.getItem('access_token')
+            },
+            processData: false,
+            contentType: false,
+            enctype:'multipart/form-data'
+        }).done(function(){
+            alert("trade 생성 완료")
+            location.replace(`/tradeMarket`);
+        }).fail(function (xhr, textStatus, error){
+            console.log("AJAX 요청 실패: ", error);
+            console.log("상태 코드: ", xhr.status);
+            console.log("에러 내용: ", textStatus);
+        })
+    }
+    function selectCategory(category) {
+        // 선택한 카테고리 값을 서버로 보낼 수 있도록 원하는 방식으로 처리합니다.
+        // 여기서는 category를 서버로 전송하거나, 데이터를 저장하는 등의 작업을 수행할 수 있습니다.
+        console.log('Selected category:', category);
+
+        // 선택한 카테고리를 버튼에 표시합니다.
+        document.getElementById('categoryButton').textContent = category;
+
+        // 드롭다운 메뉴를 닫습니다.
+        closeCategoryDropdown();
+    }
+    function closeCategoryDropdown() {
+        // 드롭다운을 닫기 위해 해당 요소를 숨깁니다.
+        document.getElementById('categoryDropdown').classList.add('hidden');
+    }
+
+    // 드롭다운 버튼을 클릭하면 드롭다운을 토글합니다.
+    document.getElementById('categoryButton').addEventListener('click', function () {
+        var dropdown = document.getElementById('categoryDropdown');
+        dropdown.classList.toggle('hidden');
+    });
+
+    // 드롭다운 영역 외의 영역을 클릭하면 드롭다운을 닫습니다.
+    document.addEventListener('click', function (event) {
+        var dropdown = document.getElementById('categoryDropdown');
+        var button = document.getElementById('categoryButton');
+        if (!dropdown.contains(event.target) && event.target !== button) {
+            closeCategoryDropdown();
+        }
+    });
+</script>

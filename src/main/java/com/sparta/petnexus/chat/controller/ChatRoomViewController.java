@@ -24,4 +24,6 @@ public class ChatRoomViewController {
     public String openChatList(@RequestParam Long chatId){
         return "websoket";
     }
+
+
 }

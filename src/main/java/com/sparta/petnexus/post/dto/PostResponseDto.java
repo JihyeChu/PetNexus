@@ -1,5 +1,6 @@
 package com.sparta.petnexus.post.dto;
 
+import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.post.postComment.dto.PostCommentResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,6 +35,8 @@ public class PostResponseDto {
 
     @Schema(description = "post에 달린 댓글 리스트")
     private List<PostCommentResponseDto> postComments;
+    @Schema(description = "post에 달린 이미지 리스트")
+    private List<String> imageList;
 
     public static PostResponseDto of(Post post){
         return PostResponseDto.builder()
@@ -43,6 +46,7 @@ public class PostResponseDto {
                 .username(post.getUser().getUsername())
                 .like(post.getPostLikes().size())
                 .postComments(post.getPostComments().stream().map(PostCommentResponseDto::of).toList())
+                .imageList(post.getImage().stream().map(Image::getImageUrl).toList())
                 .build();
     }
 }
