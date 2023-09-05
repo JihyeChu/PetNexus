@@ -42,8 +42,8 @@ public class ChatRoomController {
     @Operation(summary = "오픈채팅방 생성")
     public ResponseEntity<ApiResponse> createOpenChatRoom(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart(value = "requestDto") ChatRoomRequestDto requestDto,
-            @RequestPart(value = "file", required = false) List<MultipartFile> files) throws IOException {
+            @ModelAttribute(value = "requestDto") ChatRoomRequestDto requestDto,
+            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> files) throws IOException {
         chatRoomService.createOpenChatRoom(requestDto,
                 userDetails.getUser(),files);
         return ResponseEntity.status(HttpStatus.CREATED)

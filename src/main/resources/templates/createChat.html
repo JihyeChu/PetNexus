@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>펫 넥서스</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+  <link rel="stylesheet" href="/css/main.css"/>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#header").load("./header.html");
+    });
+  </script>
+</head>
+
+<body class="homepage is-preload">
+<div id="page-wrapper">
+  <div id="header"></div>
+
+
+  <!-- Main -->
+  <section id="main">
+    <div class="container">
+      <div class="row">
+
+        <!-- Content -->
+        <div id="content" class="col-8 col-12-medium">
+
+          <div class="space-y-12 bg-white w-full max-w-xl mx-auto">
+            <div class="border-2 px-20 pb-20 ">
+              <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-4">
+                  <label for="title" class="block text-sm font-medium leading-6 text-gray-900">제목</label>
+                  <div class="mt-2">
+                    <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300  sm:max-w-md">
+                      <input type="text" name="title" id="title" autocomplete="title"
+                             class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400  sm:text-sm sm:leading-6"
+                             placeholder="제목을 입력해주세요.">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-span-full">
+                  <label for="contents" class="block text-sm font-medium leading-6 text-gray-900">내용</label>
+                  <div class="mt-2">
+                            <textarea id="contents" name="about" rows="3"
+                                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6" placeholder="내용을 입력해주세요."></textarea>
+                  </div>
+                </div>
+
+                <div class="col-span-full">
+                  <label class="block text-sm font-medium leading-6 text-gray-900">파일 업로드</label>
+                  <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                    <div class="text-center">
+                      <svg class="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor"
+                           aria-hidden="true">
+                        <path fill-rule="evenodd"
+                              d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
+                              clip-rule="evenodd"/>
+                      </svg>
+                      <div class="mt-4 flex text-sm leading-6 text-gray-600">
+                        <label for="imageFiles"
+                               class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                          <span>Upload a file</span>
+                          <!--                                        <input id="file" name="file" type="text" class="sr-only" th:value="${file}">-->
+                          <input type="file" id="imageFiles" accept="image/*" multiple>
+                        </label>
+                        <p class="pl-1">or drag and drop</p>
+                      </div>
+                      <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 1MB</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <button onclick="createRoom()">오픈채팅 만들기</button>
+
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </section>
+</div>
+</body>
+
+<script>
+  function createRoom(){
+    let title = $('#title').val();
+    let contents = $('#contents').val();
+    let imageFiles = document.getElementById('imageFiles').files;
+    let formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", contents);
+    for(let i=0; i<imageFiles.length; i++){
+      formData.append("imageFiles", imageFiles[i]);
+    }
+    $.ajax({
+      type:"POST",
+      url: `/api/openchat`,
+      data: formData,
+      headers: {
+        Authorization: localStorage.getItem('access_token')
+      },
+      processData: false,
+      contentType: false,
+      enctype:'multipart/form-data'
+    }).done(function(){
+      alert("chat 생성 완료")
+      location.replace(`/openChat`);
+    }).fail(function (xhr, textStatus, error){
+      console.log("AJAX 요청 실패: ", error);
+      console.log("상태 코드: ", xhr.status);
+      console.log("에러 내용: ", textStatus);
+    })
+  }
+
+</script>
+</html>

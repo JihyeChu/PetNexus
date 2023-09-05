@@ -1,164 +1,132 @@
 <!DOCTYPE HTML>
 
 <html>
-	<head>
+<head>
+	<title>펫 넥서스</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=63f6394b87e974f3b46f1a9c5688deba&libraries=services"></script>
+	<link rel="stylesheet" href="/css/main.css"/>
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#header").load("./header.html");
+		});
+	</script>
+</head>
 
-		<title>펫 넥서스</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="/css/main.css" />
-	</head>
-
-	<body class="homepage is-preload">
-		<div id="page-wrapper">
-
-			<!-- Header -->
-				<section id="header">
-					<div class="container">
-
-						<!-- Logo -->
-							<h1 id="logo"><a href="/home">PET Nexus</a></h1>
-
-						<!-- Nav -->
-							<nav id="nav">
-								<ul>
-									<li><a class="icon solid fa-home" href="/home"><span>HOME</span></a></li>
-									<li><a class="icon fa-chart-bar" href="/community"><span>커뮤니티</span></a></li>
-									<li><a class="icon solid fa-cog" href="/trade"><span>중고장터</span></a></li>
-									<li><a class="icon solid fa-retweet" href="/hospital"><span>병원찾기</span></a></li>
-									<li><a class="icon solid fa-sitemap" href="/openChat"><span>오픈 채팅</span></a></li>
-								</ul>
-							</nav>
-
-					</div>
-				</section>
-
-			<!-- Banner -->
-				<section id="banner">
-					<div class="container">
-						<p>찾으시는 물품이 있으신가요?</p>
-					</div>
-				</section>
-
-			<!-- Main -->
-				<section id="main">
-					<div class="container">
-						<div class="row">
-
-							<!-- Content -->
-								<div id="content" class="col-8 col-12-medium">
-
-									<!-- Post -->
-										<article class="box post" th:each = "trade : ${tradeList}">
-											<header>
-												<h2 th:text="${trade.title}"></h2>
-											</header>
-											<h3 th:text="${trade.category}"></h3>
-											<p th:text="${trade.content}"></p>
-											<ul class="actions">
-												<li><a  class="button icon solid fa-file">상품 상세보기</a></li>
-											</ul>
-										</article>
-
-								</div>
-
-							<!-- Sidebar -->
-								<div id="sidebar" class="col-4 col-12-medium">
-
-									<!-- Excerpts -->
-										<section>
-											<ul class="divided">
-												<li>
-
-													<!-- Excerpt -->
-														<article class="box excerpt">
-															<header>
-																<span class="date">July 30</span>
-																<h3><a href="#">Just another post</a></h3>
-															</header>
-															<p>Lorem ipsum dolor odio facilisis convallis. Etiam non nunc vel est
-															suscipit convallis non id orci lorem ipsum sed magna consequat feugiat lorem dolore.</p>
-														</article>
-
-												</li>
-												<li>
-
-													<!-- Excerpt -->
-														<article class="box excerpt">
-															<header>
-																<span class="date">July 28</span>
-																<h3><a href="#">And another post</a></h3>
-															</header>
-															<p>Lorem ipsum dolor odio facilisis convallis. Etiam non nunc vel est
-															suscipit convallis non id orci lorem ipsum sed magna consequat feugiat lorem dolore.</p>
-														</article>
-
-												</li>
-												<li>
-
-													<!-- Excerpt -->
-														<article class="box excerpt">
-															<header>
-																<span class="date">July 24</span>
-																<h3><a href="#">One more post</a></h3>
-															</header>
-															<p>Lorem ipsum dolor odio facilisis convallis. Etiam non nunc vel est
-															suscipit convallis non id orci lorem ipsum sed magna consequat feugiat lorem dolore.</p>
-														</article>
-
-												</li>
-											</ul>
-										</section>
-
-									<!-- Highlights -->
-										<section>
-											<ul class="divided">
-												<li>
-
-													<!-- Highlight -->
-														<article class="box highlight">
-															<header>
-																<h3><a href="#">Something of note</a></h3>
-															</header>
-															<a href="#" class="image left"><img src="images/pic06.jpg" alt="" /></a>
-															<p>Phasellus sed laoreet massa id justo mattis pharetra. Fusce suscipit ligula vel quam
-															viverra sit amet mollis tortor congue magna lorem ipsum dolor et quisque ut odio facilisis
-															convallis. Etiam non nunc vel est suscipit convallis non id orci. Ut interdum tempus
-															facilisis convallis. Etiam non nunc vel est suscipit convallis non id orci.</p>
-															<ul class="actions">
-																<li><a href="#" class="button icon solid fa-file">Learn More</a></li>
-															</ul>
-														</article>
-
-												</li>
-												<li>
-
-													<!-- Highlight -->
-														<article class="box highlight">
-															<header>
-																<h3><a href="#">Something of less note</a></h3>
-															</header>
-															<a href="#" class="image left"><img src="images/pic07.jpg" alt="" /></a>
-															<p>Phasellus sed laoreet massa id justo mattis pharetra. Fusce suscipit ligula vel quam
-															viverra sit amet mollis tortor congue magna lorem ipsum dolor et quisque ut odio facilisis
-															convallis. Etiam non nunc vel est suscipit convallis non id orci. Ut interdum tempus
-															facilisis convallis. Etiam non nunc vel est suscipit convallis non id orci.</p>
-															<ul class="actions">
-																<li><a href="#" class="button icon solid fa-file">Learn More</a></li>
-															</ul>
-														</article>
-
-												</li>
-											</ul>
-										</section>
-
-								</div>
-
-						</div>
-					</div>
-				</section>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+	<div id="header"></div>
 
 
+	<!-- Banner -->
+	<section id="banner">
+		<div class="container">
+			<p>찾으시는 물품이 있으신가요?</p>
 		</div>
-	</body>
+	</section>
+
+	<!-- Main -->
+	<section id="main">
+		<div class="container">
+			<div class="row">
+
+				<!-- Content -->
+				<div id="content" class="col-8 col-12-medium">
+
+					<!-- Post -->
+					<article class="box post">
+						<header>
+							<h2 th:text="${trade.title}"></h2>
+						</header>
+						<h3 th:text="${trade.category}"></h3>
+						<p th:text="${trade.content}"></p>
+						<p>
+							<span th:text="${trade.price}"></span> 원
+						</p>
+						<p>
+							<span id="latitude" hidden="hidden" th:text="${trade.latitude}"></span>
+							<span id="longitude" hidden="hidden" th:text="${trade.longitude}"></span>
+						</p>
+
+						<p style="margin-top:-12px">
+							<em class="link">
+								<a href="javascript:void(0);" onclick="window.open('http://fiy.daum.net/fiy/map/CsGeneral.daum', '_blank', 'width=981, height=650')">
+								</a>
+							</em>
+						</p>
+						<div id="map" style="width:500px;height:250px;"></div>
+						<div class="bg-white">
+							<div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+								<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+									<div th:each="imageFile : ${trade.getImageList()}">
+										<div class="group relative">
+											<img style="width: 120px; height: 90px" th:src="${imageFile}">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<ul class="actions">
+							<li><a th:onclick="|location.href='@{/tradeMarket/trade?tradeId={tradeId}(tradeId=${trade.id})}'|"
+								   class="button icon solid fa-file">수정하기</a></li>
+						</ul>
+					</article>
+
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+<script>
+	var latitude = document.getElementById("latitude");
+	if (latitude) {
+		var latitudeValue = parseFloat(latitude.textContent);
+		console.log("숫자:", latitudeValue)
+		console.log(typeof latitudeValue);
+	} else {
+		console.log("요소를 찾을 수 없습니다.");
+	}
+	var longitude = document.getElementById("longitude");
+	if (longitude) {
+		var longitudeValue = parseFloat(longitude.textContent);
+		console.log("숫자:", longitudeValue);
+		console.log(typeof longitudeValue);
+	} else {
+		console.log("요소를 찾을 수 없습니다.");
+	}
+	var mapContainer = document.getElementById('map');
+	var mapOption = {
+		center: new kakao.maps.LatLng(33.450701, 126.570667), // 중심 좌표 설정
+		level: 3 // 확대 수준 설정
+	};
+
+	// 지도를 생성합니다
+	var map = new kakao.maps.Map(mapContainer, mapOption);
+
+	// 주소-좌표 변환 객체를 생성합니다
+	var geocoder = new kakao.maps.services.Geocoder();
+
+	// 주소로 좌표를 검색합니다
+	var coords = new kakao.maps.LatLng(latitudeValue, longitudeValue);
+
+	// 결과값으로 받은 위치를 마커로 표시합니다
+	var marker = new kakao.maps.Marker({
+		map: map,
+		position: coords
+	});
+
+	// 인포윈도우로 장소에 대한 설명을 표시합니다
+	var infowindow = new kakao.maps.InfoWindow({
+		content: '<div style="width:150px;text-align:center;padding:6px 0;">희망장소</div>'
+	});
+	infowindow.open(map, marker);
+
+	// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+	map.setCenter(coords);
+
+</script>
+</body>
 </html>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>펫 넥서스</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="/css/main.css"/>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#header").load("./header.html");
+        });
+    </script>
+</head>
+
+<body class="homepage is-preload">
+<div id="page-wrapper">
+    <div id="header"></div>
+
+
+    <!-- Banner -->
+    <section id="banner">
+        <div class="container">
+            <p>찾으시는 물품이 있으신가요?</p>
+        </div>
+    </section>
+
+    <!-- Main -->
+    <section id="main">
+        <div class="container">
+            <div class="row">
+
+                <!-- Content -->
+                <div id="content" class="col-8 col-12-medium">
+
+                    <!-- Post -->
+                    <article class="box post" th:each="trade : ${tradeList}">
+                        <header>
+                            <h2 th:text="${trade.title}"></h2>
+                        </header>
+                        <h3 th:text="${trade.category}"></h3>
+                        <p th:text="${trade.content}"></p>
+                        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                            <div th:if="${not #lists.isEmpty(trade.getImageList())}" class="group relative">
+                                <img style="width: 120px; height: 90px" th:src="${trade.getImageList().get(0)}">
+                            </div>
+                        </div>
+                        <ul class="actions">
+                            <li><a th:onclick="|location.href='@{/tradeMarket/{tradeId}(tradeId=${trade.id})}'|" class="button icon solid fa-file">상품 상세보기</a></li>
+                        </ul>
+                    </article>
+
+                </div>
+
+                <!-- Sidebar -->
+                <div id="sidebar" class="col-4 col-12-medium">
+
+                    <!-- Excerpts -->
+                    <section>
+                        <ul class="divided">
+                            <li>
+                                <article class="box highlight">
+                                    <header>
+                                        <h3><a href="/tradeMarket/trade" class="button icon solid fa-file">글 작성하기</a>
+                                        </h3>
+                                    </header>
+                                </article>
+                            </li>
+                        </ul>
+                    </section>
+
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+</div>
+</body>
+</html>

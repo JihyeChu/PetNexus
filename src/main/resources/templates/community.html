@@ -1,92 +1,85 @@
 <!DOCTYPE HTML>
 
-<html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-	<head>
-		<title>펫 넥서스</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="/css/main.css" />
-	</head>
+<head>
+	<title>펫 넥서스</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
 
-	<body class="homepage is-preload">
-		<div id="page-wrapper">
+	<link rel="stylesheet" href="/css/main.css" />
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#header").load("./header.html");
+		});
+	</script>
+</head>
 
-			<!-- Header -->
-				<section id="header">
-					<div class="container">
+<body class="homepage is-preload">
+<div id="page-wrapper">
+	<div id="header"></div>
 
-						<!-- Logo -->
-							<h1 id="logo"><a href="/home">PET Nexus</a></h1>
-
-						<!-- Nav -->
-							<nav id="nav">
-								<ul>
-									<li><a class="icon solid fa-home" href="/home"><span>HOME</span></a></li>
-									<li><a class="icon fa-chart-bar" href="/community"><span>커뮤니티</span></a></li>
-									<li><a class="icon solid fa-cog" href="/trade"><span>중고장터</span></a></li>
-									<li><a class="icon solid fa-retweet" href="/hospital"><span>병원찾기</span></a></li>
-									<li><a class="icon solid fa-sitemap" href="/openChat"><span>오픈 채팅</span></a></li>
-								</ul>
-							</nav>
-
-					</div>
-				</section>
-
-			<!-- Banner -->
-				<section id="banner">
-					<div class="container">
-						<p>찾으시는 커뮤니티 글이 있으신가요?</p>
-					</div>
-				</section>
-
-			<!-- Main -->
-				<section id="main">
-					<div class="container">
-						<div class="row">
-
-							<!-- Content -->
-								<div id="content" class="col-8 col-12-medium">
-
-									<!-- Post -->
-										<article class="box post" th:each="post : ${postList}">
-											<header>
-												<h2 th:text="${post.title}"></h2>
-											</header>
-											<h3 th:text="${post.username}"></h3>
-											<p th:text="${post.content}"></p>
-											<ul class="actions">
-												<li><a  th:onclick="|location.href='@{/community/{postId}(postId=${post.id})}'|" class="button icon solid fa-file">게시글 보기</a></li>
-											</ul>
-										</article>
-
-								</div>
-
-							<!-- Sidebar -->
-								<div id="sidebar" class="col-4 col-12-medium">
-
-									<!-- Highlights -->
-										<section>
-											<ul class="divided">
-												<li>
-
-													<!-- Highlight -->
-														<article class="box highlight">
-															<header>
-																<h3><a href="/community/post" class="button icon solid fa-file">글 작성하기</a></h3>
-															</header>
-														</article>
-
-												</li>
-											</ul>
-										</section>
-
-								</div>
-
-						</div>
-					</div>
-				</section>
-
+	<!-- Banner -->
+	<section id="banner">
+		<div class="container">
+			<p>찾으시는 커뮤니티 글이 있으신가요?</p>
 		</div>
-	</body>
+	</section>
+
+	<!-- Main -->
+	<section id="main">
+		<div class="container">
+			<div class="row">
+
+				<!-- Content -->
+				<div id="content" class="col-8 col-12-medium">
+
+					<!-- Post -->
+					<article class="box post" th:each="post : ${postList}">
+						<header>
+							<h2 th:text="${post.title}"></h2>
+						</header>
+						<h3 th:text="${post.username}"></h3>
+						<p th:text="${post.content}"></p>
+						<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+							<div th:if="${not #lists.isEmpty(post.getImageList())}" class="group relative">
+								<img style="width: 120px; height: 90px" th:src="${post.getImageList().get(0)}">
+							</div>
+						</div>
+						<ul class="actions">
+							<li><a th:onclick="|location.href='@{/community/{postId}(postId=${post.id})}'|" class="button icon solid fa-file">게시글 보기</a></li>
+						</ul>
+					</article>
+
+				</div>
+
+				<!-- Sidebar -->
+				<div id="sidebar" class="col-4 col-12-medium">
+
+					<!-- Highlights -->
+					<section>
+						<ul class="divided">
+							<li>
+
+								<!-- Highlight -->
+								<article class="box highlight">
+									<header>
+										<h3><a href="/community/post" class="button icon solid fa-file">글 작성하기</a></h3>
+									</header>
+								</article>
+
+							</li>
+						</ul>
+					</section>
+
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+</div>
+</body>
 </html>
