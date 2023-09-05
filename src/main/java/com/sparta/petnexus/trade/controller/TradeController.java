@@ -2,6 +2,7 @@ package com.sparta.petnexus.trade.controller;
 
 import com.sparta.petnexus.common.response.ApiResponse;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
+import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.service.TradeService;
@@ -29,9 +30,9 @@ public class TradeController {
 
     @PostMapping("/trade")
     @Operation(summary = "거래게시글 생성", description = "@RequestBody를 통해 게시글 정보를 넘겨주고 생성합니다.")
-    public ResponseEntity<ApiResponse> createTrade(@RequestPart(value = "requestDto") TradeRequestDto requestDto,
+    public ResponseEntity<ApiResponse> createTrade(@ModelAttribute TradeRequestDto requestDto,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                   @RequestPart(value = "file", required = false) List<MultipartFile> files) throws IOException {
+                                                   @RequestPart(value = "imageFiles", required = false) List<MultipartFile> files) throws IOException {
         tradeService.createTrade(requestDto, userDetails.getUser(),files);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("거래게시글 생성 성공", HttpStatus.CREATED.value()));
     }

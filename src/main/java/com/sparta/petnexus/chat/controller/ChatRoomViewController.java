@@ -32,4 +32,6 @@ public class ChatRoomViewController {
         model.addAttribute("chatList", chatListResponseDto);
         return "openChatRoom";
     }
+
+
 }

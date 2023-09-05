@@ -1,5 +1,6 @@
 package com.sparta.petnexus.trade.entity;
 
+import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.trade.bookmark.entity.TradeBookmark;
 import com.sparta.petnexus.trade.comment.entity.TradeComment;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
@@ -54,6 +55,9 @@ public class Trade {
 
     @OneToMany(mappedBy = "trade", cascade = CascadeType.REMOVE)
     private List<TradeComment> tradeComments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trade", cascade = CascadeType.REMOVE)
+    private List<Image> image = new ArrayList<>();
 
     public void update(TradeRequestDto requestDto) {
         this.title = requestDto.getTitle();

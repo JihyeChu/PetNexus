@@ -2,12 +2,19 @@
 
 <html>
 
-	<head>
-		<title>펫 넥서스</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="/css/main.css" />
-	</head>
+<head>
+	<title>펫 넥서스</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+	<link rel="stylesheet" href="/css/main.css"/>
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#header").load("./header.html");
+		});
+	</script>
+</head>
 
 	<body class="homepage is-preload">
 		<div id="page-wrapper">
@@ -26,7 +33,7 @@
 									<li><a class="icon fa-chart-bar" href="/community"><span>커뮤니티</span></a></li>
 									<li><a class="icon solid fa-cog" href="/trade"><span>중고장터</span></a></li>
 									<li><a class="icon solid fa-retweet" href="/hospital"><span>병원찾기</span></a></li>
-									<li><a class="icon solid fa-sitemap" href="/openchat"><span>오픈 채팅</span></a></li>
+									<li><a class="icon solid fa-sitemap" href="/openChat"><span>오픈 채팅</span></a></li>
 								</ul>
 							</nav>
 
@@ -55,7 +62,7 @@
 											</header>
 											<p th:text="${chatRoom.content}"></p>
 											<ul class="actions">
-												<li><a  th:onclick="|location.href='@{/openchat/room?chatId={chatId}(chatId=${chatRoom.id})}'|"
+												<li><a  th:onclick="|location.href='@{/openChat/room?chatId={chatId}(chatId=${chatRoom.id})}'|"
 																class="button icon solid fa-file">채팅방 입장</a></li>
 											</ul>
 										</article>
