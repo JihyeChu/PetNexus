@@ -46,6 +46,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String accessToken = tokenProvider.generateToken(user, TokenProvider.ACCESS_TOKEN_DURATION);
         String targetUrl = getTargetUrl(accessToken);
+        tokenProvider.addTokenToCookie(request, response, accessToken);
 
         clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);

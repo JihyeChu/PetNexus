@@ -7,7 +7,6 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-
 	<link rel="stylesheet" href="/css/main.css" />
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script>
@@ -25,6 +24,10 @@
 	<section id="banner">
 		<div class="container">
 			<p>찾으시는 커뮤니티 글이 있으신가요?</p>
+			<div>
+				<input type="text" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
+				<button type="button" class="btn btn-outline-dark">검색</button>
+			</div>
 		</div>
 	</section>
 
@@ -40,19 +43,20 @@
 					<article class="box post" th:each="post : ${postList}">
 						<header>
 							<h2 th:text="${post.title}"></h2>
-						</header>
-						<h3 th:text="${post.username}"></h3>
-						<p th:text="${post.content}"></p>
-						<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-							<div th:if="${not #lists.isEmpty(post.getImageList())}" class="group relative">
+							<div style="float:right; margin-right: 30px" th:if="${not #lists.isEmpty(post.getImageList())}" class="group relative">
 								<img style="width: 120px; height: 90px" th:src="${post.getImageList().get(0)}">
 							</div>
-						</div>
+						</header>
+						<p th:text="${post.content}"></p>
+							<div>
+								<span style="padding-right: 30px" th:text="${post.username}"></span>
+								좋아요: <span th:text="${post.like}"></span>
+							</div>
 						<ul class="actions">
-							<li><a th:onclick="|location.href='@{/community/{postId}(postId=${post.id})}'|" class="button icon solid fa-file">게시글 보기</a></li>
+							<li><a th:onclick="|location.href='@{/community/{postId}(postId=${post.id})}'|"
+										 class="button icon solid fa-file">게시글 보기</a></li>
 						</ul>
 					</article>
-
 				</div>
 
 				<!-- Sidebar -->

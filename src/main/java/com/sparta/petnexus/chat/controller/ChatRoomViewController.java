@@ -33,5 +33,11 @@ public class ChatRoomViewController {
         return "openChatRoom";
     }
 
+    @GetMapping("/tradechat/room")
+    public String joinTradeChat(@RequestParam Long chatId, Model model) {
+        ChatListResponseDto chatListResponseDto = chatService.getAllChatByRoomId(chatId);
+        model.addAttribute("chatList", chatListResponseDto);
+        return "tradeChatRoom";
+    }
 
 }

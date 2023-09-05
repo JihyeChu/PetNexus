@@ -1,12 +1,13 @@
 <!DOCTYPE HTML>
 
-<html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>펫 넥서스</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-    <link rel="stylesheet" href="/css/main.css"/>
+    <link rel="stylesheet" href="/css/main.css" />
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -19,11 +20,14 @@
 <div id="page-wrapper">
     <div id="header"></div>
 
-
     <!-- Banner -->
     <section id="banner">
         <div class="container">
             <p>찾으시는 물품이 있으신가요?</p>
+            <div>
+                <input type="text" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
+                <button type="button" class="btn btn-outline-dark">검색</button>
+            </div>
         </div>
     </section>
 
@@ -37,15 +41,20 @@
 
                     <!-- Post -->
                     <article class="box post" th:each="trade : ${tradeList}">
+                        <button  style="float:right; margin-right: 30px" type="button" id="categoryButton" class="items-center gap-x-1 text-sm font-semibold leading-6">
+                            <span th:text="${trade.category}"></span>
+                        </button>
                         <header>
                             <h2 th:text="${trade.title}"></h2>
-                        </header>
-                        <h3 th:text="${trade.category}"></h3>
-                        <p th:text="${trade.content}"></p>
-                        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                            <div th:if="${not #lists.isEmpty(trade.getImageList())}" class="group relative">
+                            <h3 th:text="${trade.price}+원"></h3>
+                            <div style="float:right; margin-right: 30px" th:if="${not #lists.isEmpty(trade.getImageList())}" class="group relative">
                                 <img style="width: 120px; height: 90px" th:src="${trade.getImageList().get(0)}">
                             </div>
+                        </header>
+                        <p th:text="${trade.content}"></p>
+                        <div>
+                            <span style="padding-right: 30px" th:text="${trade.username}"></span>
+                            좋아요: <span th:text="${trade.tradeLikeCount}"></span>
                         </div>
                         <ul class="actions">
                             <li><a th:onclick="|location.href='@{/tradeMarket/{tradeId}(tradeId=${trade.id})}'|" class="button icon solid fa-file">상품 상세보기</a></li>

@@ -10,7 +10,7 @@
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			$("#header").load("./header.html");
+			$("#header").load("./resources/static/header.html");
 		});
 	</script>
 </head>
@@ -80,6 +80,10 @@
 						 class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
 					수정하기
 				</button>
+				<button  th:if="${post.id} != null" type="button"  onclick="Delete()"
+								 class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+					삭제하기
+				</button>
 			</div>
 		</div>
 	</section>
@@ -120,7 +124,24 @@
 		})
 	}
 
+	function Delete(){
+		let params = new URLSearchParams(location.search);
+		let id = params.get('postId');
+			$.ajax({
+				type: 'Delete',
+				url: `/api/post/${id}`,
+				headers: {
+					Authorization: localStorage.getItem('access_token')
+				},
+			}).done(function () {
+				alert("post 삭제 완료")
+				location.replace(`/community`);
+			})
+	}
+
 	function update(){
+		let params = new URLSearchParams(location.search);
+		let id = params.get('postId');
 		let title = $('#title').val();
 		let contents = $('#contents').val();
 		let imageFiles = document.getElementById('imageFiles').files;
@@ -149,4 +170,5 @@
 			console.log("에러 내용: ", textStatus);
 		})
 	}
+
 </script>

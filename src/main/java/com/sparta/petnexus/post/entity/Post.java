@@ -33,13 +33,13 @@ public class Post {
     @JoinColumn(name ="user_id")
     private User user;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<PostComment> postComments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Image> image = new ArrayList<>();
 
     public Post(PostRequestDto postRequestDto, User user){

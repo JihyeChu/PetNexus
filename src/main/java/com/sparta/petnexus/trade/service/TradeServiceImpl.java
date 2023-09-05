@@ -3,6 +3,8 @@ package com.sparta.petnexus.trade.service;
 import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.Image.repository.ImageRepository;
+import com.sparta.petnexus.chat.entity.TradeChatRoom;
+import com.sparta.petnexus.chat.repository.TradeChatRoomRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.notification.service.NotificationService;
@@ -34,6 +36,7 @@ public class TradeServiceImpl implements TradeService {
     private final ImageRepository imageRepository;
     private final AwsS3upload awsS3upload;
     private final NotificationService notificationService;
+    private final TradeChatRoomRepository tradeChatRoomRepository;
 
 
     @Override
@@ -50,6 +53,11 @@ public class TradeServiceImpl implements TradeService {
                 imageRepository.save(new Image(trade, fileUrl));
             }
         }
+        TradeChatRoom tradeChatRoom = TradeChatRoom.builder()
+                .buyer(user)
+                .trade(trade).build();
+
+        tradeChatRoomRepository.save(tradeChatRoom);
     }
 
     @Override

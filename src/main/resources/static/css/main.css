@@ -2169,7 +2169,7 @@ input, select, textarea {
 	#content > article {
 		border-top: solid 2px #e5e5e5;
 		box-shadow: inset 0px 8px 0px 0px #fff, inset 0px 10px 0px 0px #e5e5e5;
-		margin: 5em 0 0 0;
+		margin: 2em 0 0 0;
 		padding: 5em 0 0 0;
 	}
 

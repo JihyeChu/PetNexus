@@ -21,9 +21,8 @@ public class UserViewController {
         return "hospital";
     }
 
-    @GetMapping("/tradeKakaoMap")
-    public String map() {
-        return "tradeKakaoMap";
+    @GetMapping("/header")
+    public String header() {
+        return "header";
     }
-
 }
