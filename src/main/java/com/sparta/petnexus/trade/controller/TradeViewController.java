@@ -27,7 +27,7 @@ public class TradeViewController {
                             @RequestParam("sortBy") Optional<String> sortBy,
                             @RequestParam("isAsc") Optional<Boolean> isAsc){
         int currentPage = page.orElse(1)-1;
-        int pageSize = size.orElse(10);
+        int pageSize = size.orElse(5);
         String sort = sortBy.orElse("id");
         boolean Asc = isAsc.orElse(true);
         Page<TradeResponseDto> tradeResponseDtoList = tradeService.getTrade(currentPage, pageSize, sort, Asc);

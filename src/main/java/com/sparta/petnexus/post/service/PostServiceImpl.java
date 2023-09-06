@@ -14,7 +14,6 @@ import com.sparta.petnexus.post.postBookmark.repository.PostBookmarkRepository;
 import com.sparta.petnexus.post.postLike.entity.PostLike;
 import com.sparta.petnexus.post.postLike.repository.PostLikeRepository;
 import com.sparta.petnexus.post.repository.PostRepository;
-import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,8 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +67,14 @@ public class PostServiceImpl implements PostService {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Post> postList = postRepository.findAll(pageable);
         return postList.map(PostResponseDto::of);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> searchPost(String keyword){
+        List<Post> foundPostList = postRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+
+        return foundPostList.stream().map(PostResponseDto::of).collect(Collectors.toList());
     }
 
     @Override

@@ -47,6 +47,12 @@ public class TradeController {
         Page<TradeResponseDto> tradeList = tradeService.getTrade(page-1, size, sortBy, isAsc);
         return ResponseEntity.ok().body(tradeList);
     }
+    @GetMapping("/trade/search")
+    @Operation(summary = "trade 검색", description = "@RequestParam으로 keyword를 입력받아 해당 trade를 조회합니다.")
+    public ResponseEntity<List<TradeResponseDto>> searchTrade(@RequestParam("keyword") String keyword){
+        List<TradeResponseDto> searchList = tradeService.searchTrade(keyword);
+        return ResponseEntity.ok().body(searchList);
+    }
 
     @GetMapping("/trade/{tradeId}")
     @Operation(summary = "거래게시글 단건 조회", description = "@PathVariable를 통해 조회하고자 하는 게시글을 받아옵니다.")

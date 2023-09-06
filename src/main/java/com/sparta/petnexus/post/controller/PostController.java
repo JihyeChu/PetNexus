@@ -52,6 +52,13 @@ public class PostController {
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("/post/search")
+    @Operation(summary = "post 검색", description = "@RequestParam으로 keyword를 입력받아 해당 post를 조회합니다.")
+    public ResponseEntity<List<PostResponseDto>> searchPost(@RequestParam("keyword") String keyword){
+        List<PostResponseDto> searchList = postService.searchPost(keyword);
+        return ResponseEntity.ok().body(searchList);
+    }
+
     @GetMapping("/post/{postId}")
     @Operation(summary = "post 단건 조회", description = "@PathVariable로 postId 받아 postId 해당하는 post를 조회합니다.")
     public ResponseEntity<PostResponseDto> getPostId(

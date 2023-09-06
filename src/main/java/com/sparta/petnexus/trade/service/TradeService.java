@@ -26,6 +26,8 @@ public interface TradeService {
      * */
     public Page<TradeResponseDto> getTrade(int page, int size, String sortBy, boolean isAsc);
 
+    List<TradeResponseDto> searchTrade(String keyword);
+
     /*
      * 거래게시글 단건 조회
      * @param id : 조회 할 거래게시글 id
@@ -82,6 +84,7 @@ public interface TradeService {
      * @return : 거래게시글 entity
      * */
     public Trade findTrade(Long tradeId);
+
 
 
 }

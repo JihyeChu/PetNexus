@@ -26,6 +26,13 @@ public interface PostService {
      * @return : 게시글 전체 정보
      * */
     Page<PostResponseDto> getPosts(int page, int size, String sortBy, boolean isAsc);
+
+    /*
+    * 검색
+    * @param keyword : 검색한 키워드
+    * */
+    List<PostResponseDto> searchPost(String keyword);
+
     /**
      * 게시글 단건 전체 조회
      * @param postId : 조회 할 거래게시글 id
@@ -89,4 +96,6 @@ public interface PostService {
      * @param user : 게시글 작업 요청자
      * */
     void userCheck(Post post, User user);
+
+
 }

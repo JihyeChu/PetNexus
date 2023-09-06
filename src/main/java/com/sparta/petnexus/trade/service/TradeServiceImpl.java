@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +67,14 @@ public class TradeServiceImpl implements TradeService {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Trade> tradeList = tradeRepository.findAll(pageable);
         return tradeList.map(TradeResponseDto::of);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TradeResponseDto> searchTrade(String keyword){
+        List<Trade> foundPostList = tradeRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+
+        return foundPostList.stream().map(TradeResponseDto::of).collect(Collectors.toList());
     }
 
     @Override
