@@ -11,9 +11,16 @@
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			$("#header").load("./header.html");
+			$("#header").load("/header");
 		});
 	</script>
+	<script>
+		let msg = "[[${result}]]";
+		if(msg === '로그인이 필요합니다.') {
+			alert("로그인이 필요합니다.");
+		}
+	</script>
+
 </head>
 
 <body class="homepage is-preload">

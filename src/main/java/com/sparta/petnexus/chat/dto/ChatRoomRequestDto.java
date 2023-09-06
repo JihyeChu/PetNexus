@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Schema(description = "오픈채팅방 생성 및 수정 요청 DTO")
 public class ChatRoomRequestDto {
 

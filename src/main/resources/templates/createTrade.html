@@ -165,6 +165,14 @@
                          class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     완료
                 </button>
+                <button  th:if="${trade.id} != null" type="button"  onclick="update()"
+                         class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    수정하기
+                </button>
+                <button  th:if="${trade.id} != null" type="button"  onclick="Delete()"
+                         class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    삭제하기
+                </button>
             </div>
         </div>
     </section>
@@ -200,9 +208,6 @@
             type:"POST",
             url: `/api/trade`,
             data: formData,
-            headers: {
-                Authorization: localStorage.getItem('access_token')
-            },
             processData: false,
             contentType: false,
             enctype:'multipart/form-data'
@@ -215,6 +220,60 @@
             console.log("에러 내용: ", textStatus);
         })
     }
+
+    function Delete(){
+        let params = new URLSearchParams(location.search);
+        let id = params.get('tradeId');
+        $.ajax({
+            type: 'Delete',
+            url: `/api/trade/${id}`,
+        }).done(function () {
+            alert("post 삭제 완료")
+            location.replace(`/tradeMarket`);
+        })
+    }
+
+    function update(){
+        let params = new URLSearchParams(location.search);
+        let id = params.get('tradeId');
+        let title = $('#title').val();
+        let contents = $('#contents').val();
+        let latitude = document.getElementById('result1').value;
+        let longitude = document.getElementById('result2').value;
+        // let latitude = $('#latitude').val();
+        // let longitude = $('#longitude').val();
+        let price = $('#price').val();
+        let category = document.getElementById('categoryButton').textContent;
+        console.log(category);
+
+        let imageFiles = document.getElementById('imageFiles').files;
+        let formData = new FormData();
+        formData.append("title", title);
+        formData.append("content", contents);
+        formData.append("latitude", latitude);
+        formData.append("longitude", longitude);
+        formData.append("price", price);
+        formData.append("category", category);
+        for(let i=0; i<imageFiles.length; i++){
+            formData.append("imageFiles", imageFiles[i]);
+        }
+        $.ajax({
+            type:"PUT",
+            url: `/api/trade/${id}`,
+            data: formData,
+            processData: false,
+            contentType: false,
+            enctype:'multipart/form-data'
+        }).done(function(){
+            alert("trade 생성 완료")
+            location.replace(`/tradeMarket`);
+        }).fail(function (xhr, textStatus, error){
+            console.log("AJAX 요청 실패: ", error);
+            console.log("상태 코드: ", xhr.status);
+            console.log("에러 내용: ", textStatus);
+        })
+    }
+
     function selectCategory(category) {
         // 선택한 카테고리 값을 서버로 보낼 수 있도록 원하는 방식으로 처리합니다.
         // 여기서는 category를 서버로 전송하거나, 데이터를 저장하는 등의 작업을 수행할 수 있습니다.

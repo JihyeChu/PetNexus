@@ -15,7 +15,7 @@
                 <div class="panel-body">
                     <div class="chats">
 
-                        <div id="my-chat" th:each="chat : ${chatList.getChatList()}">
+                        <div id="my-chat" th:each="chat : ${chatList.getTradeChatList()}">
                             <div th:if="${#authentication.principal.user.username} == ${chat.sender}">
                                 <div class="chat-avatar">
                                     <a class="avatar avatar-online" data-toggle="tooltip" href="#"
@@ -34,7 +34,7 @@
                             </div>
                         </div>
 
-                        <div class="other-chat" th:each="chat : ${chatList.getChatList()}">
+                        <div class="other-chat" th:each="chat : ${chatList.getTradeChatList()}">
                             <div th:if="${#authentication.principal.user.username} != ${chat.sender}">
                                 <div class="chat-avatar">
                                     <a class="avatar avatar-online" data-toggle="tooltip" href="#"

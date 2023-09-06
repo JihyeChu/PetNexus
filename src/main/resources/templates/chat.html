@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>펫 넥서스</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+	<link rel="stylesheet" href="/css/main.css" />
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#header").load("/header");
+		});
+	</script>
+</head>
+
+<body class="homepage is-preload">
+<div id="page-wrapper">
+	<div id="header"></div>
+
+
+	<!-- Main -->
+	<section id="main">
+		<div class="container">
+			<div class="row">
+
+				<!-- Content -->
+				<div id="content" class="col-8 col-12-medium">
+
+					<!-- Post -->
+					<article class="box post" style="margin-left: 200px">
+						<input type="hidden" id="chat-id" th:value="${chat.id}">
+						<a style="float:right; margin-right: 30px" th:onclick="|location.href='@{/openchat/room?chatId={chatId}(chatId=${chat.id})}'|"
+							 class="button icon solid fa-file">채팅방 입장하기</a>
+						<header>
+							<h2 th:text="${chat.title}"></h2>
+						</header>
+						<h3 th:text="${chat.username}"></h3>
+						<p th:text="${chat.content}"></p>
+<!--						<div th:each="imageFile : ${chat.getImageList()}">-->
+<!--							<div class="group relative">-->
+<!--								<img style="max-width: 100%; height: auto;" th:src="${imageFile}">-->
+<!--							</div>-->
+<!--						</div>-->
+
+<!--						<ul class="actions">-->
+<!--							<li><a th:onclick="|location.href='@{/community/post?postId={postId}(postId=${post.id})}'|"-->
+<!--								   class="button icon solid fa-file">수정하기</a></li>-->
+<!--						</ul>-->
+					</article>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+</div>
+</body>
+</html>

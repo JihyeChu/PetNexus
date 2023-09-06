@@ -32,15 +32,13 @@
 					<!-- Post -->
 					<article class="box post" style="margin-left: 200px">
 						<input type="hidden" id="trade-id" th:value="${trade.id}">
-						<button  style="float:right; margin-right: 30px" type="button" id="categoryButton" class="items-center gap-x-1 text-sm font-semibold leading-6">
-							<span th:text="${trade.category}"></span>
-						</button>
+						<a style="float:right; margin-right: 30px" th:onclick="|location.href='@{/tradechat/room?chatId={chatId}(chatId=${trade.tradeChatroom})}'|"
+							 class="button icon solid fa-file">구매요청 보내기</a>
 						<header>
 							<h2 th:text="${trade.title}"></h2>
 							<h3 th:text="${trade.price}+원"></h3>
 						</header>
-						<a  th:onclick="|location.href='@{/tradechat/room?chatId={chatId}(chatId=${trade.tradeChatroom})}'|"
-									 class="button icon solid fa-file">구매요청 보내기</a>
+
 
 						<p th:text="${trade.content}"></p>
 
@@ -148,9 +146,6 @@
 		$.ajax({
 			type: 'POST',
 			url: `/api/trade/${tradeId}/like`,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 		}).done(function () {
 			alert("좋아요!")
 			location.replace(`/tradeMarket/`+tradeId);
@@ -165,9 +160,6 @@
 		$.ajax({
 			type: 'POST',
 			url: `/api/trade/${tradeId}/comment`,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 			contentType: 'application/json',
 			data: JSON.stringify({ comment: comment }),
 		}).done(function () {
@@ -185,9 +177,6 @@
 		$.ajax({
 			type: 'PUT',
 			url: `/api/trade/${tradeId}/comment/`+commentId,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 			contentType: 'application/json',
 			data: JSON.stringify({ comment: comment }),
 		}).done(function () {
@@ -202,9 +191,6 @@
 		$.ajax({
 			type: 'Delete',
 			url: `/api/trade/${tradeId}/comment/`+commentId,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 		}).done(function () {
 			alert("댓글 삭제 완료")
 			location.replace(`/tradeMarket/`+tradeId);

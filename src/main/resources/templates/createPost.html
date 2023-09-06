@@ -10,7 +10,7 @@
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			$("#header").load("./resources/static/header.html");
+			$("#header").load("/header");
 		});
 	</script>
 </head>
@@ -108,9 +108,6 @@
 			type:"POST",
 			url: `/api/post`,
 			data: formData,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 			processData: false,
 			contentType: false,
 			enctype:'multipart/form-data'
@@ -130,9 +127,6 @@
 			$.ajax({
 				type: 'Delete',
 				url: `/api/post/${id}`,
-				headers: {
-					Authorization: localStorage.getItem('access_token')
-				},
 			}).done(function () {
 				alert("post 삭제 완료")
 				location.replace(`/community`);
@@ -155,9 +149,6 @@
 			type:"PUT",
 			url: `/api/post/${id}`,
 			data: formData,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 			processData: false,
 			contentType: false,
 			enctype:'multipart/form-data'

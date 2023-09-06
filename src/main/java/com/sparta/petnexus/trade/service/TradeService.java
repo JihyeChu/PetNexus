@@ -38,7 +38,7 @@ public interface TradeService {
      * @param id : 수정 할 거래게시글 id
      * @param user : 거래게시글 수정 요청자
      * */
-    public void updateTrade(TradeRequestDto requestDto, Long tradeId, User user);
+    public void updateTrade(TradeRequestDto requestDto, Long tradeId, User user, List<MultipartFile> files) throws IOException;
 
     /*
      * 거래게시글 삭제

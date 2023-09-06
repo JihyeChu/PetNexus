@@ -11,39 +11,30 @@
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			$("#header").load("./header.html");
+			$("#header").load("/header");
 		});
+	</script>
+	<script>
+		let msg = "[[${result}]]";
+		if(msg === '로그인이 필요합니다.') {
+			alert("로그인이 필요합니다.");
+		}
 	</script>
 </head>
 
 	<body class="homepage is-preload">
-		<div id="page-wrapper">
+	<div id="page-wrapper">
+		<div id="header"></div>
 
-			<!-- Header -->
-				<section id="header">
-					<div class="container">
-
-						<!-- Logo -->
-							<h1 id="logo"><a href="/home">PET Nexus</a></h1>
-
-						<!-- Nav -->
-							<nav id="nav">
-								<ul>
-									<li><a class="icon solid fa-home" href="/home"><span>HOME</span></a></li>
-									<li><a class="icon fa-chart-bar" href="/community"><span>커뮤니티</span></a></li>
-									<li><a class="icon solid fa-cog" href="/trade"><span>중고장터</span></a></li>
-									<li><a class="icon solid fa-retweet" href="/hospital"><span>병원찾기</span></a></li>
-									<li><a class="icon solid fa-sitemap" href="/openChat"><span>오픈 채팅</span></a></li>
-								</ul>
-							</nav>
-
-					</div>
-				</section>
 
 			<!-- Banner -->
 				<section id="banner">
 					<div class="container">
-						<p>찾으시는 커뮤니티 글이 있으신가요?</p>
+						<p>찾으시는 채팅방이 있으신가요?</p>
+						<div>
+							<input type="text" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
+							<button type="button" class="btn btn-outline-dark">검색</button>
+						</div>
 					</div>
 				</section>
 
@@ -64,6 +55,8 @@
 											<ul class="actions">
 												<li><a  th:onclick="|location.href='@{/openchat/room?chatId={chatId}(chatId=${chatRoom.id})}'|"
 																class="button icon solid fa-file">채팅방 입장</a></li>
+												<li><a th:onclick="|location.href='@{/openchat/{chatId}(chatId=${chatRoom.id})}'|"
+															 class="button icon solid fa-file">게시글 보기</a></li>
 											</ul>
 										</article>
 
@@ -80,7 +73,7 @@
 													<!-- Highlight -->
 														<article class="box highlight">
 															<header>
-																<h3><a href="/community/post" class="button icon solid fa-file">글 작성하기</a></h3>
+																<h3><a href="/openchat/create" class="button icon solid fa-file">채팅방 생성하기</a></h3>
 															</header>
 														</article>
 

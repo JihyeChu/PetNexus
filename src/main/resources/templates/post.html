@@ -80,16 +80,13 @@
 		$.ajax({
 			type: 'POST',
 			url: `/api/post/${postId}/like`,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 		}).done(function () {
 			alert("좋아요!")
 			location.replace(`/community/`+postId);
 		})
 	}
 
-	function create(){
+	function create() {
 		let comment = $('#comment').val();
 		let postIdElement = document.getElementById('post-id');
 		let postId = postIdElement.value;
@@ -97,9 +94,6 @@
 		$.ajax({
 			type: 'POST',
 			url: `/api/post/${postId}/comment`,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 			contentType: 'application/json',
 			data: JSON.stringify({ comment: comment }),
 		}).done(function () {
@@ -117,9 +111,6 @@
 		$.ajax({
 			type: 'PUT',
 			url: `/api/post/${postId}/comment/`+commentId,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 			contentType: 'application/json',
 			data: JSON.stringify({ comment: comment }),
 		}).done(function () {
@@ -134,9 +125,6 @@
 		$.ajax({
 			type: 'Delete',
 			url: `/api/post/${postId}/comment/`+commentId,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 		}).done(function () {
 			alert("댓글 삭제 완료")
 			location.replace(`/community/`+postId);

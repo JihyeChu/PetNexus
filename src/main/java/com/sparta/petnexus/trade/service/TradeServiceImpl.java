@@ -74,7 +74,8 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public void updateTrade(TradeRequestDto requestDto, Long tradeId, User user) {
+    public void updateTrade(TradeRequestDto requestDto, Long tradeId, User user, List<MultipartFile> files)
+            throws IOException {
         Trade trade = findTrade(tradeId);
 
         if (!user.getId().equals(trade.getUser().getId())) {
@@ -82,6 +83,16 @@ public class TradeServiceImpl implements TradeService {
         }
 
         trade.update(requestDto);
+
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = awsS3upload.upload(file, "trade " + trade.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, trade.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(trade, fileUrl));
+            }
+        }
     }
 
     @Override

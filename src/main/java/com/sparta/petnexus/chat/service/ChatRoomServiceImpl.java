@@ -5,6 +5,7 @@ import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.Image.repository.ImageRepository;
 import com.sparta.petnexus.chat.dto.ChatRoomListResponseDto;
 import com.sparta.petnexus.chat.dto.ChatRoomRequestDto;
+import com.sparta.petnexus.chat.dto.ChatRoomResponseDto;
 import com.sparta.petnexus.chat.dto.TradeChatRoomListResponseDto;
 import com.sparta.petnexus.chat.entity.ChatRoom;
 import com.sparta.petnexus.chat.entity.TradeChatRoom;
@@ -44,6 +45,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByOrderByCreatedAtAsc();
 
         return ChatRoomListResponseDto.of(chatRoomList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ChatRoomResponseDto getOpenChatRoom(Long id) {
+        ChatRoom chatRoom = findChatRoom(id);
+
+        return ChatRoomResponseDto.of(chatRoom);
     }
 
     // 오픈채팅방 생성
