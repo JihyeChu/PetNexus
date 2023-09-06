@@ -6,6 +6,8 @@ import com.sparta.petnexus.Image.repository.ImageRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.notification.service.NotificationService;
+import com.sparta.petnexus.post.dto.PostResponseDto;
+import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.trade.bookmark.entity.TradeBookmark;
 import com.sparta.petnexus.trade.bookmark.repository.TradeBookmarkRepository;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
@@ -16,6 +18,10 @@ import com.sparta.petnexus.trade.like.repository.TradeLikeRepository;
 import com.sparta.petnexus.trade.repository.TradeRepository;
 import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,8 +60,12 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TradeResponseDto> getTrade() {
-        return tradeRepository.findAll().stream().map(TradeResponseDto::of).toList();
+    public Page<TradeResponseDto> getTrade(int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Trade> tradeList = tradeRepository.findAll(pageable);
+        return tradeList.map(TradeResponseDto::of);
     }
 
     @Override

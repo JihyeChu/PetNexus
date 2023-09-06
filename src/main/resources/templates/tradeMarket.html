@@ -5,9 +5,10 @@
     <title>펫 넥서스</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
     <link rel="stylesheet" href="/css/main.css"/>
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#header").load("./header.html");
@@ -52,6 +53,13 @@
                         </ul>
                     </article>
 
+                </div>
+
+                <div th:if="${tradeList.totalPages > 0}" class="pagination"
+                     th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{/tradeMarket(size=${tradeList.size}, page=${pageNumber})}"
+                       th:text=${pageNumber}
+                       th:class="${pageNumber==tradeList.number + 1} ? active"></a>
                 </div>
 
                 <!-- Sidebar -->

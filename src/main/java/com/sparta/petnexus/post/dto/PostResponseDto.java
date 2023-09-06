@@ -7,9 +7,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
@@ -35,10 +35,11 @@ public class PostResponseDto {
 
     @Schema(description = "post에 달린 댓글 리스트")
     private List<PostCommentResponseDto> postComments;
+
     @Schema(description = "post에 달린 이미지 리스트")
     private List<String> imageList;
 
-    public static PostResponseDto of(Post post){
+    public static PostResponseDto of(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())

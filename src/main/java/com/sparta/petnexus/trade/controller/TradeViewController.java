@@ -3,6 +3,7 @@ package com.sparta.petnexus.trade.controller;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.service.TradeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,9 +22,23 @@ public class TradeViewController {
     private final TradeService tradeService;
 
     @GetMapping("/tradeMarket")
-    public String tradeList(Model model){
-        List<TradeResponseDto> tradeResponseDtoList = tradeService.getTrade();
+    public String tradeList(Model model, @RequestParam("page") Optional<Integer> page,
+                            @RequestParam("size") Optional<Integer> size,
+                            @RequestParam("sortBy") Optional<String> sortBy,
+                            @RequestParam("isAsc") Optional<Boolean> isAsc){
+        int currentPage = page.orElse(1)-1;
+        int pageSize = size.orElse(10);
+        String sort = sortBy.orElse("id");
+        boolean Asc = isAsc.orElse(true);
+        Page<TradeResponseDto> tradeResponseDtoList = tradeService.getTrade(currentPage, pageSize, sort, Asc);
         model.addAttribute("tradeList", tradeResponseDtoList);
+        int totalPages = tradeResponseDtoList.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
         return "tradeMarket";
     }
 

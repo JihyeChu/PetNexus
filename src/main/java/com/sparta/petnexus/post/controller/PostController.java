@@ -4,12 +4,18 @@ import com.sparta.petnexus.common.response.ApiResponse;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
+import com.sparta.petnexus.post.entity.Post;
+import com.sparta.petnexus.post.repository.PostRepository;
 import com.sparta.petnexus.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,8 +44,12 @@ public class PostController {
 
     @GetMapping("/post")
     @Operation(summary = "post 전체 조회", description = "매개변수를 받지 않고 전체 post를 조회합니다.")
-    public ResponseEntity<List<PostResponseDto>> getPosts(){
-        return ResponseEntity.ok(postService.getPosts());
+    public ResponseEntity<Page<PostResponseDto>> getPosts(@RequestParam("page") int page,
+                                                          @RequestParam("size") int size,
+                                                          @RequestParam("sortBy") String sortBy,
+                                                          @RequestParam("isAsc") boolean isAsc){
+        Page<PostResponseDto> result = postService.getPosts(page-1, size, sortBy, isAsc);
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/post/{postId}")

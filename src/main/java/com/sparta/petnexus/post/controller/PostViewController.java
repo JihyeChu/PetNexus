@@ -2,24 +2,42 @@ package com.sparta.petnexus.post.controller;
 
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.service.PostService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 @Controller
 @RequiredArgsConstructor
 public class PostViewController {
 
     private final PostService postService;
-
     @GetMapping("/community")
-    public String community(Model model) {
-        List<PostResponseDto> postResponseDtoList = postService.getPosts();
+    public String community(Model model, @RequestParam("page") Optional<Integer> page,
+                            @RequestParam("size") Optional<Integer> size,
+                            @RequestParam("sortBy") Optional<String> sortBy,
+                            @RequestParam("isAsc") Optional<Boolean> isAsc){
+        int currentPage = page.orElse(1)-1;
+        int pageSize = size.orElse(10);
+        String sort = sortBy.orElse("id");
+        boolean Asc = isAsc.orElse(true);
+        Page<PostResponseDto> postResponseDtoList = postService.getPosts(currentPage, pageSize, sort, Asc);
         model.addAttribute("postList", postResponseDtoList);
+        int totalPages = postResponseDtoList.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
         return "community";
     }
 
