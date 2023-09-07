@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+
 @Controller
 @RequiredArgsConstructor
 public class TradeViewController {
@@ -28,12 +29,12 @@ public class TradeViewController {
     public String tradeList(Model model, @RequestParam("page") Optional<Integer> page,
                             @RequestParam("size") Optional<Integer> size,
                             @RequestParam("sortBy") Optional<String> sortBy,
-                            @RequestParam("isAsc") Optional<Boolean> isAsc){
-        int currentPage = page.orElse(1)-1;
+                            @RequestParam("isAsc") Optional<Boolean> isAsc) {
+        int currentPage = page.orElse(1) - 1;
         int pageSize = size.orElse(5);
         String sort = sortBy.orElse("id");
-        boolean AscDesc = isAsc.orElse(true);
-        Page<TradeResponseDto> tradeResponseDtoList = tradeService.getTrade(currentPage, pageSize, sort, AscDesc);
+        boolean Asc = isAsc.orElse(true);
+        Page<TradeResponseDto> tradeResponseDtoList = tradeService.getTrade(currentPage, pageSize, sort, Asc);
         model.addAttribute("tradeList", tradeResponseDtoList);
         int totalPages = tradeResponseDtoList.getTotalPages();
         if (totalPages > 0) {
@@ -54,11 +55,11 @@ public class TradeViewController {
 
     @GetMapping("/tradeMarket/trade")
     public String createTrade(@RequestParam(required = false) Long tradeId, Model model, @AuthenticationPrincipal
-    UserDetailsImpl userDetails, RedirectAttributes rttr){
-        if(userDetails == null){
+    UserDetailsImpl userDetails, RedirectAttributes rttr) {
+        if (userDetails == null) {
             rttr.addFlashAttribute("result", "로그인이 필요합니다.");
             return "redirect:/tradeMarket";
-        }else {
+        } else {
             if (tradeId == null) {
                 model.addAttribute("trade", new TradeResponseDto());
             } else {
