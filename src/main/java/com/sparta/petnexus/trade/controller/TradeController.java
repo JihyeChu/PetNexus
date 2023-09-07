@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,8 +51,10 @@ public class TradeController {
     }
     @GetMapping("/trade/search")
     @Operation(summary = "trade 검색", description = "@RequestParam으로 keyword를 입력받아 해당 trade를 조회합니다.")
-    public ResponseEntity<List<TradeResponseDto>> searchTrade(@RequestParam("keyword") String keyword){
-        List<TradeResponseDto> searchList = tradeService.searchTrade(keyword);
+    public ResponseEntity<Page<TradeResponseDto>> searchTrade(@RequestParam("keyword") String keyword,   @RequestParam("page") int page,
+                                                              @RequestParam("size") int size){
+        Pageable pageable = PageRequest.of(page -1, size);
+        Page<TradeResponseDto> searchList = tradeService.searchTrade(keyword, pageable);
         return ResponseEntity.ok().body(searchList);
     }
 

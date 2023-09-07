@@ -54,8 +54,10 @@ public class PostController {
 
     @GetMapping("/post/search")
     @Operation(summary = "post 검색", description = "@RequestParam으로 keyword를 입력받아 해당 post를 조회합니다.")
-    public ResponseEntity<List<PostResponseDto>> searchPost(@RequestParam("keyword") String keyword){
-        List<PostResponseDto> searchList = postService.searchPost(keyword);
+    public ResponseEntity<Page<PostResponseDto>> searchPost(@RequestParam("keyword") String keyword,   @RequestParam("page") int page,
+                                                            @RequestParam("size") int size){
+        Pageable pageable = PageRequest.of(page -1, size);
+        Page<PostResponseDto> searchList = postService.searchPost(keyword, pageable);
         return ResponseEntity.ok().body(searchList);
     }
 

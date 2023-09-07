@@ -62,7 +62,7 @@ public class TradeServiceImpl implements TradeService {
     @Override
     @Transactional(readOnly = true)
     public Page<TradeResponseDto> getTrade(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Trade> tradeList = tradeRepository.findAll(pageable);
@@ -71,10 +71,10 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TradeResponseDto> searchTrade(String keyword){
-        List<Trade> foundPostList = tradeRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+    public Page<TradeResponseDto> searchTrade(String keyword, Pageable pageable){
+        Page<Trade> foundPostList = tradeRepository.findByTitleContainingOrContentContainingOrderByTitleDescContentDesc(keyword, keyword, pageable);
 
-        return foundPostList.stream().map(TradeResponseDto::of).collect(Collectors.toList());
+        return foundPostList.map(TradeResponseDto::of);
     }
 
     @Override

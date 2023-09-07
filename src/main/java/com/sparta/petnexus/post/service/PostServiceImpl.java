@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public Page<PostResponseDto> getPosts(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Post> postList = postRepository.findAll(pageable);
@@ -71,10 +72,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostResponseDto> searchPost(String keyword){
-        List<Post> foundPostList = postRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+    public Page<PostResponseDto> searchPost(String keyword, Pageable pageable){
+        Page<Post> foundPostList = postRepository.findByTitleContainingOrContentContainingOrderByTitleDescContentDesc(keyword, keyword, pageable);
 
-        return foundPostList.stream().map(PostResponseDto::of).collect(Collectors.toList());
+        return foundPostList.map(PostResponseDto::of);
     }
 
     @Override

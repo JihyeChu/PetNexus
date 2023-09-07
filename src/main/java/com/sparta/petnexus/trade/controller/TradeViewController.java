@@ -29,8 +29,8 @@ public class TradeViewController {
         int currentPage = page.orElse(1)-1;
         int pageSize = size.orElse(5);
         String sort = sortBy.orElse("id");
-        boolean Asc = isAsc.orElse(true);
-        Page<TradeResponseDto> tradeResponseDtoList = tradeService.getTrade(currentPage, pageSize, sort, Asc);
+        boolean AscDesc = isAsc.orElse(true);
+        Page<TradeResponseDto> tradeResponseDtoList = tradeService.getTrade(currentPage, pageSize, sort, AscDesc);
         model.addAttribute("tradeList", tradeResponseDtoList);
         int totalPages = tradeResponseDtoList.getTotalPages();
         if (totalPages > 0) {

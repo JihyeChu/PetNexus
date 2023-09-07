@@ -28,8 +28,8 @@ public class PostViewController {
         int currentPage = page.orElse(1)-1;
         int pageSize = size.orElse(5);
         String sort = sortBy.orElse("id");
-        boolean Asc = isAsc.orElse(true);
-        Page<PostResponseDto> postResponseDtoList = postService.getPosts(currentPage, pageSize, sort, Asc);
+        boolean AscDesc = isAsc.orElse(true);
+        Page<PostResponseDto> postResponseDtoList = postService.getPosts(currentPage, pageSize, sort, AscDesc);
         model.addAttribute("postList", postResponseDtoList);
         int totalPages = postResponseDtoList.getTotalPages();
         if (totalPages > 0) {

@@ -5,6 +5,7 @@ import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.user.entity.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public interface PostService {
     * 검색
     * @param keyword : 검색한 키워드
     * */
-    List<PostResponseDto> searchPost(String keyword);
+    Page<PostResponseDto> searchPost(String keyword, Pageable pageable);
 
     /**
      * 게시글 단건 전체 조회
