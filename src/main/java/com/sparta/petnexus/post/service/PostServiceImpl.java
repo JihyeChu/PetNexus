@@ -1,8 +1,8 @@
 package com.sparta.petnexus.post.service;
 
+import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.Image.repository.ImageRepository;
-import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.notification.service.NotificationService;
@@ -25,10 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +60,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public Page<PostResponseDto> getPosts(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Post> postList = postRepository.findAll(pageable);
@@ -71,10 +69,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostResponseDto> searchPost(String keyword){
-        List<Post> foundPostList = postRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+    public Page<PostResponseDto> searchPost(String keyword, Pageable pageable){
+        Page<Post> foundPostList = postRepository.findByTitleContainingOrContentContainingOrderByTitleDescContentDesc(keyword, keyword, pageable);
 
-        return foundPostList.stream().map(PostResponseDto::of).collect(Collectors.toList());
+        return foundPostList.map(PostResponseDto::of);
     }
 
     @Override

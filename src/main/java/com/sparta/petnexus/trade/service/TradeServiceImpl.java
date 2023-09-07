@@ -8,8 +8,6 @@ import com.sparta.petnexus.chat.repository.TradeChatRoomRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.notification.service.NotificationService;
-import com.sparta.petnexus.post.dto.PostResponseDto;
-import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.trade.bookmark.entity.TradeBookmark;
 import com.sparta.petnexus.trade.bookmark.repository.TradeBookmarkRepository;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
@@ -31,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,7 +67,7 @@ public class TradeServiceImpl implements TradeService {
     @Override
     @Transactional(readOnly = true)
     public Page<TradeResponseDto> getTrade(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Trade> tradeList = tradeRepository.findAll(pageable);
@@ -79,10 +76,10 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TradeResponseDto> searchTrade(String keyword){
-        List<Trade> foundPostList = tradeRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+    public Page<TradeResponseDto> searchTrade(String keyword, Pageable pageable){
+        Page<Trade> foundPostList = tradeRepository.findByTitleContainingOrContentContainingOrderByTitleDescContentDesc(keyword, keyword, pageable);
 
-        return foundPostList.stream().map(TradeResponseDto::of).collect(Collectors.toList());
+        return foundPostList.map(TradeResponseDto::of);
     }
 
     @Override

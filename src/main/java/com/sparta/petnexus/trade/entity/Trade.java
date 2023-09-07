@@ -9,7 +9,6 @@ import com.sparta.petnexus.trade.like.entity.TradeLike;
 import com.sparta.petnexus.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.ErrorResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Table(name="trade")
+@Table(name = "trade")
 public class Trade {
 
     @Id
@@ -45,7 +44,7 @@ public class Trade {
     private CategoryEnum category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "trade", orphanRemoval = true)

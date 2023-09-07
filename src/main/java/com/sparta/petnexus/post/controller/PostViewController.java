@@ -31,8 +31,8 @@ public class PostViewController {
         int currentPage = page.orElse(1)-1;
         int pageSize = size.orElse(5);
         String sort = sortBy.orElse("id");
-        boolean Asc = isAsc.orElse(true);
-        Page<PostResponseDto> postResponseDtoList = postService.getPosts(currentPage, pageSize, sort, Asc);
+        boolean AscDesc = isAsc.orElse(true);
+        Page<PostResponseDto> postResponseDtoList = postService.getPosts(currentPage, pageSize, sort, AscDesc);
         model.addAttribute("postList", postResponseDtoList);
         int totalPages = postResponseDtoList.getTotalPages();
         if (totalPages > 0) {
@@ -53,7 +53,7 @@ public class PostViewController {
 
     @GetMapping("/community/post")
     public String createPost(@RequestParam(required = false) Long postId, Model model, @AuthenticationPrincipal
-            UserDetailsImpl userDetails, RedirectAttributes rttr) {
+    UserDetailsImpl userDetails, RedirectAttributes rttr) {
         if(userDetails == null){
             rttr.addFlashAttribute("result", "로그인이 필요합니다.");
             return "redirect:/community";
