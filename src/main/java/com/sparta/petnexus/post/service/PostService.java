@@ -4,6 +4,7 @@ import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.entity.Post;
 import com.sparta.petnexus.user.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,7 +25,13 @@ public interface PostService {
      * 게시글 전체 조회
      * @return : 게시글 전체 정보
      * */
-    List<PostResponseDto> getPosts();
+    Page<PostResponseDto> getPosts(int page, int size, String sortBy, boolean isAsc);
+
+    /*
+    * 검색
+    * @param keyword : 검색한 키워드
+    * */
+    List<PostResponseDto> searchPost(String keyword);
 
     /**
      * 게시글 단건 전체 조회
@@ -89,4 +96,6 @@ public interface PostService {
      * @param user : 게시글 작업 요청자
      * */
     void userCheck(Post post, User user);
+
+
 }

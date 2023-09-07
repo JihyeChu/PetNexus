@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <link rel="stylesheet" href="/css/main.css" />
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="/css/main.css"/>
     <script>
         $(document).ready(function () {
             $("#header").load("/header");
@@ -67,6 +68,13 @@
                         </ul>
                     </article>
 
+                </div>
+
+                <div th:if="${tradeList.totalPages > 0}" class="pagination"
+                     th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{/tradeMarket(size=${tradeList.size}, page=${pageNumber})}"
+                       th:text=${pageNumber}
+                       th:class="${pageNumber==tradeList.number + 1} ? active"></a>
                 </div>
 
                 <!-- Sidebar -->

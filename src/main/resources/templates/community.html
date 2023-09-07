@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html>
 
 <head>
 	<title>펫 넥서스</title>
@@ -25,6 +25,16 @@
 
 <body class="homepage is-preload">
 <div id="page-wrapper">
+
+
+				<div th:if="${postList.totalPages > 0}" class="pagination"
+					 th:each="pageNumber : ${pageNumbers}">
+					<a th:href="@{/community(size=${postList.size}, page=${pageNumber})}"
+					   th:text=${pageNumber}
+					   th:class="${pageNumber==postList.number + 1} ? active"></a>
+
+          
+          
 	<div id="header"></div>
 
 	<!-- Banner -->
@@ -64,33 +74,37 @@
 										 class="button icon solid fa-file">게시글 보기</a></li>
 						</ul>
 					</article>
-				</div>
-
-				<!-- Sidebar -->
-				<div id="sidebar" class="col-4 col-12-medium">
-
-					<!-- Highlights -->
-					<section>
-						<ul class="divided">
-							<li>
-
-								<!-- Highlight -->
-								<article class="box highlight">
-									<header>
-										<h3><a href="/community/post" class="button icon solid fa-file">글 작성하기</a></h3>
-									</header>
-								</article>
-
-							</li>
-						</ul>
-					</section>
 
 				</div>
 
-			</div>
-		</div>
-	</section>
+                <!-- Sidebar -->
+                <div id="sidebar" class="col-4 col-12-medium">
 
-</div>
+                    <!-- Highlights -->
+                    <section>
+                        <ul class="divided">
+                            <li>
+
+                                <!-- Highlight -->
+                                <article class="box highlight">
+                                    <header>
+                                        <h3><a href="/community/post" class="button icon solid fa-file">글 작성하기</a></h3>
+                                    </header>
+                                </article>
+
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+
+		</div></section></div>
 </body>
+<script>
+	$(document).ready(function () {
+		$("#header").load("./header.html");
+	});
+
+</script>
+
 </html>
