@@ -1,12 +1,8 @@
 package com.sparta.petnexus.trade.dto;
 
 import com.sparta.petnexus.Image.entity.Image;
-import com.sparta.petnexus.trade.bookmark.entity.TradeBookmark;
 import com.sparta.petnexus.trade.comment.dto.TradeCommentResponseDto;
-import com.sparta.petnexus.trade.comment.entity.TradeComment;
-import com.sparta.petnexus.trade.entity.CategoryEnum;
 import com.sparta.petnexus.trade.entity.Trade;
-import com.sparta.petnexus.trade.like.entity.TradeLike;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,7 +46,7 @@ public class TradeResponseDto {
     private Long tradeChatroom;
 
 
-    public static TradeResponseDto of(Trade trade){
+    public static TradeResponseDto of(Trade trade) {
         return TradeResponseDto.builder()
                 .id(trade.getId())
                 .title(trade.getTitle())

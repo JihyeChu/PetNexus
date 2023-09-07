@@ -1,8 +1,8 @@
 package com.sparta.petnexus.post.service;
 
+import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.Image.repository.ImageRepository;
-import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.notification.service.NotificationService;
@@ -22,14 +22,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +83,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void updatePost(Long postId, PostRequestDto postRequestDto, User user) {
+    public void updatePost(Long postId, PostRequestDto postRequestDto, User user, List<MultipartFile> files) throws IOException {
         Post post = findPost(postId);
 
         if (!user.getId().equals(post.getUser().getId())) {

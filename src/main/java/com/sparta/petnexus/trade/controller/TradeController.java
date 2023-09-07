@@ -2,7 +2,6 @@ package com.sparta.petnexus.trade.controller;
 
 import com.sparta.petnexus.common.response.ApiResponse;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
-import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.service.TradeService;

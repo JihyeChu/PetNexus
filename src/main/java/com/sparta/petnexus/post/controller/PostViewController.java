@@ -2,7 +2,6 @@ package com.sparta.petnexus.post.controller;
 
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.service.PostService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -26,8 +25,8 @@ public class PostViewController {
     public String community(Model model, @RequestParam("page") Optional<Integer> page,
                             @RequestParam("size") Optional<Integer> size,
                             @RequestParam("sortBy") Optional<String> sortBy,
-                            @RequestParam("isAsc") Optional<Boolean> isAsc){
-        int currentPage = page.orElse(1)-1;
+                            @RequestParam("isAsc") Optional<Boolean> isAsc) {
+        int currentPage = page.orElse(1) - 1;
         int pageSize = size.orElse(5);
         String sort = sortBy.orElse("id");
         boolean AscDesc = isAsc.orElse(true);
@@ -51,20 +50,14 @@ public class PostViewController {
     }
 
     @GetMapping("/community/post")
-    public String createPost(@RequestParam(required = false) Long postId, Model model, @AuthenticationPrincipal
-            UserDetailsImpl userDetails, RedirectAttributes rttr) {
-        if(userDetails == null){
-            rttr.addFlashAttribute("result", "로그인이 필요합니다.");
-            return "redirect:/community";
-        }else {
-            if(postId==null){
-                model.addAttribute("post",new PostResponseDto());
-            } else {
-                PostResponseDto postResponseDto = postService.getPostId(postId);
-                model.addAttribute("post", postResponseDto);
-            }
-            return "createPost";
+    public String createPost(@RequestParam(required = false) Long postId, Model model) {
+        if (postId == null) {
+            model.addAttribute("post", new PostResponseDto());
+        } else {
+            PostResponseDto postResponseDto = postService.getPostId(postId);
+            model.addAttribute("post", postResponseDto);
         }
+        return "createPost";
     }
 
 }
