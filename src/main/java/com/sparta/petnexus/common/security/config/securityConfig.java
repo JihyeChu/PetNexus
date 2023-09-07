@@ -73,6 +73,8 @@ public class securityConfig {
                         .requestMatchers("/tradechat/**").authenticated()
                         .requestMatchers("/api/post/**").authenticated()
                         .requestMatchers("/api/trade/**").authenticated()
+                        .requestMatchers("/api/notifications/connect").authenticated()
+                        .requestMatchers("/profile").authenticated()
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")

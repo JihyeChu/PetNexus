@@ -8,6 +8,7 @@ import com.sparta.petnexus.common.security.jwt.TokenProvider;
 import com.sparta.petnexus.user.dto.AddPetRequest;
 import com.sparta.petnexus.user.dto.LoginRequest;
 import com.sparta.petnexus.user.dto.ProfileRequest;
+import com.sparta.petnexus.user.dto.ProfileResponse;
 import com.sparta.petnexus.user.dto.SignupRequest;
 import com.sparta.petnexus.user.pet.entity.Pet;
 import com.sparta.petnexus.user.entity.User;
@@ -102,7 +103,10 @@ public class UserService {
 
     @Transactional
     public void updateProfile(ProfileRequest request, User user) {
-        user.updateUsername(request.getUsername());
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()-> new BusinessException(ErrorCode.NOT_FOUND_USER)
+        );
+        findUser.updateUsername(request.getNickname());
     }
 
     public void addPet(AddPetRequest request, User user) {
@@ -132,5 +136,12 @@ public class UserService {
 
     public void deletePet(Long petId, User user) {
         petRepository.delete( petRepository.findByIdAndUser(petId, user));
+    }
+
+    public ProfileResponse findUserProfile(Long userId) {
+        User user=userRepository.findById(userId).orElseThrow(
+                ()->new NullPointerException("해당 사용자가 존재하지 않습니다.")
+        );
+        return new ProfileResponse(user);
     }
 }

@@ -53,8 +53,6 @@
 											</header>
 											<p th:text="${chatRoom.content}"></p>
 											<ul class="actions">
-												<li><a  th:onclick="|location.href='@{/openchat/room?chatId={chatId}(chatId=${chatRoom.id})}'|"
-																class="button icon solid fa-file">채팅방 입장</a></li>
 												<li><a th:onclick="|location.href='@{/openchat/{chatId}(chatId=${chatRoom.id})}'|"
 															 class="button icon solid fa-file">게시글 보기</a></li>
 											</ul>

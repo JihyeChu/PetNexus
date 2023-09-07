@@ -37,7 +37,7 @@ public interface ChatRoomService {
      * @param requestDto 오픈채팅방 수정 요청정보
      * @param user       오픈채팅방 수정 요청자
      */
-    void updateOpenChatRoom(Long id, ChatRoomRequestDto requestDto, User user);
+    void updateOpenChatRoom(Long id, ChatRoomRequestDto requestDto, User user, List<MultipartFile> files) throws IOException;
 
     /**
      * 중고거래 채팅방 목록 조회

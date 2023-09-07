@@ -42,6 +42,7 @@ public class SignupRequest {
                 .email(this.email)
                 .password(encodePassword)
                 .username(usernameNotNull(this.username))
+                .nickname("유저")
                 .role(UserRoleEnum.USER)
                 .providerType(ProviderType.LOCAL)
                 .build();

@@ -60,10 +60,11 @@ public class ChatRoomController {
     @Operation(summary = "오픈채팅방 수정", description = "@PathVariable 을 통해 오픈채팅방 id를 받아와, 해당 오픈채팅방의 제목 및 설명을 수정합니다.")
     public ResponseEntity<ApiResponse> updateContent(
         @Parameter(name = "roomId", description = "특정 채팅방 id", in = ParameterIn.PATH) @PathVariable Long id,
-        @RequestBody ChatRoomRequestDto requestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        @ModelAttribute(value = "requestDto") ChatRoomRequestDto requestDto,
+            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> files,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         chatRoomService.updateOpenChatRoom(id, requestDto,
-            userDetails.getUser());
+            userDetails.getUser(), files);
         return ResponseEntity.ok().body(new ApiResponse("오픈채팅방 수정 성공", HttpStatus.OK.value()));
     }
 

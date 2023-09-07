@@ -75,7 +75,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     @Transactional
     public void updateOpenChatRoom(Long id, ChatRoomRequestDto requestDto,
-        User user) {
+        User user, List<MultipartFile> files) throws IOException {
         ChatRoom chatRoom = findChatRoom(id);
 
         if (!chatRoom.getUser().getId().equals(user.getId())) {
@@ -83,6 +83,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         }
         chatRoom.updateChatRoomTitle(requestDto.getTitle());
         chatRoom.updateChatRoomContent(requestDto.getContent());
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = awsS3upload.upload(file, "chatRoom " + chatRoom.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, chatRoom.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(chatRoom, fileUrl));
+            }
+        }
     }
 
     // 중고거래 채팅방 목록 조회
