@@ -68,7 +68,7 @@ public class UserController {
     }
 
     @Operation(summary = "Profile 수정", description = "@RequestBody 통해 ProfileRequestDto를 통해 username을 수정합니다.")
-    @PutMapping("/user/profile")
+    @PutMapping("/profile")
     public ResponseEntity<ApiResponse> updateProfile(@RequestBody ProfileRequest request,
             @AuthenticationPrincipal
             UserDetailsImpl userDetails) {

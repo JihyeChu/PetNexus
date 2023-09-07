@@ -13,6 +13,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.time.Duration;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
@@ -79,12 +82,44 @@ public class TokenProvider {
         CookieUtil.addCookie(response, TokenProvider.REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
     }
 
+    public void addTokenToCookie(HttpServletRequest request, HttpServletResponse response,
+            String token) throws UnsupportedEncodingException {
+        int cookieMaxAge = (int) TokenProvider.ACCESS_TOKEN_DURATION.toSeconds();
+
+        String encodeToken = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20");
+
+        CookieUtil.deleteCookie(request, response, TokenProvider.HEADER_AUTHORIZATION);
+
+        CookieUtil.addCookie(response, TokenProvider.HEADER_AUTHORIZATION, encodeToken, cookieMaxAge);
+    }
+
     public String getRefreshTokenFromCookie(HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(REFRESH_TOKEN_COOKIE_NAME)) {
-                    return cookie.getValue();
+//                    return cookie.getValue();
+                    try {
+                        return URLDecoder.decode(cookie.getValue(), "UTF-8"); // Encode 되어 넘어간 Value 다시 Decode
+                    } catch (UnsupportedEncodingException e) {
+                        return null;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getTokenFromCookie(HttpServletRequest req) {
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(HEADER_AUTHORIZATION)) {
+                    try {
+                        return URLDecoder.decode(cookie.getValue(), "UTF-8"); // Encode 되어 넘어간 Value 다시 Decode
+                    } catch (UnsupportedEncodingException e) {
+                        return null;
+                    }
                 }
             }
         }
@@ -122,7 +157,7 @@ public class TokenProvider {
     public String getAccessToken(String authorizationHeader) {
         if (authorizationHeader != null && authorizationHeader.startsWith(
                 TokenProvider.BEARER_PREFIX)) {
-            return authorizationHeader.substring(TokenProvider.BEARER_PREFIX.length());
+            return authorizationHeader.substring(7);
         }
 
         return null;

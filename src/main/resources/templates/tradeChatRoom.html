@@ -1,0 +1,194 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<link rel="stylesheet" th:href="@{/css/openChatRoom.css}">
+<title>Stomp Real-time Chat</title>
+
+<body class="homepage is-preload">
+<div class="chat-box">
+    <div class="container bootstrap snippets bootdeys">
+        <div class="col-md-7 col-xs-12 col-md-offset-2">
+            <!-- Panel Chat -->
+            <div class="panel" id="chat">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="chats">
+
+                        <div id="my-chat" th:each="chat : ${chatList.getTradeChatList()}">
+                            <div th:if="${#authentication.principal.user.username} == ${chat.sender}">
+                                <div class="chat-avatar">
+                                    <a class="avatar avatar-online" data-toggle="tooltip" href="#"
+                                       data-placement="right" title="">
+                                        <img src="/img/profile.jpeg" alt="...">
+                                        <i></i>
+                                    </a>
+                                </div>
+                                <div class="chat-body">
+                                    <div class="chat-content">
+                                        <p th:text="${chat.message}"></p>
+                                        <p class='writer' th:text="${chat.sender}"></p>
+                                        <time class="chat-time" th:text="${chat.createdAt}"></time>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="other-chat" th:each="chat : ${chatList.getTradeChatList()}">
+                            <div th:if="${#authentication.principal.user.username} != ${chat.sender}">
+                                <div class="chat-avatar">
+                                    <a class="avatar avatar-online" data-toggle="tooltip" href="#"
+                                       data-placement="left" title=""
+                                       data-original-title="Edward Fletcher">
+                                        <img src="/img/profile.jpeg"
+                                             alt="...">
+                                        <i></i>
+                                    </a>
+                                </div>
+                                <div class="chat-body">
+                                    <div class="chat-content">
+                                        <p th:text="${chat.message}"></p>
+                                        <p class='writer' th:text="${chat.sender}"></p>
+                                        <time class="chat-time" th:text="${chat.createdAt}">
+                                        </time>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div sec:authentication="name" id="username" hidden="hidden"></div>
+                        <form>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Say something"
+                                       id="messageInput">
+                                <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button"
+                                        id="sendButton">Send</button>
+                            </span>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!-- End Panel Chat -->
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+    let username = $('#username').text();
+
+    // roomId 파라미터 가져오기
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const roomId = urlParams.get('chatId')
+    console.log(roomId);
+
+    $(document).ready(function () {
+
+        // WebSocket connection
+        const stompClient = new StompJs.Client({
+            connectHeaders: {
+                Authorization: localStorage.getItem('accessToken')
+            },
+            brokerURL: 'ws://localhost:8080/stomp/chat',
+        });
+
+        stompClient.onConnect = (frame) => {
+            console.log('STOMP Connection' + frame);
+
+            stompClient.subscribe(`/sub/tradechat/${roomId}`, function (chat) {
+
+                let content = JSON.parse(chat.body);
+                console.log(chat);
+
+                let writer = content.sender;
+                console.log(writer);
+                let message = content.message;
+
+                let str = '';
+
+                const now = new Date();
+                const year = now.getFullYear().toString().padStart(2, '0');
+                const month = now.getMonth().toString().padStart(2, '0');
+                const day = now.getDay().toString().padStart(2, '0');
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+
+                const currentTimeString = `${year}-${month}-${day}  ${hours}:${minutes}:${seconds}`;
+
+                if (writer === username) {
+                    console.log(writer + username)
+                    str = "<div class='my-chat'>";
+                    str += "<div class='chat-avatar'>";
+                    str += "<a class='avatar avatar-online' data-toggle='tooltip' data-placement='right'>";
+                    str += "<img src='/img/profile.jpeg' alt=''>";
+                    str += "</a>";
+                    str += "</div>";
+                    str += "<div class='chat-body'>";
+                    str += "<div class='chat-content'>";
+                    str += "<p>" + message + "</p>";
+                    str += "<p class='writer'>" + writer + "</p>";
+                    str += "<time class='chat-time'>" + currentTimeString;
+                    str += "</div>";
+                    str += "</div>";
+                    str += "</div>";
+                    str += "</div>";
+                    $(".chats").append(str);
+                } else {
+                    console.log(writer + username)
+                    str = "<div class='other-chat'>";
+                    str += "<div class='chat-avatar'>";
+                    str += "<a class='avatar avatar-online' data-toggle='tooltip' data-placement='right'>";
+                    str += "<img src='/img/profile.jpeg' alt=''>";
+                    str += "</a>";
+                    str += "</div>";
+                    str += "<div class='chat-body'>";
+                    str += "<div class='chat-content'>";
+                    str += "<p>" + message + "</p>";
+                    str += "<p>" + writer + "</p>";
+                    str += "<time class='chat-time'>" + currentTimeString;
+                    str += "</div>";
+                    str += "</div>";
+                    str += "</div>";
+                    str += "</div>";
+                    $(".chats").append(str);
+                }
+                // $(".chats").append(str);
+            });
+        };
+
+        stompClient.onWebSocketError = (error) => {
+            console.error('Error with websocket', error);
+        };
+
+        stompClient.onStompError = (frame) => {
+            console.error('Broker reported error: ' + frame.headers['message']);
+            console.error('Additional details: ' + frame.body);
+        };
+
+        stompClient.activate();
+
+        function sendMessage() {
+            console.log(username)
+
+            stompClient.publish({
+                destination: `/pub/tradechat/message/${roomId}`,
+                body: JSON.stringify({'message': $(`#messageInput`).val(), 'sender': username})
+            });
+            $(`#messageInput`).val('');
+        }
+
+        $(function () {
+            $("form").on('submit', (e) => e.preventDefault());
+            $("#sendButton").click(() => sendMessage());
+        });
+    })
+</script>

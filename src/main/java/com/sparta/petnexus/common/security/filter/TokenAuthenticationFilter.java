@@ -23,7 +23,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader(TokenProvider.HEADER_AUTHORIZATION);
+        String authorizationHeader = tokenProvider.getTokenFromCookie(request);
         String token = tokenProvider.getAccessToken(authorizationHeader);
 
         if (tokenProvider.validToken(token)) {

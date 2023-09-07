@@ -85,13 +85,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void updatePost(Long postId, PostRequestDto postRequestDto, User user) {
+    public void updatePost(Long postId, PostRequestDto postRequestDto, User user, List<MultipartFile> files) throws IOException {
         Post post = findPost(postId);
 
         if (!user.getId().equals(post.getUser().getId())) {
             throw new BusinessException(ErrorCode.NOT_USER_UPDATE);
         }
         post.update(postRequestDto);
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = awsS3upload.upload(file, "post " + post.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, post.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(post, fileUrl));
+            }
+        }
     }
 
     @Override

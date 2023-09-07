@@ -65,8 +65,10 @@ public class TradeController {
     @PutMapping("/trade/{tradeId}")
     @Operation(summary = "거래게시글 수정", description = "@PathVariable를 통해 수정하고자 하는 게시글, 수정하고자 하는 정보 requestDto를 받아 수정합니다. ")
     public ResponseEntity<ApiResponse> updateTrade(
-            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @RequestBody TradeRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        tradeService.updateTrade(requestDto, tradeId, userDetails.getUser());
+            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @ModelAttribute TradeRequestDto requestDto,
+            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> files, @AuthenticationPrincipal UserDetailsImpl userDetails)
+            throws IOException {
+        tradeService.updateTrade(requestDto, tradeId, userDetails.getUser(), files);
         return ResponseEntity.ok().body(new ApiResponse("거래게시글 수정 성공", HttpStatus.OK.value()));
     }
 

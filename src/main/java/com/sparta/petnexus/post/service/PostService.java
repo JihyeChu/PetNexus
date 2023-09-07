@@ -46,7 +46,7 @@ public interface PostService {
      * @param postRequestDto : 게시글 수정 요청정보
      * @param user : 게시글 수정 요청자
      * */
-    void updatePost(Long postId, PostRequestDto postRequestDto, User user);
+    void updatePost(Long postId, PostRequestDto postRequestDto, User user, List<MultipartFile> files) throws IOException;
 
     /**
      * 게시글 삭제

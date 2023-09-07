@@ -69,8 +69,9 @@ public class PostController {
     @PutMapping("/post/{postId}")
     @Operation(summary = "post 수정", description = "@PathVariable로 postId와 requestDto를 받아 postId 해당하는 post를 수정합니다.")
     public ResponseEntity<ApiResponse> updatePost(
-            @Parameter(name="postId",description = "특정 post id",in= ParameterIn.PATH) @PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.updatePost(postId, postRequestDto, userDetails.getUser());
+            @Parameter(name="postId",description = "특정 post id",in= ParameterIn.PATH) @PathVariable Long postId, @ModelAttribute(value = "requestDto") PostRequestDto postRequestDto, @RequestPart(value = "imageFiles", required = false) List<MultipartFile> files, @AuthenticationPrincipal UserDetailsImpl userDetails)
+            throws IOException {
+        postService.updatePost(postId, postRequestDto, userDetails.getUser(), files);
         return ResponseEntity.ok().body(new ApiResponse("post 수정 성공!", HttpStatus.OK.value()));
     }
 

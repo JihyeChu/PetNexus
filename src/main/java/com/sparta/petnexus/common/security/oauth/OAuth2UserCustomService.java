@@ -66,6 +66,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         User user = new User(
                 userInfo.getEmail(),
                 userInfo.getName(),
+                "유저",
                 providerType,
                 UserRoleEnum.USER
         );
