@@ -5,6 +5,8 @@ import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +37,25 @@ public class PostViewController {
         Page<PostResponseDto> postResponseDtoList = postService.getPosts(currentPage, pageSize, sort, AscDesc);
         model.addAttribute("postList", postResponseDtoList);
         int totalPages = postResponseDtoList.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "community";
+    }
+
+    @GetMapping("/community/keyword/{keyword}")
+    public String communityKeword(Model model, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size,
+            @PathVariable String keyword){
+        int currentPage = page.orElse(1)-1;
+        int pageSize = size.orElse(5);
+        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Page<PostResponseDto> searchList = postService.searchPost(keyword, pageable);
+        model.addAttribute("postList", searchList);
+        int totalPages = searchList.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
