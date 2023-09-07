@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -32,7 +33,7 @@ public class TradeChatRoom extends Timestamped {
     @JoinColumn(name = "buyer_id")
     private User buyer; // 중고거래 구매자
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "trade_id")
     private Trade trade; // 중고거래 상품
 

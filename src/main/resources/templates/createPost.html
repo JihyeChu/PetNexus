@@ -10,7 +10,7 @@
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			$("#header").load("./header.html");
+			$("#header").load("/header");
 		});
 	</script>
 </head>
@@ -80,6 +80,10 @@
 						 class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
 					수정하기
 				</button>
+				<button  th:if="${post.id} != null" type="button"  onclick="Delete()"
+								 class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+					삭제하기
+				</button>
 			</div>
 		</div>
 	</section>
@@ -104,9 +108,6 @@
 			type:"POST",
 			url: `/api/post`,
 			data: formData,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 			processData: false,
 			contentType: false,
 			enctype:'multipart/form-data'
@@ -120,7 +121,21 @@
 		})
 	}
 
+	function Delete(){
+		let params = new URLSearchParams(location.search);
+		let id = params.get('postId');
+			$.ajax({
+				type: 'Delete',
+				url: `/api/post/${id}`,
+			}).done(function () {
+				alert("post 삭제 완료")
+				location.replace(`/community`);
+			})
+	}
+
 	function update(){
+		let params = new URLSearchParams(location.search);
+		let id = params.get('postId');
 		let title = $('#title').val();
 		let contents = $('#contents').val();
 		let imageFiles = document.getElementById('imageFiles').files;
@@ -134,9 +149,6 @@
 			type:"PUT",
 			url: `/api/post/${id}`,
 			data: formData,
-			headers: {
-				Authorization: localStorage.getItem('access_token')
-			},
 			processData: false,
 			contentType: false,
 			enctype:'multipart/form-data'
@@ -149,4 +161,5 @@
 			console.log("에러 내용: ", textStatus);
 		})
 	}
+
 </script>
