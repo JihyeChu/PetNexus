@@ -10,12 +10,20 @@ import lombok.Getter;
 @Schema(description = "trade 댓글 응답 DTO")
 public class TradeCommentResponseDto {
 
-    @Schema(description = "trade 품목")
+    @Schema(description = "trade 댓글")
     private String comment;
+
+    @Schema(description = "trade id", example = "1")
+    private Long id;
+
+    @Schema(description = "작성자명")
+    private String username;
 
     public static TradeCommentResponseDto of(TradeComment tradeComment){
         return TradeCommentResponseDto.builder()
                 .comment(tradeComment.getComment())
+                .id(tradeComment.getId())
+                .username(tradeComment.getUser().getUsername())
                 .build();
     }
 }

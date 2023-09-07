@@ -5,6 +5,7 @@ import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.Image.repository.ImageRepository;
 import com.sparta.petnexus.chat.dto.ChatRoomListResponseDto;
 import com.sparta.petnexus.chat.dto.ChatRoomRequestDto;
+import com.sparta.petnexus.chat.dto.ChatRoomResponseDto;
 import com.sparta.petnexus.chat.dto.TradeChatRoomListResponseDto;
 import com.sparta.petnexus.chat.entity.ChatRoom;
 import com.sparta.petnexus.chat.entity.TradeChatRoom;
@@ -46,6 +47,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         return ChatRoomListResponseDto.of(chatRoomList);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ChatRoomResponseDto getOpenChatRoom(Long id) {
+        ChatRoom chatRoom = findChatRoom(id);
+
+        return ChatRoomResponseDto.of(chatRoom);
+    }
+
     // 오픈채팅방 생성
     @Override
     public void createOpenChatRoom(ChatRoomRequestDto requestDto, User user, List<MultipartFile> files) throws IOException {
@@ -66,7 +75,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     @Transactional
     public void updateOpenChatRoom(Long id, ChatRoomRequestDto requestDto,
-        User user) {
+        User user, List<MultipartFile> files) throws IOException {
         ChatRoom chatRoom = findChatRoom(id);
 
         if (!chatRoom.getUser().getId().equals(user.getId())) {
@@ -74,6 +83,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         }
         chatRoom.updateChatRoomTitle(requestDto.getTitle());
         chatRoom.updateChatRoomContent(requestDto.getContent());
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = awsS3upload.upload(file, "chatRoom " + chatRoom.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, chatRoom.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(chatRoom, fileUrl));
+            }
+        }
     }
 
     // 중고거래 채팅방 목록 조회

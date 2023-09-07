@@ -8,6 +8,7 @@ import com.sparta.petnexus.common.security.jwt.TokenProvider;
 import com.sparta.petnexus.user.dto.AddPetRequest;
 import com.sparta.petnexus.user.dto.LoginRequest;
 import com.sparta.petnexus.user.dto.ProfileRequest;
+import com.sparta.petnexus.user.dto.ProfileResponse;
 import com.sparta.petnexus.user.dto.SignupRequest;
 import com.sparta.petnexus.user.pet.entity.Pet;
 import com.sparta.petnexus.user.entity.User;
@@ -64,8 +65,8 @@ public class UserService {
             String accessToken = tokenProvider.generateToken(user,
                     TokenProvider.ACCESS_TOKEN_DURATION);
 
-            // accessToken -> header
-            httpResponse.addHeader(TokenProvider.HEADER_AUTHORIZATION, accessToken);
+            // accessToken -> cookie
+            tokenProvider.addTokenToCookie(httpRequest, httpResponse, accessToken);
 
             // generateRefreshToken, and redis save
             String refreshToken = tokenProvider.generateRefreshToken(user,
@@ -74,14 +75,13 @@ public class UserService {
             //refreshToken -> cookie
             tokenProvider.addRefreshTokenToCookie(httpRequest, httpResponse, refreshToken);
 
-            // Tod : accessToken redirect param -> front catch param and save in local storage
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.BAD_ID_PASSWORD);
         }
     }
 
     public void createNewAccessToken(HttpServletRequest request, HttpServletResponse httpResponse) {
-        String authorizationHeader = request.getHeader(TokenProvider.HEADER_AUTHORIZATION);
+        String authorizationHeader = tokenProvider.getTokenFromCookie(request);
         String accessToken = tokenProvider.getAccessToken(authorizationHeader);
         String email = tokenProvider.getAuthentication(accessToken).getName();
         User user = userRepository.findByEmail(email);
@@ -103,7 +103,10 @@ public class UserService {
 
     @Transactional
     public void updateProfile(ProfileRequest request, User user) {
-        user.updateUsername(request.getUsername());
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()-> new BusinessException(ErrorCode.NOT_FOUND_USER)
+        );
+        findUser.updateUsername(request.getNickname());
     }
 
     public void addPet(AddPetRequest request, User user) {
@@ -117,7 +120,7 @@ public class UserService {
     }
 
     public void logOut(HttpServletRequest httpRequest) {
-        String authorizationHeader = httpRequest.getHeader(TokenProvider.HEADER_AUTHORIZATION);
+        String authorizationHeader = tokenProvider.getTokenFromCookie(httpRequest);
         String accessToken = tokenProvider.getAccessToken(authorizationHeader);
         String email = tokenProvider.getAuthentication(accessToken).getName();
         redisUtils.delete(email);
@@ -133,5 +136,12 @@ public class UserService {
 
     public void deletePet(Long petId, User user) {
         petRepository.delete( petRepository.findByIdAndUser(petId, user));
+    }
+
+    public ProfileResponse findUserProfile(Long userId) {
+        User user=userRepository.findById(userId).orElseThrow(
+                ()->new NullPointerException("해당 사용자가 존재하지 않습니다.")
+        );
+        return new ProfileResponse(user);
     }
 }

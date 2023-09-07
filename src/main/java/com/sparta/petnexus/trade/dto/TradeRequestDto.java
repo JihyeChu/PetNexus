@@ -25,7 +25,7 @@ public class TradeRequestDto {
     @Schema(description = "trade 품목")
     private CategoryEnum category;
 
-    public Trade toEntity(User user){
+    public Trade toEntity(User user) {
         return Trade.builder()
                 .title(this.title)
                 .content(this.content)

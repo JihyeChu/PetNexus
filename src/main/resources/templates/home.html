@@ -6,22 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 	<link rel="stylesheet" href="/css/main.css"/>
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script src="/js/token.js"></script>
+
 	<script>
-		function removeTokenParam() {
-			if (window.history.replaceState) {
-				const urlWithoutToken = window.location.href.replace(/[\?&]token=([^&#]+)/, '');
-				window.history.replaceState({}, document.title, urlWithoutToken);
-			}
-		}
-
-		// 페이지 로드 후 토큰 매개변수 제거
 		$(document).ready(function () {
-			removeTokenParam();
-		});
-
-		$(document).ready(function () {
-			$("#header").load("./header.html");
+			$("#header").load("/header");
 		});
 	</script>
 </head>
@@ -42,7 +30,7 @@
 
 					<!-- Feature -->
 					<section>
-						<a href="#" class="image featured"><img src="images/pic01.jpg" alt=""/></a>
+						<a href="/community" class="image featured"><img src="/img/img01.png" alt=""/></a>
 						<header>
 							<h3><a href="/community" class="icon fa-chart-bar">커뮤니티</a></h3>
 						</header>
@@ -54,11 +42,11 @@
 
 					<!-- Feature -->
 					<section>
-						<a href="#" class="image featured"><img src="images/pic02.jpg" alt=""/></a>
+						<a href="/tradeMarket" class="image featured"><img src="/img/img02.png" alt=""/></a>
 						<header>
-							<h3><a class="icon solid fa-cog" href="/trade">중고거래</a></h3>
+							<h3><a class="icon solid fa-cog" href="/tradeMarket">중고거래</a></h3>
 						</header>
-						<p>원하는 거래 물품을 선택 및 위치를 확인 하고 구매자에게 1:1 채팅메세지를 보낼 수 있습니다.</p>
+						<p><strong>원하는 거래 물품을 선택 및 위치를 확인 하고 구매자에게 1:1 채팅메세지를 보낼 수 있습니다.</strong></p>
 					</section>
 
 				</div>
@@ -66,9 +54,9 @@
 
 					<!-- Feature -->
 					<section>
-						<a href="#" class="image featured"><img src="images/pic03.jpg" alt=""/></a>
+						<a href="/openchat" class="image featured"><img src="/img/img03.png" alt=""/></a>
 						<header>
-							<h3><a class="icon solid fa-cog" href="#">오픈 채팅</a></h3>
+							<h3><a class="icon solid fa-cog" href="/openchat">오픈 채팅</a></h3>
 						</header>
 						<p><strong>오픈채팅방에 입장한 회원들은 서로 이야기를 주고받으며 정보 전달을 하게 됩니다.</strong></p>
 					</section>

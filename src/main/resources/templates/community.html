@@ -1,32 +1,54 @@
 <!DOCTYPE HTML>
 
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html>
 
 <head>
 	<title>펫 넥서스</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-
 	<link rel="stylesheet" href="/css/main.css" />
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			$("#header").load("./header.html");
+			$("#header").load("/header");
 		});
 	</script>
+	<script>
+		let msg = "[[${result}]]";
+		if(msg === '로그인이 필요합니다.') {
+			alert("로그인이 필요합니다.");
+		}
+	</script>
+
+>>>>>>>>> Temporary merge branch 2
 </head>
 
 <body class="homepage is-preload">
 <div id="page-wrapper">
+
+
+				<div th:if="${postList.totalPages > 0}" class="pagination"
+					 th:each="pageNumber : ${pageNumbers}">
+					<a th:href="@{/community(size=${postList.size}, page=${pageNumber})}"
+					   th:text=${pageNumber}
+					   th:class="${pageNumber==postList.number + 1} ? active"></a>
+
+
+
 	<div id="header"></div>
 
-	<!-- Banner -->
+
 	<section id="banner">
 		<div class="container">
 			<p>찾으시는 커뮤니티 글이 있으신가요?</p>
+			<div>
+				<input type="text" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
+				<button type="button" class="btn btn-outline-dark">검색</button>
+			</div>
 		</div>
 	</section>
+>>>>>>>>> Temporary merge branch 2
 
 	<!-- Main -->
 	<section id="main">
@@ -40,46 +62,51 @@
 					<article class="box post" th:each="post : ${postList}">
 						<header>
 							<h2 th:text="${post.title}"></h2>
-						</header>
-						<h3 th:text="${post.username}"></h3>
-						<p th:text="${post.content}"></p>
-						<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-							<div th:if="${not #lists.isEmpty(post.getImageList())}" class="group relative">
+							<div style="float:right; margin-right: 30px" th:if="${not #lists.isEmpty(post.getImageList())}" class="group relative">
 								<img style="width: 120px; height: 90px" th:src="${post.getImageList().get(0)}">
 							</div>
-						</div>
+						</header>
+						<p th:text="${post.content}"></p>
+							<div>
+								<span style="padding-right: 30px" th:text="${post.username}"></span>
+								좋아요: <span th:text="${post.like}"></span>
+							</div>
 						<ul class="actions">
-							<li><a th:onclick="|location.href='@{/community/{postId}(postId=${post.id})}'|" class="button icon solid fa-file">게시글 보기</a></li>
+							<li><a th:onclick="|location.href='@{/community/{postId}(postId=${post.id})}'|"
+										 class="button icon solid fa-file">게시글 보기</a></li>
 						</ul>
 					</article>
-
+>>>>>>>>> Temporary merge branch 2
 				</div>
 
-				<!-- Sidebar -->
-				<div id="sidebar" class="col-4 col-12-medium">
+                <!-- Sidebar -->
+                <div id="sidebar" class="col-4 col-12-medium">
 
-					<!-- Highlights -->
-					<section>
-						<ul class="divided">
-							<li>
+                    <!-- Highlights -->
+                    <section>
+                        <ul class="divided">
+                            <li>
 
-								<!-- Highlight -->
-								<article class="box highlight">
-									<header>
-										<h3><a href="/community/post" class="button icon solid fa-file">글 작성하기</a></h3>
-									</header>
-								</article>
+                                <!-- Highlight -->
+                                <article class="box highlight">
+                                    <header>
+                                        <h3><a href="/community/post" class="button icon solid fa-file">글 작성하기</a></h3>
+                                    </header>
+                                </article>
 
-							</li>
-						</ul>
-					</section>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
 
-				</div>
-
-			</div>
-		</div>
-	</section>
-
-</div>
+		</div></section></div></div>
 </body>
+<script>
+	$(document).ready(function () {
+		$("#header").load("./header.html");
+	});
+
+</script>
+
 </html>

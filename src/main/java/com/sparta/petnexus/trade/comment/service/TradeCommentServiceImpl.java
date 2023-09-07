@@ -37,7 +37,7 @@ public class TradeCommentServiceImpl implements TradeCommentService {
         Trade trade = tradeService.findTrade(tradeId);
         TradeComment tradeComment = findTradeComment(commentId);
 
-        if (!user.getId().equals(trade.getUser().getId())) {
+        if (!user.getId().equals(tradeComment.getUser().getId())) {
             throw new BusinessException(ErrorCode.NOT_TRADE_UPDATE);
         }
 
@@ -50,7 +50,7 @@ public class TradeCommentServiceImpl implements TradeCommentService {
         Trade trade = tradeService.findTrade(tradeId);
         TradeComment tradeComment = findTradeComment(commentId);
 
-        if (!user.getId().equals(trade.getUser().getId())) {
+        if (!user.getId().equals(tradeComment.getUser().getId())) {
             throw new BusinessException(ErrorCode.NOT_TRADE_DELETE);
         }
 

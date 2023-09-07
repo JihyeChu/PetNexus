@@ -2,7 +2,6 @@ package com.sparta.petnexus.trade.controller;
 
 import com.sparta.petnexus.common.response.ApiResponse;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
-import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.service.TradeService;
@@ -11,6 +10,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,9 +41,20 @@ public class TradeController {
 
     @GetMapping("/trade")
     @Operation(summary = "거래게시글 전체 조회", description = "거래게시글을 조회합니다.")
-    public ResponseEntity<List<TradeResponseDto>> getTrade() {
-        List<TradeResponseDto> tradeList = tradeService.getTrade();
-        return ResponseEntity.ok(tradeList);
+    public ResponseEntity<Page<TradeResponseDto>> getTrade(@RequestParam("page") int page,
+                                                           @RequestParam("size") int size,
+                                                           @RequestParam("sortBy") String sortBy,
+                                                           @RequestParam("isAsc") boolean isAsc){
+        Page<TradeResponseDto> tradeList = tradeService.getTrade(page-1, size, sortBy, isAsc);
+        return ResponseEntity.ok().body(tradeList);
+    }
+    @GetMapping("/trade/search")
+    @Operation(summary = "trade 검색", description = "@RequestParam으로 keyword를 입력받아 해당 trade를 조회합니다.")
+    public ResponseEntity<Page<TradeResponseDto>> searchTrade(@RequestParam("keyword") String keyword,   @RequestParam("page") int page,
+                                                              @RequestParam("size") int size){
+        Pageable pageable = PageRequest.of(page -1, size);
+        Page<TradeResponseDto> searchList = tradeService.searchTrade(keyword, pageable);
+        return ResponseEntity.ok().body(searchList);
     }
 
     @GetMapping("/trade/{tradeId}")
@@ -55,8 +68,10 @@ public class TradeController {
     @PutMapping("/trade/{tradeId}")
     @Operation(summary = "거래게시글 수정", description = "@PathVariable를 통해 수정하고자 하는 게시글, 수정하고자 하는 정보 requestDto를 받아 수정합니다. ")
     public ResponseEntity<ApiResponse> updateTrade(
-            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @RequestBody TradeRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        tradeService.updateTrade(requestDto, tradeId, userDetails.getUser());
+            @Parameter(description = "해당 게시글 id", in = ParameterIn.PATH) @PathVariable Long tradeId, @ModelAttribute TradeRequestDto requestDto,
+            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> files, @AuthenticationPrincipal UserDetailsImpl userDetails)
+            throws IOException {
+        tradeService.updateTrade(requestDto, tradeId, userDetails.getUser(), files);
         return ResponseEntity.ok().body(new ApiResponse("거래게시글 수정 성공", HttpStatus.OK.value()));
     }
 

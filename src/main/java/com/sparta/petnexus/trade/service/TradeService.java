@@ -4,6 +4,8 @@ import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.user.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,7 +25,9 @@ public interface TradeService {
      * 거래게시글 전체 조회
      * @return : 거래게시글 전체 정보
      * */
-    public List<TradeResponseDto> getTrade();
+    public Page<TradeResponseDto> getTrade(int page, int size, String sortBy, boolean isAsc);
+
+    Page<TradeResponseDto> searchTrade(String keyword, Pageable pageable);
 
     /*
      * 거래게시글 단건 조회
@@ -38,7 +42,7 @@ public interface TradeService {
      * @param id : 수정 할 거래게시글 id
      * @param user : 거래게시글 수정 요청자
      * */
-    public void updateTrade(TradeRequestDto requestDto, Long tradeId, User user);
+    public void updateTrade(TradeRequestDto requestDto, Long tradeId, User user, List<MultipartFile> files) throws IOException;
 
     /*
      * 거래게시글 삭제

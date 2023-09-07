@@ -1,8 +1,8 @@
 package com.sparta.petnexus.post.service;
 
+import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.Image.repository.ImageRepository;
-import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.notification.service.NotificationService;
@@ -16,6 +16,10 @@ import com.sparta.petnexus.post.postLike.repository.PostLikeRepository;
 import com.sparta.petnexus.post.repository.PostRepository;
 import com.sparta.petnexus.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,8 +59,20 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getPosts() {
-        return postRepository.findAll().stream().map(PostResponseDto::of).toList();
+    public Page<PostResponseDto> getPosts(int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Post> postList = postRepository.findAll(pageable);
+        return postList.map(PostResponseDto::of);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PostResponseDto> searchPost(String keyword, Pageable pageable){
+        Page<Post> foundPostList = postRepository.findByTitleContainingOrContentContainingOrderByTitleDescContentDesc(keyword, keyword, pageable);
+
+        return foundPostList.map(PostResponseDto::of);
     }
 
     @Override
@@ -67,13 +83,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void updatePost(Long postId, PostRequestDto postRequestDto, User user) {
+    public void updatePost(Long postId, PostRequestDto postRequestDto, User user, List<MultipartFile> files) throws IOException {
         Post post = findPost(postId);
 
         if (!user.getId().equals(post.getUser().getId())) {
             throw new BusinessException(ErrorCode.NOT_USER_UPDATE);
         }
         post.update(postRequestDto);
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = awsS3upload.upload(file, "post " + post.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, post.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(post, fileUrl));
+            }
+        }
     }
 
     @Override

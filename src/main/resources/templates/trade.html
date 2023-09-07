@@ -11,7 +11,7 @@
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script>
 		$(document).ready(function () {
-			$("#header").load("./header.html");
+			$("#header").load("/header");
 		});
 	</script>
 </head>
@@ -20,13 +20,6 @@
 <div id="page-wrapper">
 	<div id="header"></div>
 
-
-	<!-- Banner -->
-	<section id="banner">
-		<div class="container">
-			<p>찾으시는 물품이 있으신가요?</p>
-		</div>
-	</section>
 
 	<!-- Main -->
 	<section id="main">
@@ -37,15 +30,25 @@
 				<div id="content" class="col-8 col-12-medium">
 
 					<!-- Post -->
-					<article class="box post">
+					<article class="box post" style="margin-left: 200px">
+						<input type="hidden" id="trade-id" th:value="${trade.id}">
+						<a style="float:right; margin-right: 30px" th:onclick="|location.href='@{/tradechat/room?chatId={chatId}(chatId=${trade.tradeChatroom})}'|"
+							 class="button icon solid fa-file">구매요청 보내기</a>
 						<header>
 							<h2 th:text="${trade.title}"></h2>
+							<h3 th:text="${trade.price}+원"></h3>
 						</header>
-						<h3 th:text="${trade.category}"></h3>
+
+
 						<p th:text="${trade.content}"></p>
-						<p>
-							<span th:text="${trade.price}"></span> 원
-						</p>
+
+						<div th:each="imageFile : ${trade.getImageList()}">
+							<div class="group relative">
+								<img style="max-width: 100%; height: auto;" th:src="${imageFile}">
+							</div>
+						</div>
+
+						<h2>거래 희망 장소</h2>
 						<p>
 							<span id="latitude" hidden="hidden" th:text="${trade.latitude}"></span>
 							<span id="longitude" hidden="hidden" th:text="${trade.longitude}"></span>
@@ -57,18 +60,26 @@
 								</a>
 							</em>
 						</p>
-						<div id="map" style="width:500px;height:250px;"></div>
-						<div class="bg-white">
-							<div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-								<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-									<div th:each="imageFile : ${trade.getImageList()}">
-										<div class="group relative">
-											<img style="width: 120px; height: 90px" th:src="${imageFile}">
-										</div>
-									</div>
+						<div id="map" style="width:100%;height:250px;"></div>
+
+						<button class="btn btn-black" style="font-size: 8px" id="like-btn" th:onclick="likeIt([[${trade.id}]])">좋아요</button>
+
+						<ul class="actions" style="border-top: solid 2px">
+							<li><input id="comment"  style="font-size: 15px; font-weight: 600; color: inherit; width: 650px; border:none" placeholder="댓글을 입력해 주세요."></li>
+							<li><button class="btn bnt-black" style="font-size: 2px" id="createCom-btn" onclick="create()">등록</button></li>
+						</ul>
+						<div class="row-6" th:each="comment : ${trade.tradeCommentList}">
+							<input type="hidden" id="comment-id" th:value="${comment.id}">
+							<div>
+								<span style="font-size: 7px; font-weight: 700; color: inherit" th:text="${comment.username}"></span>
+								<div>
+									<input th:id="'comment'+${comment.id}" style="font-size: 11px; font-weight: 500; color: inherit; width: 630px; border:none" th:value="${comment.comment}">
+									<button class="btn bnt-black" style="font-size: 2px" th:onclick="updateComment([[${comment.id}]])">수정</button>
+									<button class="btn bnt-black" style="font-size: 2px" th:onclick="deleteComment([[${comment.id}]])">삭제</button>
 								</div>
 							</div>
 						</div>
+
 						<ul class="actions">
 							<li><a th:onclick="|location.href='@{/tradeMarket/trade?tradeId={tradeId}(tradeId=${trade.id})}'|"
 								   class="button icon solid fa-file">수정하기</a></li>
@@ -84,16 +95,12 @@
 	var latitude = document.getElementById("latitude");
 	if (latitude) {
 		var latitudeValue = parseFloat(latitude.textContent);
-		console.log("숫자:", latitudeValue)
-		console.log(typeof latitudeValue);
 	} else {
 		console.log("요소를 찾을 수 없습니다.");
 	}
 	var longitude = document.getElementById("longitude");
 	if (longitude) {
 		var longitudeValue = parseFloat(longitude.textContent);
-		console.log("숫자:", longitudeValue);
-		console.log(typeof longitudeValue);
 	} else {
 		console.log("요소를 찾을 수 없습니다.");
 	}
@@ -130,3 +137,59 @@
 </script>
 </body>
 </html>
+<script>
+	function likeIt(tradeId){
+		$.ajax({
+			type: 'POST',
+			url: `/api/trade/${tradeId}/like`,
+		}).done(function () {
+			alert("좋아요!")
+			location.replace(`/tradeMarket/`+tradeId);
+		})
+	}
+
+	function create(){
+		let comment = $('#comment').val();
+		let tradeElement = document.getElementById('trade-id');
+		let tradeId = tradeElement.value;
+
+		$.ajax({
+			type: 'POST',
+			url: `/api/trade/${tradeId}/comment`,
+			contentType: 'application/json',
+			data: JSON.stringify({ comment: comment }),
+		}).done(function () {
+			alert("댓글 작성 완료")
+			location.replace(`/tradeMarket/`+tradeId);
+		})
+	}
+
+	function updateComment(commentId){
+		let tradeElement = document.getElementById('trade-id');
+		let tradeId = tradeElement.value;
+		var commentElementId = "comment" + commentId;
+		var comment = $('#' + commentElementId).val();
+
+		$.ajax({
+			type: 'PUT',
+			url: `/api/trade/${tradeId}/comment/`+commentId,
+			contentType: 'application/json',
+			data: JSON.stringify({ comment: comment }),
+		}).done(function () {
+			alert("댓글 수정 완료")
+			location.replace(`/tradeMarket/`+tradeId);
+		})
+	}
+
+	function deleteComment(commentId){
+		let tradeElement = document.getElementById('trade-id');
+		let tradeId = tradeElement.value;
+		$.ajax({
+			type: 'Delete',
+			url: `/api/trade/${tradeId}/comment/`+commentId,
+		}).done(function () {
+			alert("댓글 삭제 완료")
+			location.replace(`/tradeMarket/`+tradeId);
+		})
+	}
+</script>

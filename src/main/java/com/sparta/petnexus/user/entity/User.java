@@ -39,6 +39,9 @@ public class User {
     private String username;
 
     @Column
+    private String nickname;
+
+    @Column
     private ProviderType providerType;
 
     @OneToMany(mappedBy = "user")
@@ -48,10 +51,11 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    public User(String email, String username, ProviderType providerType,
+    public User(String email, String username, String nickname, ProviderType providerType,
             UserRoleEnum userRoleEnum) {
         this.email = email;
         this.username = username;
+        this.nickname = nickname;
         this.providerType = providerType;
         this.role = userRoleEnum;
     }
@@ -60,7 +64,7 @@ public class User {
         this.email = email;
     }
 
-    public void updateUsername(String username) {
-        this.username = username;
+    public void updateUsername(String nickname) {
+        this.nickname = nickname;
     }
 }
