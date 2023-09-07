@@ -28,6 +28,8 @@ public class TradeResponseDto {
     private String title;
     @Schema(description = "trade 내용")
     private String content;
+    @Schema(description = "trade 작성자")
+    private String username;
     @Schema(description = "trade 위도")
     private String latitude;
     @Schema(description = "trade 경도")
@@ -44,7 +46,8 @@ public class TradeResponseDto {
     private List<TradeCommentResponseDto> tradeCommentList;
     @Schema(description = "trade에 달린 이미지 리스트")
     private List<String> imageList;
-
+    @Schema(description = "trade 챗팅방")
+    private Long tradeChatroom;
 
 
     public static TradeResponseDto of(Trade trade){
@@ -52,6 +55,7 @@ public class TradeResponseDto {
                 .id(trade.getId())
                 .title(trade.getTitle())
                 .content(trade.getContent())
+                .username(trade.getUser().getUsername())
                 .latitude(trade.getLatitude())
                 .longitude(trade.getLongitude())
                 .price(trade.getPrice())
@@ -60,6 +64,7 @@ public class TradeResponseDto {
                 .tradeBookmarkList(trade.getTradeBookmarks().stream().map(bookmark -> bookmark.getTrade().getTitle()).toList())
                 .tradeCommentList(trade.getTradeComments().stream().map(TradeCommentResponseDto::of).toList())
                 .imageList(trade.getImage().stream().map(Image::getImageUrl).toList())
+                .tradeChatroom(trade.getTradeChatRoom().getId())
                 .build();
     }
 

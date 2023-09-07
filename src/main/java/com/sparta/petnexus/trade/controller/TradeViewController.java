@@ -50,13 +50,19 @@ public class TradeViewController {
     }
 
     @GetMapping("/tradeMarket/trade")
-    public String createTrade(@RequestParam(required = false) Long tradeId, Model model){
-        if(tradeId == null){
-            model.addAttribute("trade", new TradeResponseDto());
+    public String createTrade(@RequestParam(required = false) Long tradeId, Model model, @AuthenticationPrincipal
+    UserDetailsImpl userDetails, RedirectAttributes rttr){
+        if(userDetails == null){
+            rttr.addFlashAttribute("result", "로그인이 필요합니다.");
+            return "redirect:/tradeMarket";
         }else {
-            TradeResponseDto tradeResponseDto = tradeService.selectTrade(tradeId);
-            model.addAttribute("trade", tradeResponseDto);
+            if (tradeId == null) {
+                model.addAttribute("trade", new TradeResponseDto());
+            } else {
+                TradeResponseDto tradeResponseDto = tradeService.selectTrade(tradeId);
+                model.addAttribute("trade", tradeResponseDto);
+            }
+            return "createTrade";
         }
-        return "createTrade";
     }
 }

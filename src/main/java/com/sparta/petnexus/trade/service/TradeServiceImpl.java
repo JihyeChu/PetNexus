@@ -3,6 +3,8 @@ package com.sparta.petnexus.trade.service;
 import com.sparta.petnexus.Image.config.AwsS3upload;
 import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.Image.repository.ImageRepository;
+import com.sparta.petnexus.chat.entity.TradeChatRoom;
+import com.sparta.petnexus.chat.repository.TradeChatRoomRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.notification.service.NotificationService;
@@ -29,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,7 @@ public class TradeServiceImpl implements TradeService {
     private final ImageRepository imageRepository;
     private final AwsS3upload awsS3upload;
     private final NotificationService notificationService;
+    private final TradeChatRoomRepository tradeChatRoomRepository;
 
 
     @Override
@@ -57,6 +59,21 @@ public class TradeServiceImpl implements TradeService {
                 imageRepository.save(new Image(trade, fileUrl));
             }
         }
+        TradeChatRoom tradeChatRoom = TradeChatRoom.builder()
+                .buyer(user)
+                .trade(trade).build();
+
+        tradeChatRoomRepository.save(tradeChatRoom);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TradeResponseDto> getTrade(int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Trade> tradeList = tradeRepository.findAll(pageable);
+        return tradeList.map(TradeResponseDto::of);
     }
 
     @Override
@@ -85,7 +102,8 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional
-    public void updateTrade(TradeRequestDto requestDto, Long tradeId, User user) {
+    public void updateTrade(TradeRequestDto requestDto, Long tradeId, User user, List<MultipartFile> files)
+            throws IOException {
         Trade trade = findTrade(tradeId);
 
         if (!user.getId().equals(trade.getUser().getId())) {
@@ -93,6 +111,16 @@ public class TradeServiceImpl implements TradeService {
         }
 
         trade.update(requestDto);
+
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = awsS3upload.upload(file, "trade " + trade.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, trade.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(trade, fileUrl));
+            }
+        }
     }
 
     @Override

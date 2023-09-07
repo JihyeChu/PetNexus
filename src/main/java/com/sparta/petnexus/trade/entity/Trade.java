@@ -1,6 +1,7 @@
 package com.sparta.petnexus.trade.entity;
 
 import com.sparta.petnexus.Image.entity.Image;
+import com.sparta.petnexus.chat.entity.TradeChatRoom;
 import com.sparta.petnexus.trade.bookmark.entity.TradeBookmark;
 import com.sparta.petnexus.trade.comment.entity.TradeComment;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
@@ -47,17 +48,20 @@ public class Trade {
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy = "trade")
+    @OneToMany(mappedBy = "trade", orphanRemoval = true)
     private List<TradeLike> tradeLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "trade", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "trade", orphanRemoval = true)
     private List<TradeBookmark> tradeBookmarks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "trade", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "trade", orphanRemoval = true)
     private List<TradeComment> tradeComments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "trade", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "trade", orphanRemoval = true)
     private List<Image> image = new ArrayList<>();
+
+    @OneToOne(mappedBy = "trade", orphanRemoval = true)
+    private TradeChatRoom tradeChatRoom;
 
     public void update(TradeRequestDto requestDto) {
         this.title = requestDto.getTitle();

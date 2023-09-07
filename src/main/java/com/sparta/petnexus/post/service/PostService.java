@@ -97,6 +97,4 @@ public interface PostService {
      * @param user : 게시글 작업 요청자
      * */
     void userCheck(Post post, User user);
-
-
 }

@@ -2,6 +2,7 @@ package com.sparta.petnexus.post.controller;
 
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.service.PostService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import java.util.stream.IntStream;
 public class PostViewController {
 
     private final PostService postService;
+
     @GetMapping("/community")
     public String community(Model model, @RequestParam("page") Optional<Integer> page,
                             @RequestParam("size") Optional<Integer> size,
@@ -49,14 +51,20 @@ public class PostViewController {
     }
 
     @GetMapping("/community/post")
-    public String createPost(@RequestParam(required = false) Long postId, Model model) {
-        if(postId==null){
-            model.addAttribute("post",new PostResponseDto());
-        } else {
-            PostResponseDto postResponseDto = postService.getPostId(postId);
-            model.addAttribute("post", postResponseDto);
+    public String createPost(@RequestParam(required = false) Long postId, Model model, @AuthenticationPrincipal
+            UserDetailsImpl userDetails, RedirectAttributes rttr) {
+        if(userDetails == null){
+            rttr.addFlashAttribute("result", "로그인이 필요합니다.");
+            return "redirect:/community";
+        }else {
+            if(postId==null){
+                model.addAttribute("post",new PostResponseDto());
+            } else {
+                PostResponseDto postResponseDto = postService.getPostId(postId);
+                model.addAttribute("post", postResponseDto);
+            }
+            return "createPost";
         }
-        return "createPost";
     }
 
 }

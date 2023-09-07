@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <title>펫 넥서스</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="/css/main.css"/>
+</head>
+<body>
+<section id="header">
+
+    <div class="container">
+
+        <!-- Logo -->
+        <h1 id="logo"><a href="/home">PET Nexus</a></h1>
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <li><a class="icon solid fa-home" href="/home"><span>HOME</span></a></li>
+                <li><a class="icon fa-chart-bar" href="/community"><span>커뮤니티</span></a></li>
+                <li><a class="icon solid fa-cog" href="/tradeMarket"><span>중고장터</span></a></li>
+                <li><a class="icon solid fa-sitemap" href="/openchat"><span>오픈 채팅</span></a></li>
+                <li><a class="icon solid fa-retweet" href="/hospital"><span>병원찾기</span></a></li>
+                <li id="login-link" ><a class="icon solid fa-sitemap" href="/login"><span>로그인</span></a> </li>
+                <li id="profile-link" ><a class="icon solid fa-sitemap" href="/profile"><span>마이페이지</span></a> </li>
+            </ul>
+            <div id="sse-container">
+                <!-- SSE 이벤트 스트림 내용이 여기에 표시됩니다. -->
+            </div>
+        </nav>
+
+    </div>
+</section>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        const authorizationToken = getCookie('Authorization');
+        if (authorizationToken) {
+            $("#login-link").hide();
+            // const eventSource = new EventSource('/api/notifications/connect'); // SSE 연결을 수립할 URL을 지정합니다.
+            //
+            // eventSource.addEventListener("sse", function (event) {
+            //     console.log(event.data);
+            //     const eventData = JSON.parse(event.data);
+            //     const contentValue = eventData.content
+            //     const sseContainer = document.getElementById('sse-container');
+            //     sseContainer.innerHTML += contentValue + '<br>';
+            //     setTimeout(function () {
+            //         sseContainer.innerHTML = ''; // 내용을 비웁니다.
+            //     }, 10000); // 10초
+            // })
+        }
+        if (!authorizationToken) {
+            $("#profile-link").hide();
+        }
+    })
+    function getCookie(key) {
+        var result = null;
+        var cookie = document.cookie.split(';');
+        cookie.some(function (item) {
+            item = item.replace(' ', '');
+
+            var dic = item.split('=');
+
+            if (key === dic[0]) {
+                result = dic[1];
+                return true;
+            }
+        });
+
+        return result;
+    }
+
+</script>

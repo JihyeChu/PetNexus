@@ -93,6 +93,15 @@ public class PostServiceImpl implements PostService {
             throw new BusinessException(ErrorCode.NOT_USER_UPDATE);
         }
         post.update(postRequestDto);
+        if (files != null) {
+            for (MultipartFile file : files) {
+                String fileUrl = awsS3upload.upload(file, "post " + post.getId());
+                if (imageRepository.existsByImageUrlAndId(fileUrl, post.getId())) {
+                    throw new BusinessException(ErrorCode.EXISTED_FILE);
+                }
+                imageRepository.save(new Image(post, fileUrl));
+            }
+        }
     }
 
     @Override

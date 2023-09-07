@@ -4,8 +4,6 @@ import com.sparta.petnexus.common.response.ApiResponse;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
-import com.sparta.petnexus.post.entity.Post;
-import com.sparta.petnexus.post.repository.PostRepository;
 import com.sparta.petnexus.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -71,8 +69,9 @@ public class PostController {
     @PutMapping("/post/{postId}")
     @Operation(summary = "post 수정", description = "@PathVariable로 postId와 requestDto를 받아 postId 해당하는 post를 수정합니다.")
     public ResponseEntity<ApiResponse> updatePost(
-            @Parameter(name="postId",description = "특정 post id",in= ParameterIn.PATH) @PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.updatePost(postId, postRequestDto, userDetails.getUser());
+            @Parameter(name="postId",description = "특정 post id",in= ParameterIn.PATH) @PathVariable Long postId, @ModelAttribute(value = "requestDto") PostRequestDto postRequestDto, @RequestPart(value = "imageFiles", required = false) List<MultipartFile> files, @AuthenticationPrincipal UserDetailsImpl userDetails)
+            throws IOException {
+        postService.updatePost(postId, postRequestDto, userDetails.getUser(), files);
         return ResponseEntity.ok().body(new ApiResponse("post 수정 성공!", HttpStatus.OK.value()));
     }
 

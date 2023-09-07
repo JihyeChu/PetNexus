@@ -11,6 +11,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Page<Post> findByTitleContainingOrContentContainingOrderByTitleDescContentDesc(String keyword, String keyword1, Pageable pageable);
+
+    Page<Post> findByTitleContainingOrContentContainingOrderByTitleDescContentDesc(String title, String content, Pageable pageable);
 }
 
