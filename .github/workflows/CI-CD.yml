@@ -70,12 +70,12 @@ jobs:
 
           sudo docker run -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
           --name test \
-          -e SPRING_DATASOURCE_URL=${{ secrets.DATABASE }} \
-          -e SPRING_DATASOURCE_USERNAME=${{ secrets.NAME }} \
-          -e SPRING_DATASOURCE_PASSWORD=${{ secrets.PASSWORD }} \
-          -e CLOUD.AWS.CREDENTIALS.ACCESS-KEY=${{ secrets.ACCESS_KEY }} \
-          -e CLOUD.AWS.CREDENTIALS.SECRET-KEY=${{ secrets.SECRET_KEY }} \
-          -e CLOUD.AWS.S3.BUCKET=${{ secrets.BUCKET_NAME }} \
+          -e DATABASE=${{ secrets.DATABASE }} \
+          -e NAME=${{ secrets.NAME }} \
+          -e PASSWORD=${{ secrets.PASSWORD }} \
+          -e ACCESS_KEY=${{ secrets.ACCESS_KEY }} \
+          -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
+          -e BUCKET_NAME=${{ secrets.BUCKET_NAME }} \
           -d jum1n/pet_nexus3:1.3
 
           
