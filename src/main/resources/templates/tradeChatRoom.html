@@ -90,12 +90,30 @@
     const roomId = urlParams.get('chatId')
     console.log(roomId);
 
+
     $(document).ready(function () {
+
+        function getCookie(key) {
+            var result = null;
+            var cookie = document.cookie.split(';');
+            cookie.some(function (item) {
+                item = item.replace(' ', '');
+
+                var dic = item.split('=');
+
+                if (key === dic[0]) {
+                    result = dic[1];
+                    return true;
+                }
+            });
+
+            return result;
+        }
 
         // WebSocket connection
         const stompClient = new StompJs.Client({
             connectHeaders: {
-                Authorization: localStorage.getItem('accessToken')
+                Authorization: getCookie('Authorization')
             },
             brokerURL: 'ws://localhost:8080/stomp/chat',
         });

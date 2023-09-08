@@ -62,19 +62,19 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
 
         script: |
-          sudo docker kill ${{ secrets.PROJECT_NAME }}
-          sudo docker rm -f ${{ secrets.PROJECT_NAME }}
-          sudo docker rmi ${{ secrets.DOCKER_ID }}/${{ secrets.PROJECT_NAME }}
-          sudo docker pull ${{ secrets.DOCKER_ID }}/${{ secrets.PROJECT_NAME }}
+          sudo docker kill pet_nexus3:1.3
+          sudo docker rm -f pet_nexus3:1.3
+          sudo docker rmi jum1n/pet_nexus3:1.3
+          sudo docker pull jum1n/pet_nexus3:1.3
 
           sudo docker run -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
-          --name ${{ secrets.PROJECT_NAME }} \
+          --name pet_nexus3:1.3 \
           -e SPRING_DATASOURCE_URL=${{ secrets.DATABASE }} \
           -e SPRING_DATASOURCE_USERNAME=${{ secrets.NAME }} \
           -e SPRING_DATASOURCE_PASSWORD=${{ secrets.PASSWORD }} \
           -e CLOUD.AWS.CREDENTIALS.ACCESS-KEY=${{ secrets.ACCESS_KEY }} \
           -e CLOUD.AWS.CREDENTIALS.SECRET-KEY=${{ secrets.SECRET_KEY }} \
           -e CLOUD.AWS.S3.BUCKET=${{ secrets.BUCKET_NAME }} \
-          -d ${{ secrets.DOCKER_ID }}/${{ secrets.PROJECT_NAME }}
+          -d jum1n/pet_nexus3:1.3
 
           
