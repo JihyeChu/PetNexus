@@ -46,11 +46,12 @@ jobs:
 
     # Docker 이미지 빌드
     - name: Docker Image Build
-      run: docker build -t ${{ secrets.DOCKER_ID }}/${{ secrets.PROJECT_NAME }} .
+      run: docker build -t jum1n/pet_nexus3:1.3 .
+
 
     # DockerHub Push
     - name: DockerHub Push
-      run: docker push ${{ secrets.DOCKER_ID }}/${{ secrets.PROJECT_NAME }}
+      run: docker push jum1n/pet_nexus3:1.3
       
     # EC2 인스턴스 접속 및 애플리케이션 실행
     - name: Application Run
