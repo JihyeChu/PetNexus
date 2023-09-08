@@ -126,6 +126,14 @@ public class TokenProvider {
         return null;
     }
 
+    public String getTokenStompHeader(String token) {
+        try {
+            return getAccessToken(URLDecoder.decode(token, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
     public boolean validToken(String token) {
         try {
             Jwts.parser()
