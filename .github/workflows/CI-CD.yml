@@ -46,7 +46,7 @@ jobs:
 
     # Docker 이미지 빌드
     - name: Docker Image Build
-      run: docker build -t ${{ secrets.DOCKER_ID }}/${{ secrets.PROJECT_NAME }}
+      run: docker build -t ${{ secrets.DOCKER_ID }}/${{ secrets.PROJECT_NAME }} .
 
     # DockerHub Push
     - name: DockerHub Push
