@@ -11,6 +11,13 @@
     <script>
         $(document).ready(function () {
             $("#header").load("/header");
+
+            const searchButton = document.getElementById('search-btn');
+            $(searchButton).click(function () {
+                var keyword =document.getElementById('keyword').value
+                console.log(keyword)
+                location.replace(`/tradeMarket/keyword/${keyword}`);
+            });
         });
     </script>
     <script>
@@ -31,8 +38,8 @@
         <div class="container">
             <p>찾으시는 물품이 있으신가요?</p>
             <div>
-                <input type="text" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
-                <button type="button" class="btn btn-outline-dark">검색</button>
+                <input type="text" id="keyword" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
+                <button type="button" id="search-btn" class="btn btn-outline-dark">검색</button>
             </div>
         </div>
     </section>
@@ -67,13 +74,21 @@
                         </ul>
                     </article>
 
-                </div>
+                    <div class="row aln-center" th:if="${tradeList.totalPages > 0}">
+                        <div class="pagination" style="font-size: 20px"> <!-- 가로로 나오게 할 부모 컨테이너 -->
+                            <a th:href="@{/tradeMarket(size=${tradeList.size}, page=1)}" class="pagination-item"
+                               th:class="${tradeList.number == 0} ? active">1</a>
+                            <span class="pagination-dots" th:if="${tradeList.number > 2}">...</span>
+                            <th:block th:each="pageNumber : ${pageNumbers}" th:if="${pageNumber != 1 and pageNumber != tradeList.totalPages}">
+                                <a th:href="@{/tradeMarket(size=${tradeList.size}, page=${pageNumber})}" class="pagination-item"
+                                   th:class="${pageNumber==tradeList.number + 1} ? active" th:text="${pageNumber}"></a>
+                            </th:block>
+                            <span class="pagination-dots" th:if="${tradeList.number < tradeList.totalPages - 3}">...</span>
+                            <a th:href="@{/tradeMarket(size=${tradeList.size}, page=${tradeList.totalPages})}" class="pagination-item"
+                               th:class="${tradeList.number == tradeList.totalPages - 1} ? active" th:text="${tradeList.totalPages}"></a>
+                        </div>
+                    </div>
 
-                <div th:if="${tradeList.totalPages > 0}" class="pagination"
-                     th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{/tradeMarket(size=${tradeList.size}, page=${pageNumber})}"
-                       th:text=${pageNumber}
-                       th:class="${pageNumber==tradeList.number + 1} ? active"></a>
                 </div>
 
                 <!-- Sidebar -->

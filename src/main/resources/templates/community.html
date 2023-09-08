@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 
-<html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<title>펫 넥서스</title>
@@ -12,6 +12,13 @@
 	<script>
 		$(document).ready(function () {
 			$("#header").load("/header");
+
+			const searchButton = document.getElementById('search-btn');
+			$(searchButton).click(function () {
+				var keyword =document.getElementById('keyword').value
+				console.log(keyword)
+				location.replace(`/community/keyword/${keyword}`);
+			});
 		});
 	</script>
 	<script>
@@ -21,34 +28,22 @@
 		}
 	</script>
 
->>>>>>>>> Temporary merge branch 2
 </head>
 
 <body class="homepage is-preload">
 <div id="page-wrapper">
-
-
-				<div th:if="${postList.totalPages > 0}" class="pagination"
-					 th:each="pageNumber : ${pageNumbers}">
-					<a th:href="@{/community(size=${postList.size}, page=${pageNumber})}"
-					   th:text=${pageNumber}
-					   th:class="${pageNumber==postList.number + 1} ? active"></a>
-
-
-
 	<div id="header"></div>
 
-
+	<!-- Banner -->
 	<section id="banner">
 		<div class="container">
 			<p>찾으시는 커뮤니티 글이 있으신가요?</p>
 			<div>
-				<input type="text" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
-				<button type="button" class="btn btn-outline-dark">검색</button>
+				<input type="text" id="keyword" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
+				<button type="button" id="search-btn" class="btn btn-outline-dark">검색</button>
 			</div>
 		</div>
 	</section>
->>>>>>>>> Temporary merge branch 2
 
 	<!-- Main -->
 	<section id="main">
@@ -67,46 +62,58 @@
 							</div>
 						</header>
 						<p th:text="${post.content}"></p>
-							<div>
-								<span style="padding-right: 30px" th:text="${post.username}"></span>
-								좋아요: <span th:text="${post.like}"></span>
-							</div>
+						<div>
+							<span style="padding-right: 30px" th:text="${post.username}"></span>
+							좋아요: <span th:text="${post.like}"></span>
+						</div>
 						<ul class="actions">
 							<li><a th:onclick="|location.href='@{/community/{postId}(postId=${post.id})}'|"
 										 class="button icon solid fa-file">게시글 보기</a></li>
 						</ul>
 					</article>
->>>>>>>>> Temporary merge branch 2
+
+
+					<div class="row aln-center" th:if="${postList.totalPages > 0}">
+						<div class="pagination" style="font-size: 20px"> <!-- 가로로 나오게 할 부모 컨테이너 -->
+							<a th:href="@{/community(size=${postList.size}, page=1)}" th:class="${postList.number == 0} ? active" class="pagination-item">1</a>
+							<span class="pagination-dots" th:if="${postList.number > 2}">...</span>
+							<th:block th:each="pageNumber : ${pageNumbers}" th:if="${pageNumber != 1 and pageNumber != postList.totalPages}">
+								<a th:href="@{/community(size=${postList.size}, page=${pageNumber})}" class="pagination-item"
+									 th:class="${pageNumber==postList.number + 1} ? active" th:text="${pageNumber}"></a>
+							</th:block>
+							<span class="pagination-dots" th:if="${postList.number < postList.totalPages - 3}">...</span>
+							<a th:href="@{/community(size=${postList.size}, page=${postList.totalPages})}"
+								 th:class="${postList.number == postList.totalPages - 1} ? active" class="pagination-item" th:text="${postList.totalPages}"></a>
+						</div>
+					</div>
+
 				</div>
 
-                <!-- Sidebar -->
-                <div id="sidebar" class="col-4 col-12-medium">
+				<!-- Sidebar -->
+				<div id="sidebar" class="col-4 col-12-medium">
 
-                    <!-- Highlights -->
-                    <section>
-                        <ul class="divided">
-                            <li>
+					<!-- Highlights -->
+					<section>
+						<ul class="divided">
+							<li>
 
-                                <!-- Highlight -->
-                                <article class="box highlight">
-                                    <header>
-                                        <h3><a href="/community/post" class="button icon solid fa-file">글 작성하기</a></h3>
-                                    </header>
-                                </article>
+								<!-- Highlight -->
+								<article class="box highlight">
+									<header>
+										<h3><a href="/community/post" class="button icon solid fa-file">글 작성하기</a></h3>
+									</header>
+								</article>
 
-                            </li>
-                        </ul>
-                    </section>
-                </div>
-            </div>
+							</li>
+						</ul>
+					</section>
 
-		</div></section></div></div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+</div>
 </body>
-<script>
-	$(document).ready(function () {
-		$("#header").load("./header.html");
-	});
-
-</script>
-
 </html>
