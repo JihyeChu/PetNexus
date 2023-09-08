@@ -62,13 +62,13 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
 
         script: |
-          sudo docker kill pet_nexus3:1.3
-          sudo docker rm -f pet_nexus3:1.3
+          sudo docker kill test
+          sudo docker rm -f test
           sudo docker rmi jum1n/pet_nexus3:1.3
           sudo docker pull jum1n/pet_nexus3:1.3
 
           sudo docker run -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
-          --name pet_nexus3:1.3 \
+          --name test \
           -e SPRING_DATASOURCE_URL=${{ secrets.DATABASE }} \
           -e SPRING_DATASOURCE_USERNAME=${{ secrets.NAME }} \
           -e SPRING_DATASOURCE_PASSWORD=${{ secrets.PASSWORD }} \
