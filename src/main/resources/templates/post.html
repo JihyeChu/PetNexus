@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>펫 넥서스</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+	<link rel="stylesheet" href="/css/main.css" />
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#header").load("/header");
+		});
+	</script>
+</head>
+
+<body class="homepage is-preload">
+<div id="page-wrapper">
+	<div id="header"></div>
+
+
+	<!-- Main -->
+	<section id="main">
+		<div class="container">
+			<div class="row">
+
+				<!-- Content -->
+				<div id="content" class="col-8 col-12-medium">
+
+					<!-- Post -->
+					<article class="box post" style="margin-left: 200px">
+						<input type="hidden" id="post-id" th:value="${post.id}">
+						<header>
+							<h2 th:text="${post.title}"></h2>
+						</header>
+						<h3 th:text="${post.username}"></h3>
+						<p th:text="${post.content}"></p>
+						<div th:each="imageFile : ${post.getImageList()}">
+							<div class="group relative">
+								<img style="max-width: 100%; height: auto;" th:src="${imageFile}">
+							</div>
+						</div>
+
+						<button class="btn btn-black" style="font-size: 8px" id="like-btn" th:onclick="likeIt([[${post.id}]])">좋아요</button>
+
+						<ul class="actions" style="border-top: solid 2px">
+							<li><input id="comment"  style="font-size: 15px; font-weight: 600; color: inherit; width: 650px; border:none" placeholder="댓글을 입력해 주세요."></li>
+							<li><button class="btn bnt-black" style="font-size: 2px" id="createCom-btn" onclick="create()">등록</button></li>
+						</ul>
+						<div class="row-6" th:each="comment : ${post.postComments}">
+							<input type="hidden" id="comment-id" th:value="${comment.id}">
+							<div>
+								<span style="font-size: 7px; font-weight: 700; color: inherit" th:text="${comment.username}"></span>
+								<div>
+									<input th:id="'comment'+${comment.id}" style="font-size: 11px; font-weight: 500; color: inherit; width: 630px; border:none" th:value="${comment.comment}">
+									<button class="btn bnt-black" style="font-size: 2px" th:onclick="updateComment([[${comment.id}]])">수정</button>
+									<button class="btn bnt-black" style="font-size: 2px" th:onclick="deleteComment([[${comment.id}]])">삭제</button>
+								</div>
+							</div>
+						</div>
+
+						<ul class="actions">
+							<li><a th:onclick="|location.href='@{/community/post?postId={postId}(postId=${post.id})}'|"
+								   class="button icon solid fa-file">수정하기</a></li>
+						</ul>
+					</article>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+</div>
+</body>
+</html>
+<script>
+	function likeIt(postId){
+		$.ajax({
+			type: 'POST',
+			url: `/api/post/${postId}/like`,
+		}).done(function () {
+			alert("좋아요!")
+			location.replace(`/community/`+postId);
+		})
+	}
+
+	function create() {
+		let comment = $('#comment').val();
+		let postIdElement = document.getElementById('post-id');
+		let postId = postIdElement.value;
+
+		$.ajax({
+			type: 'POST',
+			url: `/api/post/${postId}/comment`,
+			contentType: 'application/json',
+			data: JSON.stringify({ comment: comment }),
+		}).done(function () {
+			alert("댓글 작성 완료")
+			location.replace(`/community/`+postId);
+		})
+	}
+
+	function updateComment(commentId){
+		let postIdElement = document.getElementById('post-id');
+		let postId = postIdElement.value;
+		var commentElementId = "comment" + commentId;
+		var comment = $('#' + commentElementId).val();
+
+		$.ajax({
+			type: 'PUT',
+			url: `/api/post/${postId}/comment/`+commentId,
+			contentType: 'application/json',
+			data: JSON.stringify({ comment: comment }),
+		}).done(function () {
+			alert("댓글 수정 완료")
+			location.replace(`/community/`+postId);
+		})
+	}
+
+	function deleteComment(commentId){
+		let postIdElement = document.getElementById('post-id');
+		let postId = postIdElement.value;
+		$.ajax({
+			type: 'Delete',
+			url: `/api/post/${postId}/comment/`+commentId,
+		}).done(function () {
+			alert("댓글 삭제 완료")
+			location.replace(`/community/`+postId);
+		})
+	}
+</script>

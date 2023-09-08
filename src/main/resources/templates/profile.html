@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>펫 넥서스</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<link rel="stylesheet" href="/css/main.css"/>
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+	<script>
+		$(document).ready(function () {
+			$("#header").load("/header");
+		});
+	</script>
+</head>
+
+<body class="homepage is-preload">
+<div id="page-wrapper">
+
+	<div id="header"></div>
+
+	<!-- Features -->
+	<section id="features">
+		<div class="container">
+			<header>
+				<h2><strong>회원 정보 수정</strong></h2>
+			</header>
+			<div class="row aln-center">
+
+				<div class="col-4 col-6-medium col-12-small">
+
+					<!-- Feature -->
+					<section>
+						<a href="/tradeMarket" class="image featured"><img src="/img/img02.png" alt=""/></a>
+						<header>
+							<ul class="actions" style="border-top: solid 2px">
+								<li><span><strong style="margin-right: 30px">닉네임</strong><input id="nickname"  th:value="${profile.nickname}" style="font-size: 15px; font-weight: 600; color: inherit; width: 100px; border:none" placeholder="닉네임을 입력해 주세요."></span></li>
+								<li><span id="email"  th:text="${profile.email}" style="font-size: 15px; font-weight: 600; color: inherit; width: 650px; border:none; "></span></li>
+								<li><button class="btn bnt-black" style="font-size: 8px" id="createCom-btn" onclick="create()">수정하기</button></li>
+							</ul>
+						</header>
+						<ul class="actions">
+							<li><a href="/login"
+										 class="button icon solid fa-file">로그 아웃</a></li>
+						</ul>
+					</section>
+
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+</div>
+
+</body>
+<script>
+	function create() {
+		let nickname = $('#nickname').val();
+
+		$.ajax({
+			type: 'PUT',
+			url: `/api/profile`,
+			contentType: 'application/json',
+			data: JSON.stringify({ nickname: nickname }),
+		}).done(function () {
+			alert("닉네임 수정 완료")
+			location.replace(`/profile`);
+		})
+	}
+
+</script>
+</html>

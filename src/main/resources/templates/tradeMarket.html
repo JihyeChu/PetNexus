@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>펫 넥서스</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="/css/main.css" />
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#header").load("/header");
+
+            const searchButton = document.getElementById('search-btn');
+            $(searchButton).click(function () {
+                var keyword =document.getElementById('keyword').value
+                console.log(keyword)
+                location.replace(`/tradeMarket/keyword/${keyword}`);
+            });
+        });
+    </script>
+    <script>
+        let msg = "[[${result}]]";
+        if(msg === '로그인이 필요합니다.') {
+            alert("로그인이 필요합니다.");
+        }
+    </script>
+</head>
+
+<body class="homepage is-preload">
+<div id="page-wrapper">
+    <div id="header"></div>
+
+
+    <!-- Banner -->
+    <section id="banner">
+        <div class="container">
+            <p>찾으시는 물품이 있으신가요?</p>
+            <div>
+                <input type="text" id="keyword" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
+                <button type="button" id="search-btn" class="btn btn-outline-dark">검색</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main -->
+    <section id="main">
+        <div class="container">
+            <div class="row">
+
+                <!-- Content -->
+                <div id="content" class="col-8 col-12-medium">
+
+                    <!-- Post -->
+                    <article class="box post" th:each="trade : ${tradeList}">
+                        <button  style="float:right; margin-right: 30px" type="button" id="categoryButton" class="items-center gap-x-1 text-sm font-semibold leading-6">
+                            <span th:text="${trade.category}"></span>
+                        </button>
+                        <header>
+                            <h2 th:text="${trade.title}"></h2>
+                            <h3 th:text="${trade.price}+원"></h3>
+                            <div style="float:right; margin-right: 30px" th:if="${not #lists.isEmpty(trade.getImageList())}" class="group relative">
+                                <img style="width: 120px; height: 90px" th:src="${trade.getImageList().get(0)}">
+                            </div>
+                        </header>
+                        <p th:text="${trade.content}"></p>
+                        <div>
+                            <span style="padding-right: 30px" th:text="${trade.username}"></span>
+                            좋아요: <span th:text="${trade.tradeLikeCount}"></span>
+                        </div>
+                        <ul class="actions">
+                            <li><a th:onclick="|location.href='@{/tradeMarket/{tradeId}(tradeId=${trade.id})}'|" class="button icon solid fa-file">상품 상세보기</a></li>
+                        </ul>
+                    </article>
+
+                    <div class="row aln-center" th:if="${tradeList.totalPages > 0}">
+                        <div class="pagination" style="font-size: 20px"> <!-- 가로로 나오게 할 부모 컨테이너 -->
+                            <a th:href="@{/tradeMarket(size=${tradeList.size}, page=1)}" class="pagination-item"
+                               th:class="${tradeList.number == 0} ? active">1</a>
+                            <span class="pagination-dots" th:if="${tradeList.number > 2}">...</span>
+                            <th:block th:each="pageNumber : ${pageNumbers}" th:if="${pageNumber != 1 and pageNumber != tradeList.totalPages}">
+                                <a th:href="@{/tradeMarket(size=${tradeList.size}, page=${pageNumber})}" class="pagination-item"
+                                   th:class="${pageNumber==tradeList.number + 1} ? active" th:text="${pageNumber}"></a>
+                            </th:block>
+                            <span class="pagination-dots" th:if="${tradeList.number < tradeList.totalPages - 3}">...</span>
+                            <a th:href="@{/tradeMarket(size=${tradeList.size}, page=${tradeList.totalPages})}" class="pagination-item"
+                               th:class="${tradeList.number == tradeList.totalPages - 1} ? active" th:text="${tradeList.totalPages}"></a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Sidebar -->
+                <div id="sidebar" class="col-4 col-12-medium">
+
+                    <!-- Excerpts -->
+                    <section>
+                        <ul class="divided">
+                            <li>
+                                <article class="box highlight">
+                                    <header>
+                                        <h3><a href="/tradeMarket/trade" class="button icon solid fa-file">글 작성하기</a>
+                                        </h3>
+                                    </header>
+                                </article>
+                            </li>
+                        </ul>
+                    </section>
+
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+</div>
+</body>
+</html>
