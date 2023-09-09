@@ -75,3 +75,4 @@ jobs:
           -e ACCESS_KEY=${{ secrets.ACCESS_KEY }} \
           -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
           -e BUCKET_NAME=${{ secrets.BUCKET_NAME }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.TAG }}
+
