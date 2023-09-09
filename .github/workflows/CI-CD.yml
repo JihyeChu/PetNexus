@@ -62,7 +62,7 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
 
         script: |
-          sudo docker kill ${{ secrets.CONTAINER_NAME }}
+          sudo docker stop ${{ secrets.CONTAINER_NAME }}
           sudo docker rm -f ${{ secrets.CONTAINER_NAME }}
           sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.TAG }}
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.TAG }}
