@@ -66,5 +66,5 @@ jobs:
           sudo docker rm -f ${{ secrets.CONTAINER_NAME }}
           sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.TAG }}
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.TAG }}
-          sudo docker run -d -p ${{ secrets.PORT }}:${{ secrets.PORT }} --name ${{ secrets.CONTAINER_NAME }} -e DATABASE=${{ secrets.DATABASE }} -e NAME=${{ secrets.NAME }} -e PASSWORD=${{ secrets.PASSWORD }} -e ACCESS_KEY=${{ secrets.ACCESS_KEY }} -e SECRET_KEY=${{ secrets.SECRET_KEY }} -e BUCKET_NAME=${{ secrets.BUCKET_NAME }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.TAG }}
+          sudo docker run -d -p ${{ secrets.PORT }}:${{ secrets.PORT }} --name ${{ secrets.CONTAINER_NAME }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.TAG }}
 
