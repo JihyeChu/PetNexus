@@ -115,7 +115,7 @@
             connectHeaders: {
                 Authorization: getCookie('Authorization')
             },
-            brokerURL: 'ws://localhost:8080/stomp/chat',
+            brokerURL: 'ws://13.124.143.109:8080/stomp/chat',
         });
 
         stompClient.onConnect = (frame) => {
@@ -124,7 +124,7 @@
             stompClient.subscribe(`/sub/tradechat/${roomId}`, function (chat) {
 
                 let content = JSON.parse(chat.body);
-                console.log(chat);
+                console.log(content);
 
                 let writer = content.sender;
                 console.log(writer);
@@ -199,7 +199,7 @@
 
             stompClient.publish({
                 destination: `/pub/tradechat/message/${roomId}`,
-                body: JSON.stringify({'message': $(`#messageInput`).val(), 'sender': username})
+                body: JSON.stringify({'message': $(`#messageInput`).val(), 'sender': username, type: 'TALK'})
             });
             $(`#messageInput`).val('');
         }
