@@ -1,8 +1,6 @@
 package com.sparta.petnexus.common.security.jwt;
 
 
-import com.sparta.petnexus.common.exception.BusinessException;
-import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.common.redis.utils.RedisUtils;
 import com.sparta.petnexus.common.security.entity.UserDetailServiceImp;
 import com.sparta.petnexus.common.util.CookieUtil;
@@ -65,7 +63,7 @@ public class TokenProvider {
                 .setExpiration(new Date(now.getTime() + expiredAt.toMillis()))
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
-        saveRefreshTokenInRedis(user, refreshToken);
+//        saveRefreshTokenInRedis(user, refreshToken);
         return refreshToken;
     }
 
@@ -139,9 +137,9 @@ public class TokenProvider {
             Jwts.parser()
                     .setSigningKey(jwtProperties.getSecretKey())
                     .parseClaimsJws(token);
-            if (redisUtils.hasKeyBlackList(token)){
-                throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN);
-            }
+//            if (redisUtils.hasKeyBlackList(token)){
+//                throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN);
+//            }
             return true;
         } catch (Exception e) {
             return false;
