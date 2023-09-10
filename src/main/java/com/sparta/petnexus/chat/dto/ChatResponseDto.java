@@ -11,7 +11,7 @@ import lombok.Getter;
 @Schema(description = "오픈채팅방 채팅 목록 조회 응답 DTO")
 public class ChatResponseDto {
     @Schema(description = "채팅방 아이디", example = "1")
-    private Long roomId;
+    private String roomId;
     @Schema(description = "작성자")
     private String sender;
     @Schema(description = "메세지 내용")
