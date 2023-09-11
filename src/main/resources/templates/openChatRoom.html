@@ -114,8 +114,10 @@
                 Authorization: getCookie('Authorization')
             },
 
+
             brokerURL: 'ws://petnexus.xyz/stomp/chat',
             // brokerURL: 'ws://localhost:8080/stomp/chat',
+
         });
 
         stompClient.onConnect = (frame) => {
