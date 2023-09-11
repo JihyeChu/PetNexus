@@ -5,6 +5,7 @@ import com.sparta.petnexus.chat.dto.ChatMessageDto;
 import com.sparta.petnexus.chat.dto.TradeChatListResponseDto;
 import com.sparta.petnexus.chat.entity.Chat;
 import com.sparta.petnexus.chat.entity.ChatRoom;
+import com.sparta.petnexus.chat.entity.ChatType;
 import com.sparta.petnexus.chat.entity.TradeChat;
 import com.sparta.petnexus.chat.entity.TradeChatRoom;
 import com.sparta.petnexus.chat.repository.ChatRepository;
@@ -39,6 +40,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void sendChatMessage(String roomId, ChatMessageDto messageDto) {
+        messageDto.setType(ChatType.TALK);
         saveMessage(roomId, messageDto);
         redisMessageListenerContainer.addMessageListener(redisSubscriber,
             chatRoomRedisRepository.getTopic(roomId));

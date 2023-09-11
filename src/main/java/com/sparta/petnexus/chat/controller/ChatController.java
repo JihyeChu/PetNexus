@@ -24,7 +24,6 @@ public class ChatController {
     @MessageMapping("chat/message/{roomId}") // 오픈채팅
     public ChatMessageDto message(@DestinationVariable String roomId, ChatMessageDto messageDto) {
         chatService.sendChatMessage(roomId, messageDto);
-
         return ChatMessageDto.builder()
             .roomId(roomId)
             .sender(messageDto.getSender())
@@ -37,9 +36,7 @@ public class ChatController {
     @SendTo("/sub/tradechat/{roomId}")
     public ChatMessageDto tradeMessage(@DestinationVariable String roomId,
         ChatMessageDto messageDto) {
-
         chatService.saveTradeMessage(roomId, messageDto);
-
         return ChatMessageDto.builder()
             .roomId(roomId)
             .sender(messageDto.getSender())
