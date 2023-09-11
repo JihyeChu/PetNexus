@@ -113,7 +113,9 @@
             connectHeaders: {
                 Authorization: getCookie('Authorization')
             },
-            brokerURL: 'ws://13.124.143.109:8080/stomp/chat',
+
+            brokerURL: 'http://13.124.143.109:8080/stomp/chat',
+
         });
 
         stompClient.onConnect = (frame) => {

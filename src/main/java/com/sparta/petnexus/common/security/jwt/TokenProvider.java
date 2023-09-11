@@ -63,7 +63,7 @@ public class TokenProvider {
                 .setExpiration(new Date(now.getTime() + expiredAt.toMillis()))
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
-        saveRefreshTokenInRedis(user, refreshToken);
+//        saveRefreshTokenInRedis(user, refreshToken);
         return refreshToken;
     }
 
