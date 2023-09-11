@@ -13,6 +13,12 @@ public class ChatListResponseDto {
 
     private List<ChatResponseDto> chatList;
 
+    public static ChatListResponseDto ofList(List<ChatResponseDto> chatList) {
+
+        return ChatListResponseDto.builder()
+                .chatList(chatList)
+                .build();
+    }
 
     public static ChatListResponseDto of(List<Chat> chats) {
         List<ChatResponseDto> chatResponseDtoList = chats.stream().map(ChatResponseDto::of)

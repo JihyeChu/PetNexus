@@ -26,7 +26,7 @@ public class Image {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="chatRoom_id")
+    @JoinColumn(name="chat_room_id")
     private ChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)

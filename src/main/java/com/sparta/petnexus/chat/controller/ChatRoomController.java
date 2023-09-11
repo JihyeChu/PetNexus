@@ -40,7 +40,7 @@ public class ChatRoomController {
     }
     @GetMapping("/openchat/{id}")
     @Operation(summary = "오픈채팅방 목록 조회")
-    public ResponseEntity<ChatRoomResponseDto> getOpenChatRoom(@PathVariable Long id) {
+    public ResponseEntity<ChatRoomResponseDto> getOpenChatRoom(@PathVariable String id) {
         return ResponseEntity.ok(chatRoomService.getOpenChatRoom(id));
     }
 
@@ -59,7 +59,7 @@ public class ChatRoomController {
     @PutMapping("/openchat/{id}")
     @Operation(summary = "오픈채팅방 수정", description = "@PathVariable 을 통해 오픈채팅방 id를 받아와, 해당 오픈채팅방의 제목 및 설명을 수정합니다.")
     public ResponseEntity<ApiResponse> updateContent(
-        @Parameter(name = "roomId", description = "특정 채팅방 id", in = ParameterIn.PATH) @PathVariable Long id,
+        @Parameter(name = "roomId", description = "특정 채팅방 id", in = ParameterIn.PATH) @PathVariable String id,
         @ModelAttribute(value = "requestDto") ChatRoomRequestDto requestDto,
             @RequestPart(value = "imageFiles", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
@@ -71,7 +71,7 @@ public class ChatRoomController {
     @DeleteMapping("/openchat/{id}")
     @Operation(summary = "오픈채팅방 삭제", description = "@PathVariable 을 통해 오픈채팅방 Id를 받아와, 해당 오픈채팅방을 삭제합니다.")
     public ResponseEntity<ApiResponse> deleteChatRoom(
-        @Parameter(name = "id", description = "특정 채팅방 id", in = ParameterIn.PATH) @PathVariable Long id,
+        @Parameter(name = "id", description = "특정 채팅방 id", in = ParameterIn.PATH) @PathVariable String id,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         chatRoomService.deleteChatRoom(id, userDetails.getUser());
         return ResponseEntity.ok()
@@ -82,7 +82,7 @@ public class ChatRoomController {
     @GetMapping("/openchat/room/{id}")
     @Operation(summary = "오픈채팅방 내 채팅 목록 조회", description = "@PathVariable 을 통해 채팅방 id를 받아와, 해당 오픈채팅방에 존재하는 채팅 목록을 조회합니다.")
     public ResponseEntity<ChatListResponseDto> getAllChatByRoomId(
-        @Parameter(name = "roomId", description = "특정 채팅방 id", in = ParameterIn.PATH) @PathVariable Long id) {
+        @Parameter(name = "roomId", description = "특정 채팅방 id", in = ParameterIn.PATH) @PathVariable String id) {
         return ResponseEntity.ok(chatService.getAllChatByRoomId(id));
     }
 
