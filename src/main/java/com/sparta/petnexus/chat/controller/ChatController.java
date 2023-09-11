@@ -19,26 +19,11 @@ public class ChatController {
     private final ChatService chatService;
 
     // stompConfig 에서 설정한 applicationDestinationPrefixes 와 @MessageMapping 경로가 병합됨 (/pub + ...)
-    // /pub/chat/enter 에 메세지가 오면 동작
-    @MessageMapping("chat/enter/{roomId}")
-    @SendTo("/sub/chat/{roomId}")
-    public ChatMessageDto enter(@DestinationVariable Long roomId,
-        ChatMessageDto messageDto) { // 채팅방 입장
-
-        return ChatMessageDto.builder()
-            .roomId(roomId)
-            .sender(messageDto.getSender())
-            .message(messageDto.getSender() + "님이 채팅방에 참여하였습니다.")
-            .build();
-    }
-
     // /pub/chat/message 에 메세지가 오면 동작
+    // 채팅방에 발행된 메시지는 서로 다른 서버에 공유하기 위해 redis 의 Topic 으로 발행
     @MessageMapping("chat/message/{roomId}") // 오픈채팅
-    @SendTo("/sub/chat/{roomId}")
-    public ChatMessageDto message(@DestinationVariable Long roomId, ChatMessageDto messageDto) {
-
-        chatService.saveMessage(roomId, messageDto);
-
+    public ChatMessageDto message(@DestinationVariable String roomId, ChatMessageDto messageDto) {
+        chatService.sendChatMessage(roomId, messageDto);
         return ChatMessageDto.builder()
             .roomId(roomId)
             .sender(messageDto.getSender())
@@ -49,11 +34,9 @@ public class ChatController {
     // /pub/trade-chat/message 에 메세지가 오면 동작
     @MessageMapping("tradechat/message/{roomId}") // 중고거래 채팅
     @SendTo("/sub/tradechat/{roomId}")
-    public ChatMessageDto tradeMessage(@DestinationVariable Long roomId,
+    public ChatMessageDto tradeMessage(@DestinationVariable String roomId,
         ChatMessageDto messageDto) {
-
         chatService.saveTradeMessage(roomId, messageDto);
-
         return ChatMessageDto.builder()
             .roomId(roomId)
             .sender(messageDto.getSender())

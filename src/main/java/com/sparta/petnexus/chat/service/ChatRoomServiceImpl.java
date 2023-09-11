@@ -37,7 +37,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ImageRepository imageRepository;
     private final NotificationService notificationService;
 
-
     // 오픈채팅방 목록 조회
     @Override
     @Transactional(readOnly = true)
@@ -49,7 +48,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     @Transactional(readOnly = true)
-    public ChatRoomResponseDto getOpenChatRoom(Long id) {
+    public ChatRoomResponseDto getOpenChatRoom(String id) {
         ChatRoom chatRoom = findChatRoom(id);
 
         return ChatRoomResponseDto.of(chatRoom);
@@ -57,13 +56,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     // 오픈채팅방 생성
     @Override
-    public void createOpenChatRoom(ChatRoomRequestDto requestDto, User user, List<MultipartFile> files) throws IOException {
+    public void createOpenChatRoom(ChatRoomRequestDto requestDto, User user,
+        List<MultipartFile> files) throws IOException {
         ChatRoom chatRoom = requestDto.toEntity(user);
         chatRoomRepository.save(chatRoom);
         if (files != null) {
             for (MultipartFile file : files) {
                 String fileUrl = awsS3upload.upload(file, "chatRoom " + chatRoom.getId());
-                if (imageRepository.existsByImageUrlAndId(fileUrl, chatRoom.getId())) {
+                if (imageRepository.existsByImageUrlAndChatRoom_Id(fileUrl,
+                    chatRoom.getId())) {
                     throw new BusinessException(ErrorCode.EXISTED_FILE);
                 }
                 imageRepository.save(new Image(chatRoom, fileUrl));
@@ -74,19 +75,18 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     // 오픈채팅방 수정
     @Override
     @Transactional
-    public void updateOpenChatRoom(Long id, ChatRoomRequestDto requestDto,
+    public void updateOpenChatRoom(String id, ChatRoomRequestDto requestDto,
         User user, List<MultipartFile> files) throws IOException {
         ChatRoom chatRoom = findChatRoom(id);
 
         if (!chatRoom.getUser().getId().equals(user.getId())) {
             throw new BusinessException(ErrorCode.ONLY_MASTER_EDIT);
         }
-        chatRoom.updateChatRoomTitle(requestDto.getTitle());
-        chatRoom.updateChatRoomContent(requestDto.getContent());
+        chatRoom.update(requestDto);
         if (files != null) {
             for (MultipartFile file : files) {
                 String fileUrl = awsS3upload.upload(file, "chatRoom " + chatRoom.getId());
-                if (imageRepository.existsByImageUrlAndId(fileUrl, chatRoom.getId())) {
+                if (imageRepository.existsByImageUrlAndChatRoom_Id(fileUrl, chatRoom.getId())) {
                     throw new BusinessException(ErrorCode.EXISTED_FILE);
                 }
                 imageRepository.save(new Image(chatRoom, fileUrl));
@@ -122,7 +122,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     // 오픈채팅방 삭제
     @Override
     @Transactional
-    public void deleteChatRoom(Long id, User user) {
+    public void deleteChatRoom(String id, User user) {
         ChatRoom chatRoom = findChatRoom(id);
 
         if (!chatRoom.getUser().getId().equals(user.getId())) {
@@ -145,7 +145,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         tradeChatRoomRepository.delete(tradeChatRoom);
     }
 
-    private ChatRoom findChatRoom(long id) {
+    private ChatRoom findChatRoom(String id) {
         return chatRoomRepository.findById(id).orElseThrow(() ->
             new BusinessException(ErrorCode.NOT_FOUND_CHATROOM));
     }
