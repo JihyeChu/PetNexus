@@ -27,7 +27,7 @@
                                     <div class="chat-content">
                                         <p th:text="${chat.message}"></p>
                                         <p class='writer' th:text="${chat.sender}"></p>
-                                        <time class="chat-time" th:text="${chat.createdAt}"></time>
+<!--                                        <time class="chat-time" th:text="${chat.createdAt}"></time>-->
                                     </div>
                                 </div>
                             </div>
@@ -48,7 +48,7 @@
                                     <div class="chat-content">
                                         <p th:text="${chat.message}"></p>
                                         <p class='writer' th:text="${chat.sender}"></p>
-                                        <time class="chat-time" th:text="${chat.createdAt}">
+<!--                                        <time class="chat-time" th:text="${chat.createdAt}">-->
                                         </time>
                                     </div>
                                 </div>
@@ -114,8 +114,8 @@
                 Authorization: getCookie('Authorization')
             },
 
-            brokerURL: 'http://13.124.143.109:8080/stomp/chat',
-
+            brokerURL: 'ws://petnexus.xyz/stomp/chat',
+            // brokerURL: 'ws://localhost:8080/stomp/chat',
         });
 
         stompClient.onConnect = (frame) => {
