@@ -2,7 +2,6 @@ package com.sparta.petnexus.chat.dto;
 
 import com.sparta.petnexus.chat.entity.Chat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,15 +15,15 @@ public class ChatResponseDto {
     private String sender;
     @Schema(description = "메세지 내용")
     private String message;
-    @Schema(description = "메세지 생성 일자")
-    private LocalDateTime createdAt;
+//    @Schema(description = "메세지 생성 일자")
+//    private LocalDateTime createdAt;
 
     public static ChatResponseDto of(Chat chat) { // 오픈채팅
         return ChatResponseDto.builder()
             .roomId(chat.getChatRoom().getId())
             .sender(chat.getSender())
             .message(chat.getMessage())
-            .createdAt(chat.getCreatedAt())
+//            .createdAt(chat.getCreatedAt())
             .build();
     }
 }

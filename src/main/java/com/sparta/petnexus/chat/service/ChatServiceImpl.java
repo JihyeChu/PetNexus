@@ -2,6 +2,7 @@ package com.sparta.petnexus.chat.service;
 
 import com.sparta.petnexus.chat.dto.ChatListResponseDto;
 import com.sparta.petnexus.chat.dto.ChatMessageDto;
+import com.sparta.petnexus.chat.dto.ChatResponseDto;
 import com.sparta.petnexus.chat.dto.TradeChatListResponseDto;
 import com.sparta.petnexus.chat.entity.Chat;
 import com.sparta.petnexus.chat.entity.ChatRoom;
@@ -18,7 +19,9 @@ import com.sparta.petnexus.common.exception.ErrorCode;
 import com.sparta.petnexus.common.redis.pubsub.RedisSubscriber;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +36,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRoomRedisRepository chatRoomRedisRepository;
     private final RedisSubscriber redisSubscriber;
     private final RedisMessageListenerContainer redisMessageListenerContainer;
+    private final RedisTemplate<String, ChatResponseDto> redisTemplateMessage;
 
     // 메세지 삭제 - DB Scheduler 적용 필요
 
@@ -53,9 +57,26 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional(readOnly = true)
     public ChatListResponseDto getAllChatByRoomId(String roomId) {
-        List<Chat> chatList = chatRepository.findAllByChatRoomIdOrderByCreatedAtAsc(roomId);
 
-        return ChatListResponseDto.of(chatList);
+        // Redis 에서 해당 채팅방의 메시지 100개 가져오기
+        List<ChatResponseDto> redisMessageList = redisTemplateMessage.opsForList().range(roomId, 0, 99);
+
+        // Redis 에서 가져온 메시지가 없다면, DB 에서 메시지 100개 가져오기
+        if (redisMessageList == null || redisMessageList.isEmpty()) {
+
+            List<Chat> dbMessageList = chatRepository.findTop100ByChatRoomIdOrderByCreatedAtAsc(roomId);
+
+            for (Chat message : dbMessageList) {
+                redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChatResponseDto.class));      // 직렬화
+                redisTemplateMessage.opsForList().rightPush(roomId, ChatResponseDto.of(message));                       // redis 저장
+            }
+            return  ChatListResponseDto.of(dbMessageList);
+
+        } else {
+
+            return ChatListResponseDto.ofList(redisMessageList);
+        }
+
     }
 
     // 오픈채팅 메세지 저장
