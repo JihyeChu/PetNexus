@@ -89,4 +89,33 @@ public class TradeViewController {
             return "createTrade";
         }
     }
+
+    @GetMapping("/mytradeMarket")
+    public String mytradeList(Model model, @RequestParam("page") Optional<Integer> page,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam("size") Optional<Integer> size,
+            @RequestParam("sortBy") Optional<String> sortBy,
+            @RequestParam("isAsc") Optional<Boolean> isAsc) {
+        int currentPage = page.orElse(1) - 1;
+        int pageSize = size.orElse(5);
+        String sort = sortBy.orElse("id");
+        boolean Asc = isAsc.orElse(true);
+        Page<TradeResponseDto> tradeResponseDtoList = tradeService.getmyTrade(currentPage, pageSize, sort, Asc, userDetails);
+        model.addAttribute("tradeList", tradeResponseDtoList);
+        int totalPages = tradeResponseDtoList.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "mytradeMarket";
+    }
+
+    @GetMapping("/mytradeMarket/{tradeId}")
+    public String getmyTrade(@PathVariable Long tradeId, Model model) {
+        TradeResponseDto tradeResponseDto = tradeService.selectTrade(tradeId);
+        model.addAttribute("trade", tradeResponseDto);
+        return "mytrade";
+    }
 }

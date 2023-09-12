@@ -89,4 +89,34 @@ public class PostViewController {
         }
     }
 
+
+    @GetMapping("/mycommunity")
+    public String mycommunity(Model model, @AuthenticationPrincipal
+            UserDetailsImpl userDetails,
+            @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size,
+            @RequestParam("sortBy") Optional<String> sortBy,
+            @RequestParam("isAsc") Optional<Boolean> isAsc){
+        int currentPage = page.orElse(1)-1;
+        int pageSize = size.orElse(5);
+        String sort = sortBy.orElse("id");
+        boolean AscDesc = isAsc.orElse(true);
+        Page<PostResponseDto> postResponseDtoList = postService.getmyPosts(currentPage, pageSize, sort, AscDesc, userDetails);
+        model.addAttribute("postList", postResponseDtoList);
+        int totalPages = postResponseDtoList.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "mycommunity";
+    }
+
+    @GetMapping("/mycommunity/{postId}")
+    public String getmyPost(@PathVariable Long postId, Model model) {
+        PostResponseDto postResponseDto = postService.getPostId(postId);
+        model.addAttribute("post", postResponseDto);
+        return "mypost";
+    }
 }

@@ -1,5 +1,6 @@
 package com.sparta.petnexus.post.service;
 
+import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
 import com.sparta.petnexus.post.entity.Post;
@@ -29,6 +30,7 @@ public interface PostService {
      * @return : 게시글 전체 정보
      */
     Page<PostResponseDto> getPosts(int page, int size, String sortBy, boolean isAsc);
+    Page<PostResponseDto> getmyPosts(int page, int size, String sortBy, boolean isAsc, UserDetailsImpl userDetails);
 
     /*
      * 검색
