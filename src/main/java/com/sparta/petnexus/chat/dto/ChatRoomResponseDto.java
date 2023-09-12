@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class ChatRoomResponseDto {
 
     @Schema(description = "오픈채팅방 id")
-    private String id;
+    private Long id;
     @Schema(description = "오픈채팅방 이름", example = "강아지 병원 정보 공유합니다.")
     private String title;
     @Schema(description = "오픈채팅방 설명", example = "서울 인천 경기 지역 분들을 위한 방입니다.")

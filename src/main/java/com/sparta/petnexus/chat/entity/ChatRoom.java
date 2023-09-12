@@ -5,13 +5,13 @@ import com.sparta.petnexus.chat.dto.ChatRoomRequestDto;
 import com.sparta.petnexus.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -26,15 +26,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="chat_room")
-public class ChatRoom extends Timestamped implements Serializable {
-
-    // Redis 에 저장되는 객체들은 Serialize(직렬화) 가능해야 하므로
-    // Serializable 을 참조하도록 선언하고 serialVersionUID 를 세팅한다.
-    @Serial
-    private static final long serialVersionUID = 6494678977089006639L;
+public class ChatRoom extends Timestamped{
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
