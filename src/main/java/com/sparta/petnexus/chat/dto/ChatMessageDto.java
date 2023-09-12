@@ -2,7 +2,6 @@ package com.sparta.petnexus.chat.dto;
 
 import com.sparta.petnexus.chat.entity.Chat;
 import com.sparta.petnexus.chat.entity.ChatRoom;
-import com.sparta.petnexus.chat.entity.ChatType;
 import com.sparta.petnexus.chat.entity.TradeChat;
 import com.sparta.petnexus.chat.entity.TradeChatRoom;
 import lombok.AllArgsConstructor;
@@ -17,8 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessageDto {
-    private ChatType type; // 메시지 타입
-    private String roomId;
+    private Long roomId;
     private String sender; // 메시지 보낸사람
     private String message;
 
@@ -27,7 +25,6 @@ public class ChatMessageDto {
             .chatRoom(chatRoom)
             .sender(this.sender)
             .message(this.message)
-            .type(this.type)
             .build();
     }
 

@@ -56,7 +56,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     @Transactional(readOnly = true)
-    public ChatRoomResponseDto getOpenChatRoom(String id) {
+    public ChatRoomResponseDto getOpenChatRoom(Long id) {
         ChatRoom chatRoom = findChatRoom(id);
 
         return ChatRoomResponseDto.of(chatRoom);
@@ -71,7 +71,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         if (files != null) {
             for (MultipartFile file : files) {
                 String fileUrl = awsS3upload.upload(file, "chatRoom " + chatRoom.getId());
-                if (imageRepository.existsByImageUrlAndChatRoom_Id(fileUrl,
+                if (imageRepository.existsByImageUrlAndId(fileUrl,
                     chatRoom.getId())) {
                     throw new BusinessException(ErrorCode.EXISTED_FILE);
                 }
@@ -83,7 +83,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     // 오픈채팅방 수정
     @Override
     @Transactional
-    public void updateOpenChatRoom(String id, ChatRoomRequestDto requestDto,
+    public void updateOpenChatRoom(Long id, ChatRoomRequestDto requestDto,
         User user, List<MultipartFile> files) throws IOException {
         ChatRoom chatRoom = findChatRoom(id);
 
@@ -94,7 +94,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         if (files != null) {
             for (MultipartFile file : files) {
                 String fileUrl = awsS3upload.upload(file, "chatRoom " + chatRoom.getId());
-                if (imageRepository.existsByImageUrlAndChatRoom_Id(fileUrl, chatRoom.getId())) {
+                if (imageRepository.existsByImageUrlAndId(fileUrl, chatRoom.getId())) {
                     throw new BusinessException(ErrorCode.EXISTED_FILE);
                 }
                 imageRepository.save(new Image(chatRoom, fileUrl));
@@ -130,7 +130,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     // 오픈채팅방 삭제
     @Override
     @Transactional
-    public void deleteChatRoom(String id, User user) {
+    public void deleteChatRoom(Long id, User user) {
         ChatRoom chatRoom = findChatRoom(id);
 
         if (!chatRoom.getUser().getId().equals(user.getId())) {
@@ -153,7 +153,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         tradeChatRoomRepository.delete(tradeChatRoom);
     }
 
-    private ChatRoom findChatRoom(String id) {
+    private ChatRoom findChatRoom(Long id) {
         return chatRoomRepository.findById(id).orElseThrow(() ->
             new BusinessException(ErrorCode.NOT_FOUND_CHATROOM));
     }

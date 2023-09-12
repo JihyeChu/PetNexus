@@ -28,7 +28,7 @@ public interface ChatRoomService {
      * @param id        조회할 오픈채팅방 id
      * @return          조회된 오픈채팅방
      */
-    ChatRoomResponseDto getOpenChatRoom(String id);
+    ChatRoomResponseDto getOpenChatRoom(Long id);
 
     /**
      * 오픈채팅방 생성
@@ -46,7 +46,7 @@ public interface ChatRoomService {
      * @param requestDto 오픈채팅방 수정 요청정보
      * @param user       오픈채팅방 수정 요청자
      */
-    void updateOpenChatRoom(String id, ChatRoomRequestDto requestDto, User user, List<MultipartFile> files) throws IOException;
+    void updateOpenChatRoom(Long id, ChatRoomRequestDto requestDto, User user, List<MultipartFile> files) throws IOException;
 
     /**
      * 중고거래 채팅방 목록 조회
@@ -70,7 +70,7 @@ public interface ChatRoomService {
      * @param user 오픈채팅방 삭제 요청자
      */
     // 채팅방 삭제
-    void deleteChatRoom(String id, User user);
+    void deleteChatRoom(Long id, User user);
 
     /**
      * 중고거래 채팅방 삭제
