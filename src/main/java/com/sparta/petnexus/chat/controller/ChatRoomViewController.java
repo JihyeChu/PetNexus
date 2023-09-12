@@ -30,14 +30,14 @@ public class ChatRoomViewController {
 
 
     @GetMapping("/openchat/{chatId}")
-    public String getChat(@PathVariable String chatId, Model model) {
+    public String getChat(@PathVariable Long chatId, Model model) {
         ChatRoomResponseDto chatRoomResponseDto = chatRoomService.getOpenChatRoom(chatId);
         model.addAttribute("chat", chatRoomResponseDto);
         return "chat";
     }
 
     @GetMapping("/openchat/create")
-    public String createPost(@RequestParam(required = false) String chatId, Model model, @AuthenticationPrincipal
+    public String createPost(@RequestParam(required = false) Long chatId, Model model, @AuthenticationPrincipal
     UserDetailsImpl userDetails, RedirectAttributes rttr) {
         if(userDetails == null){
             rttr.addFlashAttribute("result", "로그인이 필요합니다.");
@@ -55,7 +55,7 @@ public class ChatRoomViewController {
 
     // 채팅방
     @GetMapping("/openchat/room")
-    public String openChatList(@RequestParam(required=false) String chatId, Model model) {
+    public String openChatList(@RequestParam(required=false) Long chatId, Model model) {
         model.addAttribute("chatList", chatService.getAllChatByRoomId(chatId));
         return "openChatRoom";
     }
@@ -75,7 +75,7 @@ public class ChatRoomViewController {
 
 
     @GetMapping("/myopenchat/{chatId}")
-    public String getmyChat(@PathVariable String chatId, Model model) {
+    public String getmyChat(@PathVariable Long chatId, Model model) {
         ChatRoomResponseDto chatRoomResponseDto = chatRoomService.getOpenChatRoom(chatId);
         model.addAttribute("chat", chatRoomResponseDto);
         return "mychat";

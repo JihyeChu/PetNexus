@@ -1,8 +1,6 @@
 package com.sparta.petnexus.common.redis.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.petnexus.chat.dto.ChatResponseDto;
-import com.sparta.petnexus.common.redis.pubsub.RedisSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -13,9 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -46,38 +41,5 @@ public class RedisConfig {
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         return template;
-    }
-
-    //pub/sub///////////////////////////////////////////////
-    // redis 를 경청하고 있다가 메시지 발행(publish)이 오면 Listener 가 처리합니다.
-    @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(
-        RedisConnectionFactory connectionFactory,
-        MessageListenerAdapter listenerAdapter,
-        ChannelTopic channelTopic
-    ) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAdapter, channelTopic);
-        return container;
-    }
-
-    @Bean
-    public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
-        return new MessageListenerAdapter(subscriber, "onMessage");
-    }
-    @Bean
-    public ChannelTopic channelTopic() {
-        return new ChannelTopic("chatroom");
-    }
-
-    @Bean
-    public RedisTemplate<String, ChatResponseDto> redisTemplateMessage(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, ChatResponseDto> redisTemplateMessage = new RedisTemplate<>();
-        redisTemplateMessage.setConnectionFactory(connectionFactory);
-        redisTemplateMessage.setKeySerializer(new StringRedisSerializer());        // Key Serializer
-        redisTemplateMessage.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));      // Value Serializer
-
-        return redisTemplateMessage;
     }
 }
