@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TradeRepository extends JpaRepository<Trade, Long> {
     Page<Trade> findByTitleContainingOrContentContainingOrderByTitleDescContentDesc(String keyword, String keyword1, Pageable pageable);
+
+    Page<Trade> findAllByUserId(Pageable pageable, Long id);
 }

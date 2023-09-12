@@ -5,6 +5,7 @@ import com.sparta.petnexus.Image.entity.Image;
 import com.sparta.petnexus.Image.repository.ImageRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.notification.service.NotificationService;
 import com.sparta.petnexus.post.dto.PostRequestDto;
 import com.sparta.petnexus.post.dto.PostResponseDto;
@@ -64,6 +65,16 @@ public class PostServiceImpl implements PostService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Post> postList = postRepository.findAll(pageable);
+        return postList.map(PostResponseDto::of);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PostResponseDto> getmyPosts(int page, int size, String sortBy, boolean isAsc, UserDetailsImpl userDetails) {
+        Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Post> postList = postRepository.findAllByUserId(pageable, userDetails.getUser().getId());
         return postList.map(PostResponseDto::of);
     }
 

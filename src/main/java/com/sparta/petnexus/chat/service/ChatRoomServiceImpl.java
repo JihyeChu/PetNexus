@@ -13,6 +13,7 @@ import com.sparta.petnexus.chat.repository.ChatRoomRepository;
 import com.sparta.petnexus.chat.repository.TradeChatRoomRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.notification.service.NotificationService;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.trade.repository.TradeRepository;
@@ -42,6 +43,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional(readOnly = true)
     public ChatRoomListResponseDto getOpenChatRooms() {
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByOrderByCreatedAtAsc();
+        return ChatRoomListResponseDto.of(chatRoomList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ChatRoomListResponseDto getmyOpenChatRooms(UserDetailsImpl userDetails) {
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByUserId(userDetails.getUser().getId());
 
         return ChatRoomListResponseDto.of(chatRoomList);
     }

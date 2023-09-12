@@ -10,5 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByTitleContainingOrContentContainingOrderByTitleDescContentDesc(String title, String content, Pageable pageable);
+
+    Page<Post> findAllByUserId(Pageable pageable, Long id);
 }
 
