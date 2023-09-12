@@ -22,6 +22,7 @@ public class ChatController {
     // /pub/chat/message 에 메세지가 오면 동작
     // 채팅방에 발행된 메시지는 서로 다른 서버에 공유하기 위해 redis 의 Topic 으로 발행
     @MessageMapping("chat/message/{roomId}") // 오픈채팅
+    @SendTo("/sub/chat/{roomId}")
     public ChatMessageDto message(@DestinationVariable String roomId, ChatMessageDto messageDto) {
         chatService.sendChatMessage(roomId, messageDto);
         return ChatMessageDto.builder()

@@ -6,7 +6,6 @@ import com.sparta.petnexus.chat.dto.ChatResponseDto;
 import com.sparta.petnexus.chat.dto.TradeChatListResponseDto;
 import com.sparta.petnexus.chat.entity.Chat;
 import com.sparta.petnexus.chat.entity.ChatRoom;
-import com.sparta.petnexus.chat.entity.ChatType;
 import com.sparta.petnexus.chat.entity.TradeChat;
 import com.sparta.petnexus.chat.entity.TradeChatRoom;
 import com.sparta.petnexus.chat.repository.ChatRepository;
@@ -44,14 +43,21 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void sendChatMessage(String roomId, ChatMessageDto messageDto) {
-        messageDto.setType(ChatType.TALK);
-        saveMessage(roomId, messageDto);
-        redisMessageListenerContainer.addMessageListener(redisSubscriber,
-            chatRoomRedisRepository.getTopic(roomId));
+//        messageDto.setType(ChatType.TALK);
+//        saveMessage(roomId, messageDto);
+//        redisMessageListenerContainer.addMessageListener(redisSubscriber,
+//            chatRoomRedisRepository.getTopic(roomId));
+//
+//        // Websocket 에 발행된 메시지를 redis 로 발행한다(publish)
+//        chatRoomRedisRepository.pushMessage(roomId, messageDto);
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_CHATROOM));
 
-        // Websocket 에 발행된 메시지를 redis 로 발행한다(publish)
-        chatRoomRedisRepository.pushMessage(roomId, messageDto);
+        Chat chat = messageDto.toEntity(chatRoom);
+        chatRepository.save(chat);
     }
+
+
 
     // 오픈채팅방 채팅 목록 조회
     @Override
