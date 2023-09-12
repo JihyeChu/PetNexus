@@ -67,4 +67,18 @@ public class ChatRoomViewController {
         return "tradeChatRoom";
     }
 
+    @GetMapping("/myopenchat")
+    public String myopenChatList(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        model.addAttribute("chatRoomList", chatRoomService.getmyOpenChatRooms(userDetails));
+        return "myopenChat";
+    }
+
+
+    @GetMapping("/myopenchat/{chatId}")
+    public String getmyChat(@PathVariable String chatId, Model model) {
+        ChatRoomResponseDto chatRoomResponseDto = chatRoomService.getOpenChatRoom(chatId);
+        model.addAttribute("chat", chatRoomResponseDto);
+        return "mychat";
+    }
+
 }
