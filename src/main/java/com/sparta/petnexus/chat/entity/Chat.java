@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class Chat extends Timestamped {
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private ChatType type; // 메시지 타입
 
     @Id
@@ -36,9 +36,9 @@ public class Chat extends Timestamped {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
-    @Column(nullable = false)
+    @Column
     private String sender;
 
-    @Column(nullable = false)
+    @Column
     private String message;
 }
