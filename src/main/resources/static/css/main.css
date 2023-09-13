@@ -2097,6 +2097,7 @@ input, select, textarea {
 /* Banner */
 
 	#banner {
+		height: 80px;
 		position: relative;
 		overflow: hidden;
 		background: #fff;
@@ -2105,11 +2106,10 @@ input, select, textarea {
 		/*border-top: solid 2px #e5e5e5;*/
 		/*border-bottom: solid 2px #e5e5e5;*/
 		box-shadow: inset 0px -8px 0px 0px #fff, inset 0px 8px 0px 0px #fff;
-		position: relative;
 		text-transform: uppercase;
 		background-color: lightsalmon;
 		background-size: cover;
-		padding: 10em 0;
+		padding: 8em 0;
 	}
 
 		#banner p {
