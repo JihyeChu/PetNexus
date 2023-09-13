@@ -1,11 +1,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
 <link rel="stylesheet" th:href="@{/css/openChatRoom.css}">
 <title>Stomp Real-time Chat</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
 <body class="homepage is-preload">
 <div class="chat-box">
     <div class="container bootstrap snippets bootdeys">
-        <div class="col-md-7 col-xs-12 col-md-offset-2">
+
             <!-- Panel Chat -->
             <div class="panel" id="chat">
                 <div class="panel-heading">
@@ -13,21 +16,22 @@
                     </h3>
                 </div>
                 <div class="panel-body">
+                    <div class="open-chat" th:text="${chat.title}"></div>
                     <div class="chats">
                         <div id="my-chat" th:each="chat : ${chatList.getChatList()}">
                             <div th:if="${#authentication.principal.username} == ${chat.sender}">
                                 <div class="chat-avatar">
                                     <a class="avatar avatar-online" data-toggle="tooltip" href="#"
                                        data-placement="right" title="">
-                                        <img src="/img/profile.jpeg" alt="...">
+                                        <img src="/img/profile01.jpg" alt="...">
                                         <i></i>
                                     </a>
                                 </div>
                                 <div class="chat-body">
                                     <div class="chat-content">
                                         <p th:text="${chat.message}"></p>
-                                        <p class='writer' th:text="${chat.sender}"></p>
-<!--                                        <time class="chat-time" th:text="${chat.createdAt}"></time>-->
+                                        <p class='writer-right' th:text="${chat.sender}"></p>
+                                        <!--<time class="chat-time" th:text="${chat.createdAt}"></time>-->
                                     </div>
                                 </div>
                             </div>
@@ -39,7 +43,7 @@
                                     <a class="avatar avatar-online" data-toggle="tooltip" href="#"
                                        data-placement="left" title=""
                                        data-original-title="Edward Fletcher">
-                                        <img src="/img/profile.jpeg"
+                                        <img src="/img/profile01.jpg"
                                              alt="...">
                                         <i></i>
                                     </a>
@@ -47,8 +51,8 @@
                                 <div class="chat-body">
                                     <div class="chat-content">
                                         <p th:text="${chat.message}"></p>
-                                        <p class='writer' th:text="${chat.sender}"></p>
-<!--                                        <time class="chat-time" th:text="${chat.createdAt}">-->
+                                        <p class='writer-left' th:text="${chat.sender}"></p>
+                                        <!--<time class="chat-time" th:text="${chat.createdAt}">-->
                                         </time>
                                     </div>
                                 </div>
@@ -57,14 +61,14 @@
                     </div>
                     <div class="panel-footer">
                         <div sec:authentication="name" id="username" hidden="hidden"></div>
-                        <form>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Say something"
+                        <form class="send-box">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder=""
                                        id="messageInput">
                                 <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button"
-                                        id="sendButton">Send</button>
-                            </span>
+                                <button class="btn btn-warning btn-lg" type="button"
+                                        id="sendButton">전송</button>
+                                </span>
                             </div>
 
                         </form>
@@ -74,7 +78,7 @@
             </div>
         </div>
     </div>
-</div>
+
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
@@ -115,7 +119,7 @@
             },
 
             brokerURL: 'wss://petnexus.xyz/stomp/chat',
-            // brokerURL: 'ws://localhost:8080/stomp/chat',
+            //brokerURL: 'ws://localhost:8080/stomp/chat',
 
         });
 
@@ -148,14 +152,14 @@
                     str = "<div class='my-chat'>";
                     str += "<div class='chat-avatar'>";
                     str += "<a class='avatar avatar-online' data-toggle='tooltip' data-placement='right'>";
-                    str += "<img src='/img/profile.jpeg' alt=''>";
+                    str += "<img src='/img/profile01.jpg' alt=''>";
                     str += "</a>";
                     str += "</div>";
                     str += "<div class='chat-body'>";
                     str += "<div class='chat-content'>";
                     str += "<p>" + message + "</p>";
-                    str += "<p class='writer'>" + writer + "</p>";
-                    str += "<time class='chat-time'>" + currentTimeString;
+                    str += "<p class='writer-right'>" + writer + "</p>";
+                 /*   str += "<time class='chat-time'>" + currentTimeString;*/
                     str += "</div>";
                     str += "</div>";
                     str += "</div>";
@@ -166,14 +170,14 @@
                     str = "<div class='other-chat'>";
                     str += "<div class='chat-avatar'>";
                     str += "<a class='avatar avatar-online' data-toggle='tooltip' data-placement='right'>";
-                    str += "<img src='/img/profile.jpeg' alt=''>";
+                    str += "<img src='/img/profile01.jpg' alt=''>";
                     str += "</a>";
                     str += "</div>";
                     str += "<div class='chat-body'>";
                     str += "<div class='chat-content'>";
                     str += "<p>" + message + "</p>";
-                    str += "<p>" + writer + "</p>";
-                    str += "<time class='chat-time'>" + currentTimeString;
+                    str += "<p>" + writer-left + "</p>";
+                   /* str += "<time class='chat-time'>" + currentTimeString;*/
                     str += "</div>";
                     str += "</div>";
                     str += "</div>";
@@ -181,6 +185,36 @@
                     $(".chats").append(str);
                 }
                 // $(".chats").append(str);
+            });
+
+            stompClient.subscribe(`/sub/enter/${roomId}`, function (chat) {
+
+                let content = JSON.parse(chat.body);
+                console.log(content);
+
+                let writer = content.sender;
+                console.log(writer);
+                let message = content.message;
+
+                let str = '';
+
+                str = "<div class='my-chat'>";
+                str += "<a class='avatar avatar-online' data-toggle='tooltip' data-placement='right'>";
+                str += "</a>";
+                str += "</div>";
+                str += "<div class='chat-body'>";
+                str += "<div class='chat-enter'>";
+                str += "<p>" + message + "</p>";
+                str += "</div>";
+                str += "</div>";
+                str += "</div>";
+                $(".chats").append(str);
+
+                // $(".chats").append(str);
+            });
+            stompClient.publish({
+                destination: `/pub/chat/enter/${roomId}`,
+                body: JSON.stringify({'sender': username})
             });
         };
 
@@ -200,7 +234,7 @@
 
             stompClient.publish({
                 destination: `/pub/chat/message/${roomId}`,
-                body: JSON.stringify({'message': $(`#messageInput`).val(), 'sender': username, type: 'TALK'})
+                body: JSON.stringify({'message': $(`#messageInput`).val(), 'sender': username})
             });
             $(`#messageInput`).val('');
         }

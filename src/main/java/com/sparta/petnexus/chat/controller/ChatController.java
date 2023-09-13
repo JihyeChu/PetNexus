@@ -21,7 +21,7 @@ public class ChatController {
     // stompConfig 에서 설정한 applicationDestinationPrefixes 와 @MessageMapping 경로가 병합됨 (/pub + ...)
     // /pub/chat/enter 에 메세지가 오면 동작
     @MessageMapping("chat/enter/{roomId}")
-    @SendTo("/sub/chat/{roomId}")
+    @SendTo("/sub/enter/{roomId}")
     public ChatMessageDto enter(@DestinationVariable Long roomId,
         ChatMessageDto messageDto) { // 채팅방 입장
 
