@@ -3,7 +3,7 @@ body {
   margin-top: 10px;
   text-align: center;
   background-image:url('/img/back01.jpg');
-  background-size: 950px;
+  background-size: 50%;
 }
 
 .open-chat {
@@ -184,5 +184,5 @@ body {
 
 .panel-footer {
   margin-top: 30px;
-  width: 980px;
+  width: 100%;
 }
