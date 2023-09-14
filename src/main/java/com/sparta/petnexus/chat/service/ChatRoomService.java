@@ -4,6 +4,7 @@ import com.sparta.petnexus.chat.dto.ChatRoomListResponseDto;
 import com.sparta.petnexus.chat.dto.ChatRoomRequestDto;
 import com.sparta.petnexus.chat.dto.ChatRoomResponseDto;
 import com.sparta.petnexus.chat.dto.TradeChatRoomListResponseDto;
+import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.user.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,14 @@ public interface ChatRoomService {
      */
     ChatRoomListResponseDto getOpenChatRooms();
 
+    ChatRoomListResponseDto getmyOpenChatRooms(UserDetailsImpl userDetails);
+
+    /**
+     * 오픈채팅방 조회
+     *
+     * @param id        조회할 오픈채팅방 id
+     * @return          조회된 오픈채팅방
+     */
     ChatRoomResponseDto getOpenChatRoom(Long id);
 
     /**

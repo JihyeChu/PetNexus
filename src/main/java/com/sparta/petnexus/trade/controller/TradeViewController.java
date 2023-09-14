@@ -5,6 +5,8 @@ import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.service.TradeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,6 +48,24 @@ public class TradeViewController {
         return "tradeMarket";
     }
 
+    @GetMapping("/tradeMarket/keyword/{keyword}")
+    public String tradeKeywordList(Model model, @PathVariable String keyword, @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1) - 1;
+        int pageSize = size.orElse(5);
+        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Page<TradeResponseDto> searchList = tradeService.searchTrade(keyword, pageable);
+        model.addAttribute("tradeList", searchList);
+        int totalPages = searchList.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "tradeMarket";
+    }
+
     @GetMapping("/tradeMarket/{tradeId}")
     public String getTrade(@PathVariable Long tradeId, Model model) {
         TradeResponseDto tradeResponseDto = tradeService.selectTrade(tradeId);
@@ -68,5 +88,34 @@ public class TradeViewController {
             }
             return "createTrade";
         }
+    }
+
+    @GetMapping("/mytradeMarket")
+    public String mytradeList(Model model, @RequestParam("page") Optional<Integer> page,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam("size") Optional<Integer> size,
+            @RequestParam("sortBy") Optional<String> sortBy,
+            @RequestParam("isAsc") Optional<Boolean> isAsc) {
+        int currentPage = page.orElse(1) - 1;
+        int pageSize = size.orElse(5);
+        String sort = sortBy.orElse("id");
+        boolean Asc = isAsc.orElse(true);
+        Page<TradeResponseDto> tradeResponseDtoList = tradeService.getmyTrade(currentPage, pageSize, sort, Asc, userDetails);
+        model.addAttribute("tradeList", tradeResponseDtoList);
+        int totalPages = tradeResponseDtoList.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "mytradeMarket";
+    }
+
+    @GetMapping("/mytradeMarket/{tradeId}")
+    public String getmyTrade(@PathVariable Long tradeId, Model model) {
+        TradeResponseDto tradeResponseDto = tradeService.selectTrade(tradeId);
+        model.addAttribute("trade", tradeResponseDto);
+        return "mytrade";
     }
 }

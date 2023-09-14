@@ -3,10 +3,8 @@ package com.sparta.petnexus.chat.dto;
 import com.sparta.petnexus.chat.entity.ChatRoom;
 import com.sparta.petnexus.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Builder
 @Getter

@@ -10,6 +10,7 @@
 	<script>
 		$(document).ready(function () {
 			$("#header").load("/header");
+			$("#pagelist").load("/mypagelist");
 		});
 	</script>
 </head>
@@ -19,8 +20,14 @@
 
 	<div id="header"></div>
 
+	<!-- Banner -->
+	<section id="banner" style="padding: 1em 0; background-color:white">
+		<div id="pagelist"></div>
+	</section>
+
 	<!-- Features -->
 	<section id="features">
+
 		<div class="container">
 			<header>
 				<h2><strong>회원 정보 수정</strong></h2>
@@ -39,10 +46,6 @@
 								<li><button class="btn bnt-black" style="font-size: 8px" id="createCom-btn" onclick="create()">수정하기</button></li>
 							</ul>
 						</header>
-						<ul class="actions">
-							<li><a href="/login"
-										 class="button icon solid fa-file">로그 아웃</a></li>
-						</ul>
 					</section>
 
 				</div>

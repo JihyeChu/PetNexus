@@ -1,7 +1,17 @@
 body {
-  background: #ddd;
+/*  background: #ddd;*/
   margin-top: 10px;
   text-align: center;
+  background-image:url('/img/back01.jpg');
+  background-size: 50%;
+}
+
+.open-chat {
+  margin-top: 50px;
+  font-size: 50px;
+  color: #888;
+  font-family: 'Source Sans Pro';
+  font-weight: 300;
 }
 
 .chat-box {
@@ -51,6 +61,21 @@ body {
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
 }
 
+.chat-enter {
+  position: relative;
+  display: inline-block;
+  width: 500px;
+  float: none;
+  padding: 8px 15px;
+  margin: 0 0 10px 0;
+  clear: both;
+  color: #fff;
+  background-color: #fd887a;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}
+
 .chat-content:before {
   position: absolute;
   top: 10px;
@@ -74,6 +99,14 @@ body {
   display: block;
   margin-top: 8px;
   color: rgba(255, 255, 255, .6)
+}
+
+.panel-footer {
+  padding: 0 30px 15px;
+  background-color: transparent;
+  border-top: 1px solid transparent;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 
 .other-chat .chat-avatar {
@@ -126,7 +159,8 @@ body {
 }
 
 .chat-avatar .avatar {
-  width: 30px;
+  width: 50px;
+
 }
 
 .avatar {
@@ -138,7 +172,17 @@ body {
   vertical-align: bottom;
 }
 
-.writer {
-  color: #3c3b3b;
+.writer-right {
+  color: #dfe9ef;
   font-weight: bold;
+}
+
+.writer-left {
+  color: #979797;
+  font-weight: bold;
+}
+
+.panel-footer {
+  margin-top: 30px;
+  width: 100%;
 }

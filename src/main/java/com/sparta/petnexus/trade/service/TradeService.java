@@ -1,5 +1,6 @@
 package com.sparta.petnexus.trade.service;
 
+import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
 import com.sparta.petnexus.trade.entity.Trade;
@@ -19,13 +20,15 @@ public interface TradeService {
      * @param user : 거래게시글 생성 요청자
      * @param files : 거래게시글 생성 첨부 파일
      * */
-    void createTrade(TradeRequestDto requestDto, User user, List<MultipartFile> files) throws IOException;
+    public void createTrade(TradeRequestDto requestDto, User user,List<MultipartFile> files) throws IOException;
 
     /*
      * 거래게시글 전체 조회
      * @return : 거래게시글 전체 정보
      * */
     Page<TradeResponseDto> getTrade(int page, int size, String sortBy, boolean isAsc);
+
+    Page<TradeResponseDto> getmyTrade(int page, int size, String sortBy, boolean isAsc, UserDetailsImpl userDetails);
 
     Page<TradeResponseDto> searchTrade(String keyword, Pageable pageable);
 

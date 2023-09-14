@@ -42,9 +42,11 @@
 								<img style="max-width: 100%; height: auto;" th:src="${imageFile}">
 							</div>
 						</div>
+
 						<div style="text-align: center;">
-						<button class="btn btn-black" style="font-size: 8px;" id="like-btn" th:onclick="likeIt([[${post.id}]])">좋아요</button>
+							<button class="btn btn-black" style="font-size: 8px;" id="like-btn" th:onclick="likeIt([[${post.id}]])">좋아요</button>
 						</div>
+
 						<ul class="actions" style="border-top: solid 2px">
 							<li><input id="comment"  style="font-size: 15px; font-weight: 600; color: inherit; width: 650px; border:none" placeholder="댓글을 입력해 주세요."></li>
 							<li><button class="btn bnt-black" style="font-size: 2px" id="createCom-btn" onclick="create()">등록</button></li>
@@ -61,6 +63,10 @@
 							</div>
 						</div>
 
+						<ul class="actions">
+							<li><a th:onclick="|location.href='@{/community/post?postId={postId}(postId=${post.id})}'|"
+								   class="button icon solid fa-file">수정하기</a></li>
+						</ul>
 					</article>
 
 				</div>

@@ -13,6 +13,7 @@ import com.sparta.petnexus.chat.repository.ChatRoomRepository;
 import com.sparta.petnexus.chat.repository.TradeChatRoomRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.notification.service.NotificationService;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.trade.repository.TradeRepository;
@@ -37,12 +38,18 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ImageRepository imageRepository;
     private final NotificationService notificationService;
 
-
     // 오픈채팅방 목록 조회
     @Override
     @Transactional(readOnly = true)
     public ChatRoomListResponseDto getOpenChatRooms() {
         List<ChatRoom> chatRoomList = chatRoomRepository.findAllByOrderByCreatedAtAsc();
+        return ChatRoomListResponseDto.of(chatRoomList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ChatRoomListResponseDto getmyOpenChatRooms(UserDetailsImpl userDetails) {
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByUserId(userDetails.getUser().getId());
 
         return ChatRoomListResponseDto.of(chatRoomList);
     }
@@ -57,13 +64,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     // 오픈채팅방 생성
     @Override
-    public void createOpenChatRoom(ChatRoomRequestDto requestDto, User user, List<MultipartFile> files) throws IOException {
+    public void createOpenChatRoom(ChatRoomRequestDto requestDto, User user,
+        List<MultipartFile> files) throws IOException {
         ChatRoom chatRoom = requestDto.toEntity(user);
         chatRoomRepository.save(chatRoom);
         if (files != null) {
             for (MultipartFile file : files) {
                 String fileUrl = awsS3upload.upload(file, "chatRoom " + chatRoom.getId());
-                if (imageRepository.existsByImageUrlAndId(fileUrl, chatRoom.getId())) {
+                if (imageRepository.existsByImageUrlAndId(fileUrl,
+                    chatRoom.getId())) {
                     throw new BusinessException(ErrorCode.EXISTED_FILE);
                 }
                 imageRepository.save(new Image(chatRoom, fileUrl));
@@ -81,8 +90,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         if (!chatRoom.getUser().getId().equals(user.getId())) {
             throw new BusinessException(ErrorCode.ONLY_MASTER_EDIT);
         }
-        chatRoom.updateChatRoomTitle(requestDto.getTitle());
-        chatRoom.updateChatRoomContent(requestDto.getContent());
+        chatRoom.update(requestDto);
         if (files != null) {
             for (MultipartFile file : files) {
                 String fileUrl = awsS3upload.upload(file, "chatRoom " + chatRoom.getId());
@@ -145,7 +153,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         tradeChatRoomRepository.delete(tradeChatRoom);
     }
 
-    private ChatRoom findChatRoom(long id) {
+    private ChatRoom findChatRoom(Long id) {
         return chatRoomRepository.findById(id).orElseThrow(() ->
             new BusinessException(ErrorCode.NOT_FOUND_CHATROOM));
     }

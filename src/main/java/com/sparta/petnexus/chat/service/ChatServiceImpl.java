@@ -32,9 +32,10 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional(readOnly = true)
     public ChatListResponseDto getAllChatByRoomId(Long roomId) {
-        List<Chat> chatList = chatRepository.findAllByChatRoomIdOrderByCreatedAtAsc(roomId);
+        List<Chat> ChatList = chatRepository.findAllByChatRoomIdOrderByCreatedAtAsc(
+                roomId);
 
-        return ChatListResponseDto.of(chatList);
+        return ChatListResponseDto.of(ChatList);
     }
 
     // 오픈채팅 메세지 저장
@@ -52,7 +53,8 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional(readOnly = true)
     public TradeChatListResponseDto getAllTradeChatByRoomId(Long roomId) {
-        List<TradeChat> tradeChatList = tradeChatRepository.findAllByTradeChatRoomIdOrderByCreatedAtAsc(roomId);
+        List<TradeChat> tradeChatList = tradeChatRepository.findAllByTradeChatRoomIdOrderByCreatedAtAsc(
+            roomId);
 
         return TradeChatListResponseDto.of(tradeChatList);
     }

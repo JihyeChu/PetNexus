@@ -12,6 +12,7 @@
 	<script>
 		$(document).ready(function () {
 			$("#header").load("/header");
+      $("#pagelist").load("/mypagelist");
 
 			const searchButton = document.getElementById('search-btn');
 			$(searchButton).click(function () {
@@ -35,14 +36,8 @@
 	<div id="header"></div>
 
 	<!-- Banner -->
-	<section id="banner">
-		<div class="container">
-			<p>찾으시는 커뮤니티 글이 있으신가요?</p>
-			<div>
-				<input type="text" id="keyword" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
-				<button type="button" id="search-btn" class="btn btn-outline-dark">검색</button>
-			</div>
-		</div>
+	<section id="banner" style="padding: 1em 0; background-color:white">
+		<div id="pagelist"></div>
 	</section>
 
 	<!-- Main -->
@@ -67,7 +62,7 @@
 							좋아요: <span th:text="${post.like}"></span>
 						</div>
 						<ul class="actions">
-							<li><a th:onclick="|location.href='@{/community/{postId}(postId=${post.id})}'|"
+							<li><a th:onclick="|location.href='@{/mycommunity/{postId}(postId=${post.id})}'|"
 										 class="button icon solid fa-file">게시글 보기</a></li>
 						</ul>
 					</article>

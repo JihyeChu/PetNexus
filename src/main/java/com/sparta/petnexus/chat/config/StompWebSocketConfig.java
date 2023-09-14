@@ -3,12 +3,15 @@ package com.sparta.petnexus.chat.config;
 import com.sparta.petnexus.chat.StompHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+@Order(Ordered.HIGHEST_PRECEDENCE + 99)
 @EnableWebSocketMessageBroker
 @Configuration
 @RequiredArgsConstructor
@@ -34,9 +37,9 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker("/sub");
     }
 
-//    @Override
-//    public void configureClientInboundChannel(ChannelRegistration registration) { // 핸들러 등록
-//        // connect / disconnect 인터셉터
-//        registration.interceptors(stompHandler);
-//    }
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) { // 핸들러 등록
+        // connect / disconnect 인터셉터
+        registration.interceptors(stompHandler);
+    }
 }

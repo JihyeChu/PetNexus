@@ -7,6 +7,7 @@ import com.sparta.petnexus.chat.entity.TradeChatRoom;
 import com.sparta.petnexus.chat.repository.TradeChatRoomRepository;
 import com.sparta.petnexus.common.exception.BusinessException;
 import com.sparta.petnexus.common.exception.ErrorCode;
+import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.notification.service.NotificationService;
 import com.sparta.petnexus.trade.bookmark.entity.TradeBookmark;
 import com.sparta.petnexus.trade.bookmark.repository.TradeBookmarkRepository;
@@ -71,6 +72,16 @@ public class TradeServiceImpl implements TradeService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Trade> tradeList = tradeRepository.findAll(pageable);
+        return tradeList.map(TradeResponseDto::of);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TradeResponseDto> getmyTrade(int page, int size, String sortBy, boolean isAsc, UserDetailsImpl userDetails) {
+        Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Trade> tradeList = tradeRepository.findAllByUserId(pageable, userDetails.getUser().getId());
         return tradeList.map(TradeResponseDto::of);
     }
 

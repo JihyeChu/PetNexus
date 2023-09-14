@@ -24,15 +24,13 @@ public class StompHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         // 헤더에 있는 토큰값을 가져오기 위해 StompHeaderAccessor.wrap()
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-
+        log.info("###########"+accessor.getCommand());
         // websocket 을 통해 들어온 요청이 처리 되기 전 실행된다.
         // websocket 연결시 헤더의 jwt token 유효성 검증
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             String jwt = accessor.getFirstNativeHeader("Authorization");
-
-            if (!tokenProvider.validToken(
-                Objects.requireNonNull(jwt)
-                    .substring(7))) {
+            String token = tokenProvider.getTokenStompHeader(jwt);
+            if (!tokenProvider.validToken(token)) {
                 throw new BusinessException(ErrorCode.INVALID_AUTH_TOKEN);
             }
         }

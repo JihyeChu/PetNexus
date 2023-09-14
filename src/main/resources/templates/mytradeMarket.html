@@ -11,6 +11,7 @@
     <script>
         $(document).ready(function () {
             $("#header").load("/header");
+            $("#pagelist").load("/mypagelist");
 
             const searchButton = document.getElementById('search-btn');
             $(searchButton).click(function () {
@@ -34,14 +35,8 @@
 
 
     <!-- Banner -->
-    <section id="banner">
-        <div class="container">
-            <p>찾으시는 물품이 있으신가요?</p>
-            <div>
-                <input type="text" id="keyword" style="width: 500px; height: 50px; padding-bottom: 6px" placeholder="  검색어를 입력하세요.">
-                <button type="button" id="search-btn" class="btn btn-outline-dark">검색</button>
-            </div>
-        </div>
+    <section id="banner" style="padding: 1em 0; background-color:white">
+        <div id="pagelist"></div>
     </section>
 
     <!-- Main -->
@@ -70,7 +65,7 @@
                             좋아요: <span th:text="${trade.tradeLikeCount}"></span>
                         </div>
                         <ul class="actions">
-                            <li><a th:onclick="|location.href='@{/tradeMarket/{tradeId}(tradeId=${trade.id})}'|" class="button icon solid fa-file">상품 상세보기</a></li>
+                            <li><a th:onclick="|location.href='@{/mytradeMarket/{tradeId}(tradeId=${trade.id})}'|" class="button icon solid fa-file">상품 상세보기</a></li>
                         </ul>
                     </article>
 

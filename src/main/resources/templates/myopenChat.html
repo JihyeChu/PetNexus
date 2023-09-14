@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<title>펫 넥서스</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+	<link rel="stylesheet" href="/css/main.css"/>
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#header").load("/header");
+			$("#pagelist").load("/mypagelist");
+		});
+	</script>
+	<script>
+		let msg = "[[${result}]]";
+		if(msg === '로그인이 필요합니다.') {
+			alert("로그인이 필요합니다.");
+		}
+	</script>
+</head>
+
+	<body class="homepage is-preload">
+	<div id="page-wrapper">
+		<div id="header"></div>
+
+
+			<!-- Banner -->
+		<section id="banner" style="padding: 1em 0; background-color:white">
+			<div id="pagelist"></div>
+		</section>
+
+			<!-- Main -->
+				<section id="main">
+					<div class="container">
+						<div class="row">
+
+							<!-- Content -->
+								<div id="content" class="col-8 col-12-medium">
+
+									<!-- Post -->
+										<article class="box post" th:each="chatRoom : ${chatRoomList.getChatRoomList()}">
+											<header>
+												<h2 th:text="${chatRoom.title}"></h2>
+											</header>
+											<p th:text="${chatRoom.content}"></p>
+											<ul class="actions">
+												<li><a th:onclick="|location.href='@{/myopenchat/{chatId}(chatId=${chatRoom.id})}'|"
+															 class="button icon solid fa-file">게시글 보기</a></li>
+											</ul>
+										</article>
+
+								</div>
+
+							<!-- Sidebar -->
+								<div id="sidebar" class="col-4 col-12-medium">
+
+									<!-- Highlights -->
+										<section>
+											<ul class="divided">
+												<li>
+
+													<!-- Highlight -->
+														<article class="box highlight">
+															<header>
+																<h3><a href="/openchat/create" class="button icon solid fa-file">채팅방 생성하기</a></h3>
+															</header>
+														</article>
+
+												</li>
+											</ul>
+										</section>
+
+								</div>
+
+						</div>
+					</div>
+				</section>
+
+		</div>
+	</body>
+</html>
