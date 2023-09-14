@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <title>펫 넥서스</title>
@@ -23,8 +23,9 @@
                 <li><a class="icon solid fa-cog" href="/tradeMarket"><span>중고장터</span></a></li>
                 <li><a class="icon solid fa-sitemap" href="/openchat"><span>오픈 채팅</span></a></li>
                 <li><a class="icon solid fa-retweet" href="/hospital"><span>병원찾기</span></a></li>
-                <li id="login-link" ><a class="icon solid fa-sitemap" href="/login"><span>로그인</span></a> </li>
-                <li id="profile-link" ><a class="icon solid fa-sitemap" href="/profile"><span>마이페이지</span></a> </li>
+                <li id="login-link" ><a class="icon solid fa-sitemap" href="/login"><span>로그인</span></a></li>
+                <li id="profile-link" ><a class="icon solid fa-sitemap" href="/profile"><span>마이페이지</span></a></li>
+                <li><a sec:authorize="isAuthenticated" class="icon solid fa-sitemap" href=/login><span>로그아웃</span></a></li>
             </ul>
             <div id="sse-container">
                 <!-- SSE 이벤트 스트림 내용이 여기에 표시됩니다. -->
