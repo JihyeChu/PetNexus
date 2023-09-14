@@ -1,11 +1,12 @@
 <img src="https://capsule-render.vercel.app/api?type=cylinder&color=auto&height=200&section=header&text=PETNexus&fontSize=90" />
 
-# 서비스 명: PETNexus
+# 🐾PetNexus
 * 1인 가구가 늘어나는 요즘 세상. 반려동물을 위한 커뮤니티  ”PetNexus”를 소개합니다.
 * Nexus : 연결, 연계, 관계, 집합체, 무언가의 중심을 뜻하는 영어 단어로써
 * 반려동물 관련 정보 및 커뮤니티를 연결하는 역할을 하기위해 만들어 졌습니다.
 * [펫넥스 브로셔](https://www.notion.so/PetNexus-2e88c713687f4cf28f1c16c61ba6519f)
 * [펫넥스 홈페이지](https://petnexus.xyz/home)
+<br/><br/>
   
 # 🔎 주요기능
 
@@ -14,27 +15,26 @@
 - 오픈채팅방 게시물에 따른 채팅방 생성
 - 중거거래 게시물에 따른 채팅방 생성<br/>
 ![3D2BFFE5-715F-4DCE-ACF2-37F9AC12836F_1_105_c](https://github.com/JihyeChu/PetNexus/assets/51440636/5980f486-981c-4282-83a2-463656fffee2)
-
+#
 
 ### ✅ 지도 (kakao Map)
 
 - kakao Map 을 사용한 지도 검색 기능<br/>
 ![Untitled](https://github.com/JihyeChu/PetNexus/assets/51440636/e7812685-63f9-48ee-ad9e-a8c8ce34b724)
-
+#
 
 ### ✅ 알림 (SSE)
 
 - 해당 채팅방에 있지않을 때 알람 송신
     - 새로운 메세지
     - 새로운 댓글<br/>
-[사연영상](https://prod-files-secure.s3.us-west-2.amazonaws.com/2b7fd51b-9c0c-4e8d-9ed3-98e8abb991fb/c0a3e788-49f3-48b4-9037-a6eea8d838f5/Untitled.qt)
-<hr/>
+<hr/><br/><br/>
 
-# 서비스 아키텍쳐
+# 🔗서비스 아키텍쳐
 ![Untitled](https://github.com/JihyeChu/PetNexus/assets/51440636/4a29497e-c03d-4849-9deb-85137588793d)
-<hr/>
+<br/><br/>
 
-# 기술적 의사 결정에 따른 주요 기술
+# ⚙기술적 의사 결정에 따른 주요 기술
 <details>
 <summary>Redis</summary>
   
@@ -156,7 +156,7 @@ Front에서 KAKAO MAP API를 도입하여 주소를 찾은 뒤, 주소데이터�
 
 
 
-# 기술 스택
+# 🛠기술 스택
 ### Back-End & Front-End
 <div align="left">
 <img src="https://img.shields.io/badge/Java-007396?style=flat&logo=Java&logoColor=white" />
@@ -204,9 +204,13 @@ Front에서 KAKAO MAP API를 도입하여 주소를 찾은 뒤, 주소데이터�
 [채팅 데이터 ****Cache를 통해 성능 개선****](https://www.notion.so/Cache-367ffba92147419ea1554fd182730536?pvs=21)
 <hr/><br/>
 
-# API 명세
+# 🧶ERD
+![Test](https://github.com/JihyeChu/PetNexus/assets/51440636/033ba086-92b8-4fa8-abc3-5502e8abf144)
+
+# 🚩API 명세
 [API postman](https://documenter.getpostman.com/view/27923748/2s9Xy6rVWx)<br/>
-[API swagger](file:///C:/Users/09str/Downloads/index.html)
+[API swagger](https://github.com/JihyeChu/PetNexus/files/12602705/REST.API.pdf)
+<br/><br/>
 
 # 팀원    
 | 이름 | 이메일 |
