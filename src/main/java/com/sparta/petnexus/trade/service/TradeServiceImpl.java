@@ -13,6 +13,7 @@ import com.sparta.petnexus.trade.bookmark.entity.TradeBookmark;
 import com.sparta.petnexus.trade.bookmark.repository.TradeBookmarkRepository;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
+import com.sparta.petnexus.trade.entity.CategoryEnum;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.trade.like.entity.TradeLike;
 import com.sparta.petnexus.trade.like.repository.TradeLikeRepository;
@@ -84,6 +85,15 @@ public class TradeServiceImpl implements TradeService {
         Page<Trade> tradeList = tradeRepository.findAllByUserId(pageable, userDetails.getUser().getId());
         return tradeList.map(TradeResponseDto::of);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TradeResponseDto> getCategoryTrade(CategoryEnum category, Pageable pageable){
+        Page<Trade> foundCategoryList = tradeRepository.findByCategoryOrderByCategoryDesc(category, pageable);
+
+        return foundCategoryList.map(TradeResponseDto::of);
+    }
+
 
     @Override
     @Transactional(readOnly = true)

@@ -4,6 +4,7 @@ import com.sparta.petnexus.common.response.ApiResponse;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
+import com.sparta.petnexus.trade.entity.CategoryEnum;
 import com.sparta.petnexus.trade.service.TradeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,7 +41,7 @@ public class TradeController {
     }
 
     @GetMapping("/trade")
-    @Operation(summary = "거래게시글 전체 조회", description = "거래게시글을 조회합니다.")
+    @Operation(summary = "거래게시글 전체 조회", description = "@RequestParam을 통해 게시글 정보를 넘겨주고 전체 게시글을 조회합니다.")
     public ResponseEntity<Page<TradeResponseDto>> getTrade(@RequestParam("page") int page,
                                                            @RequestParam("size") int size,
                                                            @RequestParam("sortBy") String sortBy,
@@ -48,9 +49,19 @@ public class TradeController {
         Page<TradeResponseDto> tradeList = tradeService.getTrade(page-1, size, sortBy, isAsc);
         return ResponseEntity.ok().body(tradeList);
     }
+
+    @GetMapping("/trade/category")
+    @Operation(summary = "trade 카테고리 별 조회" , description = "@RequestParam을 통해 게시글정보와 카테고리를 넘겨주고 해당 카테고리의 게시글을 가져옵니다.")
+    public ResponseEntity<Page<TradeResponseDto>> getCategoryTrade(@RequestParam("page") int page,
+                                                                   @RequestParam("size") int size, @RequestParam("category") CategoryEnum category){
+        Pageable pageable = PageRequest.of(page-1, size);
+        Page<TradeResponseDto> tradeList = tradeService.getCategoryTrade(category, pageable);
+        return ResponseEntity.ok().body(tradeList);
+    }
+
     @GetMapping("/trade/search")
     @Operation(summary = "trade 검색", description = "@RequestParam으로 keyword를 입력받아 해당 trade를 조회합니다.")
-    public ResponseEntity<Page<TradeResponseDto>> searchTrade(@RequestParam("keyword") String keyword,   @RequestParam("page") int page,
+    public ResponseEntity<Page<TradeResponseDto>> searchTrade(@RequestParam("keyword") String keyword,  @RequestParam("page") int page,
                                                               @RequestParam("size") int size){
         Pageable pageable = PageRequest.of(page -1, size);
         Page<TradeResponseDto> searchList = tradeService.searchTrade(keyword, pageable);
