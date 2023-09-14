@@ -57,7 +57,7 @@ public class ChatRoomViewController {
     @GetMapping("/openchat/room")
     public String openChatList(@RequestParam(required=false) Long chatId, Model model) {
         model.addAttribute("chatList", chatService.getAllChatByRoomId(chatId));
-        model.addAttribute("chat", chatRoomService.getOpenChatRoom(chatId));
+        model.addAttribute("chatRoom", chatRoomService.getOpenChatRoom(chatId));
         return "openChatRoom";
     }
 

@@ -70,6 +70,8 @@ public class securityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll() // swagger
                         .requestMatchers("/api/user/**").permitAll()
                         .requestMatchers("/api/token").permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/openchat/**").authenticated()
                         .requestMatchers("/tradechat/**").authenticated()
                         .requestMatchers("/api/post/**").authenticated()
                         .requestMatchers("/api/trade/**").authenticated()
@@ -94,6 +96,10 @@ public class securityConfig {
                                 new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
                                 new AntPathRequestMatcher("/api/**"))
                 );
+        http.formLogin((formLogin) ->
+            formLogin
+                .loginPage("/login").permitAll() // 로그인 페이지를 제공하는 URL 을 설정
+        );
         return http.build();
     }
 
