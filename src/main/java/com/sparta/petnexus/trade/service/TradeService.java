@@ -3,6 +3,7 @@ package com.sparta.petnexus.trade.service;
 import com.sparta.petnexus.common.security.entity.UserDetailsImpl;
 import com.sparta.petnexus.trade.dto.TradeRequestDto;
 import com.sparta.petnexus.trade.dto.TradeResponseDto;
+import com.sparta.petnexus.trade.entity.CategoryEnum;
 import com.sparta.petnexus.trade.entity.Trade;
 import com.sparta.petnexus.user.entity.User;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,15 @@ public interface TradeService {
     Page<TradeResponseDto> getTrade(int page, int size, String sortBy, boolean isAsc);
 
     Page<TradeResponseDto> getmyTrade(int page, int size, String sortBy, boolean isAsc, UserDetailsImpl userDetails);
+
+    /*
+     * 카테고리 별 거래게시글 전체 조회
+     * @param page : 거래게시글 현재페이지
+     * @param size : 한 페이지에 조회될 게시글 수
+     * @param category : 유저가 조회하고자 하는 카테고리 종류
+     * @return : 카테고리 별 거래게시글 정보
+     * */
+    Page<TradeResponseDto> getCategoryTrade(CategoryEnum category, Pageable pageable);
 
     Page<TradeResponseDto> searchTrade(String keyword, Pageable pageable);
 
@@ -88,6 +98,7 @@ public interface TradeService {
      * @return : 거래게시글 entity
      * */
     Trade findTrade(Long tradeId);
+
 
 
 }
