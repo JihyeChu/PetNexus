@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Builder
@@ -31,7 +32,7 @@ public class TradeResponseDto {
     @Schema(description = "trade 경도")
     private String longitude;
     @Schema(description = "trade 가격")
-    private int price;
+    private String price;
     @Schema(description = "trade 품목")
     private String category;
     @Schema(description = "trade 좋아요 수")
@@ -47,6 +48,8 @@ public class TradeResponseDto {
 
 
     public static TradeResponseDto of(Trade trade) {
+        DecimalFormat df = new DecimalFormat("###,###,###");
+
         return TradeResponseDto.builder()
                 .id(trade.getId())
                 .title(trade.getTitle())
@@ -54,7 +57,7 @@ public class TradeResponseDto {
                 .username(trade.getUser().getUsername())
                 .latitude(trade.getLatitude())
                 .longitude(trade.getLongitude())
-                .price(trade.getPrice())
+                .price(df.format(trade.getPrice()))
                 .category(String.valueOf(trade.getCategory()))
                 .tradeLikeCount(trade.getTradeLikes().size())
                 .tradeBookmarkList(trade.getTradeBookmarks().stream().map(bookmark -> bookmark.getTrade().getTitle()).toList())
