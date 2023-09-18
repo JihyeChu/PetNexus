@@ -210,7 +210,6 @@ Front에서 KAKAO MAP API를 도입하여 주소를 찾은 뒤, 주소데이터�
 ![Test](https://github.com/JihyeChu/PetNexus/assets/51440636/033ba086-92b8-4fa8-abc3-5502e8abf144)
 
 # 🚩API 명세
-[API postman](https://documenter.getpostman.com/view/27923748/2s9Xy6rVWx)<br/>
 [API swagger](https://github.com/JihyeChu/PetNexus/files/12602705/REST.API.pdf)
 <br/><br/>
 
