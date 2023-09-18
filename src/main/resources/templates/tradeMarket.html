@@ -100,8 +100,9 @@
                             <li>
                                 <article class="box highlight">
                                     <header>
-                                        <h3><a href="/tradeMarket/trade" class="button icon solid fa-file">글 작성하기</a>
-                                        </h3>
+                                        <h3><a style="width: 200px;" href="/tradeMarket/trade" class="button icon solid fa-file">글 작성하기</a></h3>
+                                        <h3><a style="width: 200px;" href="#" class="button icon solid fa-file" id="food-button">FOOD 모아보기</a></h3>
+                                        <h3><a style="width: 200px;" href="#" class="button icon solid fa-file" id="item-button">ITEM 모아보기</a></h3>
                                     </header>
                                 </article>
                             </li>
@@ -119,3 +120,28 @@
 </div>
 </body>
 </html>
+<script>
+    $(document).ready(function () {
+        const allPosts = document.querySelectorAll('.box.post');
+
+        $("#food-button").click(function () {
+            allPosts.forEach(post => post.style.display = 'none');
+            allPosts.forEach(post => {
+                const category = post.querySelector('#categoryButton span').innerText;
+                if (category === 'FOOD') {
+                    post.style.display = 'block';
+                }
+            });
+        });
+
+        $("#item-button").click(function () {
+            allPosts.forEach(post => post.style.display = 'none');
+            allPosts.forEach(post => {
+                const category = post.querySelector('#categoryButton span').innerText;
+                if (category === 'ITEM') {
+                    post.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>
